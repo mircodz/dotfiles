@@ -1,0 +1,12 @@
+- name: 'installing'
+  pacman:
+    name: tmux
+    state: installed
+
+- name: 'symlinking'
+  file:
+    src: '{{ ansible_env.PWD }}/roles/tumx/files/{{ item }}'
+    path: '~/{{ item }}'
+    state: link
+    force: yes
+  loop: '{{ [ ".tmux.conf" ] }}'
