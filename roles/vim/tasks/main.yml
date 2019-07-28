@@ -1,0 +1,12 @@
+- name: 'installing'
+  pacman:
+    name: vim
+    state: installed
+
+- name: 'symlinking'
+  file:
+    src: '{{ ansible_env.PWD }}/roles/vim/files/{{ item }}'
+    path: '~/{{ item }}'
+    state: link
+    force: yes
+  loop: '{{ [ ".vim", ".vimrc" ] }}'
