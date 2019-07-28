@@ -1,0 +1,33 @@
+alias dot="/usr/bin/git --git-dir=$DOTDIR --work-tree=$DOTTREE"
+alias dotls="dot ls-tree -r master --name-only"
+
+alias pa="sudo pacman -S"
+alias pr="sudo pacman -Rns"
+alias pip2="python2 -m pip install --user --upgrade"
+alias pip3="python3 -m pip install --user --upgrade"
+
+alias gh="cd $HOME"
+alias gs="cd src"
+alias gr="cd repos"
+alias gd="cd docs"
+alias gw="cd walls"
+alias gm="cd /mnt"
+
+alias l="ls -la"
+alias ll="ls -la"
+alias ls="ls --color=auto"
+alias lsa="ls -la"
+alias ldot="ls -ld .*"
+
+alias ccat="highlight --out-format ansi"
+alias grep="grep --color=auto"
+
+alias netspeed="speedometer -tx wlan0 -rx wlan0"
+alias sensors="watch -n 1 -t sensors"
+alias zathura="zathura --fork"
+
+alias webcam="mplayer tv:// -tv driver=v4l2:width=640:height=480:device=/dev/video0:fps=30:outfmt=yuy2"
+
+alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"

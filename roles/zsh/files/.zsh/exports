@@ -1,0 +1,22 @@
+export DOTTREE="$HOME"
+export DOTDIR="$DOTTREE/.dotfiles"
+
+export RECDIR="$HOME/recs"
+export SHOTDIR="$HOME/shots"
+export WALLDIR="$HOME/walls"
+
+export XDG_CONFIG_HOME=$HOME/.config
+
+export BROWSER="chromium"
+export EDITOR="nvim"
+export READER="zathura"
+export TERMINAL="urxvtc"
+
+export PAGER="less"
+export LESS="-iMRS -x2"
+
+export HISTCONTROL=ignoredups
+export HISTTIMEFORMAT="%d/%m/%y %T "
+export HISTFILESIZE=-1
+export HISTSIZE=-1
+export HISTIGNORE="ls:bg:fg:history"
