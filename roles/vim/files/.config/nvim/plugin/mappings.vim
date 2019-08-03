@@ -1,5 +1,6 @@
 map <silent> <C-O> :w<CR>
-map <silent> <C-P> :CtrlP<CR>
+"map <silent> <C-P> :CtrlP<CR>
+map <silent> <C-P> :GFiles<CR>
 map <silent> <C-S> :Tagbar<CR>
 map <silent> <C-U> :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='\t'

@@ -18,15 +18,14 @@ endfunction
 
 if &loadplugins
   if has('packages')
+    packadd! UltiSnips
     packadd! coc.nvim
-    "packadd! YouCompleteMe
-    packadd! ctrlp.vim
+    packadd! fzf.vim
     packadd! goyo.vim
     packadd! lightline.vim
     packadd! limelight.vim
     packadd! nerdcommenter
     packadd! nerdtree
-    packadd! ultisnips
     packadd! undotree
     packadd! vim-arpeggio
     packadd! vim-markdown
@@ -35,6 +34,13 @@ if &loadplugins
     packadd! vim-textobj-user
   endif
 endif
+
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 
 "set nocp
 set laststatus=2
@@ -85,7 +91,6 @@ let g:ctrlp_custom_ignore = {
     \   'file' : '\v\.(o|so)$'
     \ }
 
-call arpeggio#map('i', '', 0, 'eu', '<Esc>')
 
 set encoding=utf-8
 filetype indent plugin on

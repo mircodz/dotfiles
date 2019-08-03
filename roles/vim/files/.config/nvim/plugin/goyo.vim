@@ -10,7 +10,7 @@ function! s:leave()
   set showcmd
   set scrolloff=5
   Limelight!
-  source ~/.vim/plugin/highlight.vim
+  source ~/.config/nvim/plugin/highlight.vim
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>enter()

@@ -9,4 +9,4 @@
     path: '~/{{ item }}'
     state: link
     force: yes
-  loop: '{{ [ ".zsh", ".zshrc" ] }}'
+  loop: '{{ [ ".zsh", ".zshrc", ".zprofile" ] }}'

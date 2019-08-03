@@ -1,7 +1,11 @@
 - name: 'installing'
   pacman:
-    name: vim
+    name: '{{ item }}'
     state: installed
+  loop: '{{ [ "vim", "python", "python-pip", "npm" ] }}'
+
+- name: 'installing plugins'
+  shell: python3 -m pip install --user neovim
 
 - name: 'symlinking'
   file:
@@ -9,4 +13,4 @@
     path: '~/{{ item }}'
     state: link
     force: yes
-  loop: '{{ [ ".vim", ".vimrc" ] }}'
+  loop: '{{ [ ".config/nvim" ] }}'

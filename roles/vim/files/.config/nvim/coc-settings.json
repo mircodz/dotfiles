@@ -1,0 +1,46 @@
+{
+  "suggest.completionItemKindLabels": {
+    "keyword": "keyword",
+    "variable": "variable",
+    "value": "value",
+    "operator": "operator",
+    "function": "function",
+    "reference": "reference",
+    "constant": "constant",
+    "method": "method",
+    "struct": "struct",
+    "class": "class",
+    "interface": "interface",
+    "text": "text",
+    "enum": "enum",
+    "enumMember": "enum member",
+    "module": "module",
+    "color": "color",
+    "property": "property",
+    "field": "field",
+    "unit": "unit",
+    "event": "event",
+    "file": "file",
+    "folder": "folder",
+    "snippet": "snippet",
+    "typeParameter": "type parameter",
+    "default": "default"
+  },
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+         "cache": {
+           "directory": "/home/mirco/.ccls-cache"
+         }
+       }
+    },
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    }
+  }
+}
