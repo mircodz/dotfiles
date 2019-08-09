@@ -1,0 +1,6 @@
+files:
+  - .config/zathura
+  - .Xresources
+  - .dunstrc
+  - .xinitrc
+  - .xprofile

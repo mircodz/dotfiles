@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+xrdb -load $HOME/.Xresources
+xsetroot -cursor_name left_ptr
+xset r rate 250 35
+
+# $KEYBOARD will be set by the calling script, normally .xinputrc
+[ "$KEYBOARD" = "dvp" ] && setxkbmap -layout us -variant dvp
+
+[ "$WM" = "dwm" ] && status &
+
+~/.fehbg
+
+pidof clipmenud && pkill clipmenud
+clipmenud &
+
+pidof dunst && pkill dunst
+dunst -config ~/.dunstrc &
+
+pidof unclutter && pkill unclutter
+unclutter --timeout 2 --fork
+
+pidof urxvtd && pkill urxvtd
+urxvtd --fork
+
+pidof xscreensaver && pkill xscreensaver
+xscreensaver -no-splash &

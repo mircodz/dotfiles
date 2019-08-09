@@ -1,0 +1,8 @@
+- name: 'symlinking'
+  file:
+    src: '{{ ansible_env.PWD }}/roles/dotfiles/files/{{ item }}'
+    path: '~/{{ item }}'
+    state: link
+    force: yes
+  loop: '{{ files }}'
+
