@@ -1,0 +1,10 @@
+- hosts: localhost
+  become: true
+  become_user: mirco
+  become_method: sudo
+  roles:
+    - dotfiles
+    - dwm
+    - tmux
+    - vim
+    - zsh
