@@ -49,3 +49,10 @@ augroup OrgMode
   au BufNewFile,BufRead *.org source ~/.nvim/syn_todo.vim
 augroup END
 
+augroup BetterFocus
+  autocmd!
+  au BufEnter,FocusGained,VimEnter,WinEnter,BufNewFile *
+    \ let &l:colorcolumn=join(range(81, 255), ',')
+  au FocusLost,WinLeave *
+    \ let &l:colorcolumn=join(range(1,255),   ',')
+augroup end

@@ -1,11 +1,5 @@
 " Author: Mirco De Zorzi
 
-augroup BetterFocus
-  autocmd!
-  au BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn=join(range(81, 255), ',')
-  au FocusLost,WinLeave                     * let &l:colorcolumn=join(range(1,255),   ',')
-augroup end
-
 function! g:PlugLoaded(plugin)
   let l:paths = split(&packpath, ',')
   for path in l:paths
@@ -41,16 +35,6 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-
-"set nocp
-set laststatus=2
-"set lazyredraw
-"syntax sync minlines=256
-"set ttyfast
-"set wildmenu
-"set timeoutlen=1000
-"set ttimeoutlen=0
-
 let loaded_matchparen = 1
 let mapleader=";"
 
@@ -69,10 +53,6 @@ endfunction
 
 set foldtext=Foldtext()
 
-imap <Tab> <Plug>(coc-snippets-expand)
-let g:coc_snippet_next = '<c-h>'
-let g:coc_snippet_prev = '<c-t>'
-
 " Undo tree with dvorak binds
 function! g:Undotree_CustomMap()
     map <buffer> H 5<down>
@@ -85,12 +65,7 @@ map <silent> <C-C> :UndotreeToggle<CR>
 " File navigation
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-
-let g:ctrlp_custom_ignore = {
-    \   'dir' : '\.git$\|build$\|node_modules' ,
-    \   'file' : '\v\.(o|so)$'
-    \ }
-
+let NERDTreeMapOpenInTab='\t'
 
 set encoding=utf-8
 filetype indent plugin on
