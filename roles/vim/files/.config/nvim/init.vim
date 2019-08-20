@@ -1,5 +1,7 @@
 " Author: Mirco De Zorzi
 
+set encoding=utf-8
+
 function! g:PlugLoaded(plugin)
   let l:paths = split(&packpath, ',')
   for path in l:paths
@@ -16,7 +18,6 @@ if &loadplugins
     packadd! coc.nvim
     packadd! fzf.vim
     packadd! goyo.vim
-    packadd! lightline.vim
     packadd! limelight.vim
     packadd! nerdcommenter
     packadd! nerdtree
@@ -26,19 +27,22 @@ if &loadplugins
     packadd! vim-snippets
     packadd! vim-textobj-comment
     packadd! vim-textobj-user
+    packadd! base16-vim
   endif
 endif
 
-
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
+  \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
 
 let loaded_matchparen = 1
 let mapleader=";"
 
 set foldmethod=manual
+set shortmess=I
+
+set mouse=a
 
 " Author: Greg Hurrell
 let s:middot='·'
@@ -67,9 +71,12 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDTreeMapOpenInTab='\t'
 
-set encoding=utf-8
 filetype indent plugin on
 syntax on
+
+"set termguicolors
+"let base16colorspace=256
+colorscheme base16-default-dark
 
 set number relativenumber
 set ruler hidden wrap
@@ -85,4 +92,5 @@ if !isdirectory($HOME."/.undo")
 endif
 set undodir=$HOME/.undo
 set undofile
+set swapfile
 

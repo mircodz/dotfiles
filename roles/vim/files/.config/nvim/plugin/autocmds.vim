@@ -24,11 +24,12 @@ autocmd BufRead * normal zz
 " indent settings based on filetype
 augroup Indent
   autocmd!
-  au FileType *         setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
   au FileType c         setlocal tabstop=8 softtabstop=0 noexpandtab shiftwidth=8 smarttab
-  au FileType cpp       setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
 
+  au FileType *         setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
+  au FileType cpp       setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
   au FileType python    setlocal tabstop=4 softtabstop=0 expandtab   shiftwidth=4 smarttab
+
   au FileType sh,zsh    setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
   au FileType tex,md    setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
   au FileType vim       setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
@@ -51,8 +52,8 @@ augroup END
 
 augroup BetterFocus
   autocmd!
-  au BufEnter,FocusGained,VimEnter,WinEnter,BufNewFile *
-    \ let &l:colorcolumn=join(range(81, 255), ',')
-  au FocusLost,WinLeave *
-    \ let &l:colorcolumn=join(range(1,255),   ',')
+  au BufEnter,FocusGained,VimEnter,WinEnter,BufNewFile * let &l:colorcolumn=join(range(81, 255), ',')
+  au FocusLost,WinLeave * let &l:colorcolumn=join(range(1,255),   ',')
+  au InsertLeave,VimEnter,WinEnter * setlocal cursorline
+  au InsertEnter,WinLeave * setlocal nocursorline
 augroup end

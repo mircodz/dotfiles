@@ -1,8 +1,14 @@
-- name: 'installing'
+- name: 'installing dependencies'
   pacman:
     name: '{{ item }}'
     state: installed
-  loop: '{{ [ "vim", "python", "python-pip", "npm" ] }}'
+  loop: '{{ [ "python", "python-pip", "npm" ] }}'
+
+- name: "installing from repository"
+  shell: make chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
+
+- name: 'compiling'
+  shell: sudo make install chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
 
 - name: 'installing plugins'
   shell: python3 -m pip install --user neovim

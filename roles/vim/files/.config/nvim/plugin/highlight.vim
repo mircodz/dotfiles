@@ -1,18 +1,15 @@
-colorscheme default
-
 " vim highlithing
-hi VertSplit ctermbg=7 ctermfg=8
-hi Folded ctermbg=8 ctermfg=7
-hi LineNR ctermbg=8 ctermfg=7
-hi Visual ctermbg=9
+hi VertSplit ctermfg=8 ctermbg=18
+hi Folded    ctermfg=8 ctermbg=18
+hi LineNR    ctermfg=8 ctermbg=18
+hi Visual              ctermbg=9
 
 " code highlithing
 hi cIncluded ctermbg=8
 hi Comment cterm=italic
 
-highlight clear CursorLine
-highlight CursorLine   ctermbg=8
-highlight CursorLineNR ctermbg=8
+hi CursorLine   ctermbg=18 cterm=none
+hi CursorLineNR ctermbg=18
 set cursorline
 
 " Enable folds and remove fold background
@@ -20,9 +17,14 @@ set foldenable
 
 " Highlight all columns beyond 80th
 let &colorcolumn=join(range(81,999),",")
-highlight ColorColumn ctermbg=8
+hi ColorColumn ctermbg=18
+hi link EndOfBuffer ColorColumn
 
 " Highlight tabs and trailing spaces
 let &showbreak='↳ '
 set listchars=tab:›\ ,trail:·,nbsp:~
 set list
+
+hi Pmenu ctermbg=8 ctermfg=15
+
+hi Normal ctermbg=none
