@@ -9,15 +9,15 @@ choice=$(echo -e "fullscreen\nfullscreen notification\nactive\narea" | dmenu)
 [ -z "$choice" ] && exit
 
 case "$choice" in
-    "fullscreen")
-        maim    -u                                 $filename ;;
-    "fullscreen notification")
-        pidof dunst && notify-send -i $IMG "*SNAP*" "Yep, this is going in the desktop thread"
-        maim    -u                                 $filename ;;
-    "active")
-        maim    -u -i "$(xdotool getactivewindow)" $filename ;;
-    "area")
-        maim -s -u                                 $filename ;;
+  "fullscreen")
+    maim    -u                                 $filename ;;
+  "fullscreen notification")
+    pidof dunst && notify-send -i $IMG "*SNAP*" "Yep, this is going in the desktop thread"
+    maim    -u                                 $filename ;;
+  "active")
+    maim    -u -i "$(xdotool getactivewindow)" $filename ;;
+  "area")
+    maim -s -u                                 $filename ;;
 esac
 
 cat $filename | xclip -selection clipboard -t image/png

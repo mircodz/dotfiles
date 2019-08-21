@@ -3,8 +3,8 @@
 sudo pacman -Syy
 
 click=$(dunstify --action="replyAction,reply"\
-    "Checking for updates" "$(pacman -Qqu | wc -l) updates available"\
-    -i $HOME/.scripts/arch.png \
-    -t 5000)
+  "Checking for updates" "$(pacman -Qqu | wc -l) updates available"\
+  -i $HOME/.scripts/arch.png \
+  -t 5000)
 
 [ $click == 2 ] && sudo pacman -Suu --noconfirm

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+DIR="$HOME/recs"
+[ ! -d $DIR ] && mkdir $DIR
+
+choices="entire screen\nscreen portion\nmicrophone only"
+choice=$(echo -e $choices | dmenu)
+
+case $choice in
+
+  "entire screen")
+    res=$(xrandr | grep '*' | awk '{print $1}')
+    filename=$(sleep 0 | dmenu -p "Filename")
+    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
+    ffmpeg -video_size $res\
+           -framerate 60\
+           -f x11grab -i :0.0\
+           -f pulse -ac 2 -i default\
+           -c:v libx264 -crf 0\
+           -preset ultrafast\
+           "$DIR/$filename.mkv" ;;
+
+  "screen portion")
+    read cancelled x y d < <(slop -f "%c %x %y %wx%h")
+    [ -z $cancelled ] && exit
+    filename=$(sleep 0 | dmenu -p "Filename")
+    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
+    ffmpeg -video_size $d\
+           -framerate 25\
+           -f x11grab -i :0.0+$x,$y\
+           -f pulse -ac 2 -i default\
+           -c:v libx264 -crf 0\
+           -preset ultrafast\
+           "$DIR/$filename.mkv" ;;
+
+  "microphone only")
+    filename=$(sleep 0 | dmenu -p "Filename")
+    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
+    ffmpeg -f pulse -ac 2 -i default\
+           -acodec flac\
+           "$DIR/$filename.flac" ;;
+
+esac
