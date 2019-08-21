@@ -1,3 +1,9 @@
+- name: 'installing'
+  pacman:
+    name: '{{ item }}'
+    state: installed
+  loop: '{{ software }}'
+
 - name: 'symlinking'
   file:
     src: '{{ ansible_env.PWD }}/roles/dotfiles/files/{{ item }}'
