@@ -1,7 +1,12 @@
+bindkey -e
+
 source ~/.zsh/aliases
 source ~/.zsh/exports
+source ~/.zsh/mappings
+source ~/.zsh/functions
 
-bindkey -e
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
 
 autoload -U edit-command-line
 zle -N edit-command-line
@@ -81,8 +86,19 @@ setopt PROMPT_SUBST
 
 # Anonymous function to avoid leaking variables.
 function () {
-	local SUFFIX=$(printf '%%F{red}$%.0s%%f' {1..$LVL})
-	export PS1="%F{blue}%B%1~%b%F{yellow}%B%(1j.*.)%(?..!)%b%f %B${SUFFIX}%b "
+
+  if [ -n "$TMUX" ]; then
+    local LVL=$(($SHLVL - 3))
+  else
+    local LVL=$(($SHLVL - 1))
+  fi
+
+  if [[ $EUID -eq 0 ]]; then
+    local SUFFIX='%F{yellow}%n%f'$(printf '%%F{yellow}\u276f%.0s%%f' {1..$LVL})
+  else
+    local SUFFIX=$(printf '%%F{red}\u276f%.0s%%f' {1..$LVL})
+  fi
+  export PS1="%F{green}${SSH_TTY:+%n@%m}%f%B${SSH_TTY:+:}%b%F{blue}%B%1~%b%F{yellow}%B%(1j.*.)%(?..!)%b%f %B${SUFFIX}%b "
 }
 
 autoload -U add-zsh-hook

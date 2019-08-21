@@ -1,0 +1,51 @@
+function trash {
+  for file in "$@"; do
+    mv "$file" "$HOME/.trash/$(uuidgen).$file"
+  done
+}
+
+function pr {
+  if [ -z "$@" ]; then
+    sudo pacman -Rns --noconfirm $(pacman -Qq | fzf)
+  else
+    sudo pacman -Rns --noconfirm $@
+  fi
+}
+
+function pa {
+  if [ -z "$@" ]; then
+    yay -S --noconfirm $(cat "$HOME/.cache/yay/completion.cache" | awk '{print $1}' | fzf)
+  else
+    yay -S --noconfirm $@
+  fi
+}
+
+function fkill {
+  local pid
+  if [ "$UID" != "0" ]; then
+      pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+  else
+      pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  fi
+
+  if [ "x$pid" != "x" ]
+  then
+      echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+function bhistory {
+  local cols sep google_history open
+  cols=$(( COLUMNS / 3 ))
+  sep='{::}'
+
+  google_history="$HOME/.config/chromium/Default/History"
+  open=xdg-open
+
+  cp -f "$google_history" /tmp/h
+  sqlite3 -separator $sep /tmp/h \
+    "select substr(title, 1, $cols), url
+     from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
+}
