@@ -15,9 +15,11 @@ endfunction
 if &loadplugins
   if has('packages')
     packadd! UltiSnips
+    packadd! base16-vim
     packadd! coc.nvim
     packadd! fzf.vim
     packadd! goyo.vim
+    packadd! grayout.vim
     packadd! limelight.vim
     packadd! nerdcommenter
     packadd! nerdtree
@@ -27,7 +29,6 @@ if &loadplugins
     packadd! vim-snippets
     packadd! vim-textobj-comment
     packadd! vim-textobj-user
-    packadd! base16-vim
   endif
 endif
 

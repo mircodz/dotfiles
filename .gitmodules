@@ -7,9 +7,6 @@
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/goyo.vim"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/goyo.vim
 	url = https://github.com/junegunn/goyo.vim
-[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/lightline.vim"]
-	path = roles/vim/files/.config/nvim/pack/bundle/opt/lightline.vim
-	url = https://github.com/itchyny/lightline.vim
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/limelight.vim"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/limelight.vim
 	url = https://github.com/junegunn/limelight.vim
@@ -103,3 +100,6 @@
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/base16-vim"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/base16-vim
 	url = https://github.com/chriskempson/base16-vim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/grayout.vim"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/grayout.vim
+	url = https://github.com/mphe/grayout.vim
