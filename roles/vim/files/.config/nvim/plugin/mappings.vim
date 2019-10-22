@@ -41,3 +41,16 @@ nnoremap <leader>h :tabn<CR>
 nnoremap <leader>d :tabclose<CR>
 nnoremap <leader>n :tabnew<CR>
 
+"xnoremap <  <gv
+"xnoremap >  >gv
+
+function! s:find_git_root()
+  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+
+function! NumlessFzf()
+  execute 'Files' s:find_git_root()
+  setlocal nonumber norelativenumber
+endfunction
+
+map <silent> <C-p> :call NumlessFzf()<CR>

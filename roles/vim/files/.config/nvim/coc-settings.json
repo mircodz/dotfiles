@@ -1,4 +1,6 @@
 {
+  "suggest.detailMaxLength": 10,
+  "suggest.labelMaxLength": 50,
   "suggest.completionItemKindLabels": {
     "keyword": "keyword",
     "variable": "variable",
@@ -34,6 +36,9 @@
       "initializationOptions": {
          "cache": {
            "directory": "/home/mirco/.ccls-cache"
+         },
+         "index": {
+           "comments": 3
          }
        }
     },
@@ -41,6 +46,24 @@
       "command": "gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
+    },
+    "haskell": {
+      "command": "hie-wrapper",
+      "rootPatterns": [
+        ".stack.yaml",
+        "cabal.config",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ],
+      "initializationOptions": {
+        "languageServerHaskell": {
+          "hlintOn": true
+        }
+      }
     }
   }
 }

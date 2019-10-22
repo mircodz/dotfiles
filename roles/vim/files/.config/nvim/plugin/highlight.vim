@@ -2,21 +2,15 @@
 hi VertSplit ctermfg=8 ctermbg=18
 hi Folded    ctermfg=8 ctermbg=18
 hi LineNR    ctermfg=8 ctermbg=18
-hi Visual              ctermbg=9
-
-" code highlithing
-hi cIncluded ctermbg=8
-hi Comment cterm=italic
+hi Pmenu     ctermbg=8 ctermfg=15
+hi Normal    ctermbg=none
 
 hi CursorLine   ctermbg=18 cterm=none
 hi CursorLineNR ctermbg=18
 set cursorline
 
-" Enable folds and remove fold background
-set foldenable
-
 " Highlight all columns beyond 80th
-let &colorcolumn=join(range(81,999),",")
+let &colorcolumn=join(range(81,254),",")
 hi ColorColumn ctermbg=18
 hi link EndOfBuffer ColorColumn
 
@@ -25,6 +19,9 @@ let &showbreak='↳ '
 set listchars=tab:›\ ,trail:·,nbsp:~
 set list
 
-hi Pmenu ctermbg=8 ctermfg=15
+" code highlithing
+hi Comment cterm=italic
 
-hi Normal ctermbg=none
+" c/c++
+hi Include                         cterm=bold
+hi cIncluded ctermbg=8

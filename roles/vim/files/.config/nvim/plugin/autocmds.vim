@@ -24,16 +24,10 @@ autocmd BufRead * normal zz
 " indent settings based on filetype
 augroup Indent
   autocmd!
-  au FileType c         setlocal tabstop=8 softtabstop=0 noexpandtab shiftwidth=8 smarttab
-
-  au FileType *         setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
-  au FileType cpp       setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
-  au FileType python    setlocal tabstop=4 softtabstop=0 expandtab   shiftwidth=4 smarttab
-
-  au FileType sh,zsh    setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
-  au FileType tex,md    setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
-  au FileType vim       setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
-  au FileType yaml,json setlocal tabstop=2 softtabstop=0 expandtab   shiftwidth=2 smarttab
+  au FileType *,c,cpp,python
+    \ setlocal tabstop=4 softtabstop=0 noexpandtab shiftwidth=4 smarttab
+  au FileType haskell,html,css,sh,zsh,tex,md,vim,yaml,json
+    \ setlocal tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 augroup END
 
 " fold settings based on filetype
@@ -43,17 +37,27 @@ augroup Folds
   au FileType * setlocal foldmethod=syntax foldlevel=999
 augroup END
 
-" org mode syntax highlight for vim
-augroup OrgMode
-  autocmd!
-  au BufNewFile,BufRead *.org source ~/.nvim/syn_org.vim
-  au BufNewFile,BufRead *.org source ~/.nvim/syn_todo.vim
-augroup END
-
 augroup BetterFocus
   autocmd!
-  au BufEnter,FocusGained,VimEnter,WinEnter,BufNewFile * let &l:colorcolumn=join(range(81, 255), ',')
-  au FocusLost,WinLeave * let &l:colorcolumn=join(range(1,255),   ',')
-  au InsertLeave,VimEnter,WinEnter * setlocal cursorline
-  au InsertEnter,WinLeave * setlocal nocursorline
+
+  au VimEnter,WinEnter,BufEnter,BufNewFile,BufWinEnter,FocusGained *
+    \ if g:goyoed == 0 |
+    \   let &l:colorcolumn=join(range(81, 255), ',') |
+    \ endif
+
+  au WinLeave,FocusLost *
+    \ if g:goyoed == 0 |
+    \   let &l:colorcolumn=join(range(1, 255), ',') |
+    \ endif
+
+  au InsertLeave,VimEnter,WinEnter *
+    \ if g:goyoed == 0 |
+    \   setlocal cursorline |
+    \ endif
+
+  au InsertEnter,VimLeave,WinLeave *
+    \ if g:goyoed == 0 |
+    \   setlocal nocursorline |
+    \ endif
+
 augroup end

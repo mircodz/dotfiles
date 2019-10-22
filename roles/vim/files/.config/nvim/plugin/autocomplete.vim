@@ -13,6 +13,7 @@ if PlugLoaded('coc.nvim')
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
   nmap <silent> rn <Plug>(coc-rename)
+  nmap <leader>f   <Plug>(coc-format-selected)
 
   imap <Tab> <Plug>(coc-snippets-expand)
   let g:coc_snippet_next = '<c-h>'

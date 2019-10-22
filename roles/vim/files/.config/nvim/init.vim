@@ -1,5 +1,8 @@
 " Author: Mirco De Zorzi
 
+
+let g:goyoed = 0
+
 set encoding=utf-8
 
 function! g:PlugLoaded(plugin)
@@ -20,13 +23,16 @@ if &loadplugins
     packadd! fzf.vim
     packadd! goyo.vim
     packadd! grayout.vim
+    packadd! haskell-vim
     packadd! limelight.vim
     packadd! nerdcommenter
     packadd! nerdtree
     packadd! undotree
     packadd! vim-arpeggio
     packadd! vim-markdown
+    packadd! vim-projectionist
     packadd! vim-snippets
+    packadd! vim-speeddating
     packadd! vim-textobj-comment
     packadd! vim-textobj-user
   endif
@@ -39,6 +45,7 @@ let g:fzf_action = {
 
 let loaded_matchparen = 1
 let mapleader=";"
+let maplocalleader=","
 
 set foldmethod=manual
 set shortmess=I
@@ -79,6 +86,9 @@ syntax on
 "let base16colorspace=256
 colorscheme base16-default-dark
 
+
+set noautochdir
+set foldenable
 set number relativenumber
 set ruler hidden wrap
 set ignorecase incsearch
@@ -94,4 +104,19 @@ endif
 set undodir=$HOME/.undo
 set undofile
 set swapfile
+
+let g:clang_format#style_options = {
+            \ "BasedOnStyle" : "LLVM",
+            \ "IndentWidth" : 4,
+            \ "AccessModifierOffset" : -4,
+            \ "AllowShortIfStatementsOnASingleLine" : "true",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "Standard" : "C++11",
+            \ "BreakBeforeBraces" : "Stroustrup"
+            \ }
+
+if has('nvim')
+  let $FZF_DEFAULT_OPTS .= ' --inline-info'
+endif
+
 

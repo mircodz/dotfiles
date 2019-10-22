@@ -1,0 +1,9 @@
+snippet class "Complete C++ Class with Rule of Five"
+class $1 {
+public:
+	$1();
+	$1($1 &&) = default; $1& operator=($1 &&) = default;
+	$1(const $1&) = default; $1& operator=(const $1&) = default;
+	~$1();
+}
+endsnippet
