@@ -1,4 +1,13 @@
-export FZF_DEFAULT_COMMAND='fd -E "pack"  -E "view"   -E "site" -E ".undo" -E ".cache" -E "lib" -H --type f'
+IGNORE_FILES=(.git build view site .undo .cache .local)
+function build_ignores {
+  s=""
+  for f in $IGNORE_FILES
+  do
+      s+="-E '$f' "
+  done
+  echo $s
+}
+export FZF_DEFAULT_COMMAND="fd $(build_ignores) -H --type f"
 
 export DOTTREE="$HOME"
 export DOTDIR="$DOTTREE/.dotfiles"
