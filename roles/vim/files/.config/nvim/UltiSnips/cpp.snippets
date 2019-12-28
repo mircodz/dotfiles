@@ -1,0 +1,23 @@
+snippet class "Entire .h generator"
+#ifndef ${2:`!v substitute(vim_snippets#Filename('$1_HPP_','ClassName'),'.*','\U&\E','')`}
+#define $2
+
+class ${1:`!v substitute(substitute(vim_snippets#Filename('$1','ClassName'),'^.','\u&',''), '_\(\w\)', '\u\1', 'g')`}
+{
+private:
+	$3
+
+public:
+	$1();
+	virtual ~$1();
+};
+
+#endif /* $2 */
+endsnippet
+
+snippet ns "Namespace generator"
+namespace $1
+{
+
+} // namespace $1
+endsnippet
