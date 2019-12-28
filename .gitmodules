@@ -103,3 +103,48 @@
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/grayout.vim"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/grayout.vim
 	url = https://github.com/mphe/grayout.vim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-speeddating"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-speeddating
+	url = https://github.com/tpope/vim-speeddating
+[submodule "roles/vim/files/neovim"]
+	path = roles/vim/files/neovim
+	url = https://github.com/neovim/neovim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/haskell-vim"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/haskell-vim
+	url = https://github.com/neovimhaskell/haskell-vim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-projectionist"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-projectionist
+	url = https://github.com/tpope/vim-projectionist
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-clang-format"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-clang-format
+	url = https://github.com/rhysd/vim-clang-format
+[submodule "roles/dwm/files/dwm"]
+	path = roles/dwm/files/dwm
+	url = https://github.com/mircodezorzi/dwm
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-eunuch"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-eunuch
+	url = https://github.com/tpope/vim-eunuch
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/ack.vim"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/ack.vim
+	url = https://github.com/mileszs/ack.vim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-gitgutter"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vista.vim"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vista.vim
+	url = https://github.com/liuchengxu/vista.vim
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-lion"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-lion
+	url = https://github.com/tommcdo/vim-lion
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-grammarous"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-grammarous
+	url = https://github.com/rhysd/vim-grammarous
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-vue"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-vue
+	url = https://github.com/posva/vim-vue
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-devicons"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-devicons
+	url = https://github.com/ryanoasis/vim-devicons
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-fugitive"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
