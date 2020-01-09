@@ -148,3 +148,9 @@
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-fugitive"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-surround"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-surround
+	url = https://github.com/tpope/vim-surround
+[submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-orgmode"]
+	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-orgmode
+	url = https://github.com/jceb/vim-orgmode
