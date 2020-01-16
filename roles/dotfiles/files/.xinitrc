@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+export GOPATH=$HOME/go
+export PATH=$HOME/bin:$HOME/.local/bin:$HOME/.gem/ruby/*/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # dvorak programmer keyboard layout
 #export KEYBOARD="dvp"
