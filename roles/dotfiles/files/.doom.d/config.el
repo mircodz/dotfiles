@@ -1,72 +1,81 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+(add-to-list 'custom-theme-load-path "~/code/base16-emacs/build")
+(add-to-list 'load-path "~/code/base16-emacs")
 
 (setq user-full-name "Mirco De Zorzi"
-      user-mail-address "mircodezorzi@protonmail.com")
+      user-mail-address "mircodezorzi@protonmail.com"
 
-(setq doom-font (font-spec :family "Source Code Pro" :size 20))
+      doom-font (font-spec :family "Source Code Pro" :size 15)
+      doom-theme 'base16-default-dark
 
-(setq doom-theme 'base16-default-dark)
+      org-directory "~/org/"
 
-(setq org-directory "~/org/")
+      display-line-numbers-type 'relative)
 
-(setq display-line-numbers-type 'relative)
+(evil-mode t)
 
-(map! :nvm (kbd "C-p") #'counsel-fzf)
-
-(map! :nvm "s" #'evil-ex)
-
-(map!
- :after org
- :map evil-org-mode-map
- :nvm "d" #'evil-backward-char)
-
-(map! :nvm "d" #'evil-backward-char)
-(map! :nvm "n" #'evil-forward-char)
-(map! :nvm "h" #'evil-next-line)
-(map! :nvm "t" #'evil-previous-line)
-
-(map! :nvm "D" #'evil-beginning-of-line)
-(map! :nvm "N" #'evil-end-of-line)
-(map! :nvm "H" #'(lambda () (interactive) (evil-next-line 5)))
-(map! :nvm "T" #'(lambda () (interactive) (evil-previous-line 5)))
-
-(map! :nvm "j" #'evil-delete)
-(map! :nvm "k" #'evil-find-char-to)
-
-(map! :nvm (kbd "C-d") #'evil-window-left)
-(map! :nvm (kbd "C-h") #'evil-window-down)
-(map! :nvm (kbd "C-t") #'evil-window-up)
-(map! :nvm (kbd "C-n") #'evil-window-right)
-
-(after! evil-snipe
-  (evil-snipe-mode -1))
+(global-evil-leader-mode)
+(evil-leader/set-leader ";")
+(evil-leader/set-key
+  "cc" 'evilnc-comment-or-uncomment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs
+  "cr" 'comment-or-uncomment-region)
 
 (setq key-chord-two-keys-delay 0.05)
 (key-chord-define evil-insert-state-map "eu" 'evil-normal-state)
 (key-chord-mode 1)
 
-(add-to-list 'custom-theme-load-path "~/code/base16-emacs/build")
-(add-to-list 'load-path "~/code/base16-emacs")
+(map!
+  :map neotree-mode-map
+  :after neotree
+  :nvm "d" #'evil-backward-char
+  :nvm "j" #'neotree-delete-node)
 
-(evil-mode t)
+(map!
+  :after evil-org
+  :map evil-org-mode-map
+  :nvm "d" #'evil-backward-char
+  :nvm (kbd "M-t") #'org-metaup
+  :nvm (kbd "M-h") #'org-metadown)
 
-(global-evil-leader-mode)
-(require 'evil-leader)
+(map!
+  :nvm (kbd "M-+") #'doom/increase-font-size
+  :nvm (kbd "M--") #'doom/decrease-font-size
 
-(global-evil-leader-mode)
-(evil-leader/set-key
-  "cc" 'evilnc-comment-or-uncomment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs
-  "cr" 'comment-or-uncomment-region
-  )
+  :nvm "s" #'evil-ex
+
+  :nvm "d" #'evil-backward-char
+  :nvm "n" #'evil-forward-char
+  :nvm "h" #'evil-next-line
+  :nvm "t" #'evil-previous-line
+
+  :nvm "D" #'evil-beginning-of-line
+  :nvm "N" #'evil-end-of-line
+  :nvm "H" #'(lambda () (interactive) (evil-next-line     5))
+  :nvm "T" #'(lambda () (interactive) (evil-previous-line 5))
+
+  :nvm "j" #'evil-delete
+  :nvm "k" #'evil-find-char-to
+
+  :nvm (kbd "C-d") #'evil-window-left
+  :nvm (kbd "C-h") #'evil-window-down
+  :nvm (kbd "C-t") #'evil-window-up
+  :nvm (kbd "C-n") #'evil-window-right)
+
+(after! evil-snipe
+  (evil-snipe-mode -1))
 
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.1))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+
+(defun highlight-selected-window ()
+  "Highlight selected window with a different background color."
+  (walk-windows (lambda (w)
+                  (unless (eq w (selected-window))
+                    (with-current-buffer (window-buffer w)
+                      (buffer-face-set '(:background "#282828"))))))
+  (buffer-face-set 'default))
+(add-hook 'buffer-list-update-hook 'highlight-selected-window)
