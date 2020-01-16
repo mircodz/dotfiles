@@ -1,5 +1,10 @@
 call arpeggio#map('i', '', 0, 'eu', '<Esc>')
-call arpeggio#map('t', '', 0, 'eu', '<Esc>')
+call arpeggio#map('t', '', 0, 'eu', '<C-\><C-n>')
 
-unmap d<C-X>
-unmap d<C-A>
+" remap tpope/vim-speeddating conflicting mappings
+nmap <localleader>dn <Plug>SpeedDatingNowUTC
+unmap d<c-x>
+unmap d<c-a>
+
+map <localleader>ds <Plug>Dsurround
+unmap ds
