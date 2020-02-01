@@ -31,7 +31,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=59'
 ZSH_AUTOSUGGEST_USE_ASYNC=true
 ZSH_AUTOSUGGEST_STRATEGY=history
 
-# author: Greg Hurrel
+# Source: Greg Hurrel
 
 autoload -U colors
 colors

@@ -18,7 +18,8 @@ export PAGER="less"
 export LESS="-iMRS -x2"
 
 export HISTCONTROL=ignoredups
-export HISTTIMEFORMAT="%d/%m/%y %T "
+export HISTFILE="$HOME/.zsh_history"
 export HISTFILESIZE=-1
+export HISTIGNORE="cat:ls:bg:fg:history"
 export HISTSIZE=-1
-export HISTIGNORE="ls:bg:fg:history"
+export SAVEHIST=$HISTSIZE

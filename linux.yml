@@ -3,8 +3,6 @@
   become_user: mirco
   become_method: sudo
   roles:
-    - dotfiles
     - dwm
-    - tmux
     - vim
     - zsh

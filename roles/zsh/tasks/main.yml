@@ -3,7 +3,7 @@
     name: zsh
     state: installed
 
-- name: 'symlinking'
+- name: 'symlinking configuration files'
   file:
     src: '{{ ansible_env.PWD }}/roles/zsh/files/{{ item }}'
     path: '~/{{ item }}'

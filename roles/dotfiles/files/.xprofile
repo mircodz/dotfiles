@@ -14,14 +14,8 @@ xset r rate 250 35
 pidof clipmenud && pkill clipmenud
 clipmenud &
 
-pidof dunst && pkill dunst
-dunst -config ~/.dunstrc &
-
 pidof unclutter && pkill unclutter
 unclutter --timeout 2 --fork
 
-pidof urxvtd && pkill urxvtd
-urxvtd --fork
-
-pidof xscreensaver && pkill xscreensaver
-xscreensaver -no-splash &
+pidof emacs && pkill emacs
+emacs --fg-daemon &

@@ -1,14 +1,13 @@
 files:
   - bin
-  - .config/zathura
   - .config/kitty
-  - .Xresources
+  - .config/zathura
+  - .doom.d
   - .dunstrc
   - .xinitrc
   - .xprofile
 
 software:
-  - cmus
   - dunst
   - fzf
   - kitty

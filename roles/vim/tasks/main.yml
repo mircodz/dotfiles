@@ -4,16 +4,16 @@
     state: installed
   loop: '{{ [ "python", "python-pip", "npm" ] }}'
 
-- name: "installing from repository"
+- name: 'compiling from source'
   shell: make chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
 
-- name: 'compiling'
+- name: 'installing from source'
   shell: sudo make install chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
 
-- name: 'installing plugins'
+- name: 'installing required python modules'
   shell: python3 -m pip install --user neovim
 
-- name: 'symlinking'
+- name: 'symlinking configuration files'
   file:
     src: '{{ ansible_env.PWD }}/roles/vim/files/{{ item }}'
     path: '~/{{ item }}'

@@ -2,7 +2,7 @@ set autoindent                        " maintain indent of current line
 set backspace=indent,start,eol        " allow unrestricted backspacing in insert mode
 
 if exists('+colorcolumn')
-  let &l:colorcolumn='+' . join(range(0, 254), ',+')
+	let &l:colorcolumn='+' . join(range(0, 254), ',+')
 endif
 
 set cursorline                        " highlight current line
@@ -12,8 +12,10 @@ if has('termguicolors')
 endif
 
 if has('syntax')
-  set synmaxcol=200                   " don't bother syntax highlighting long lines
+	set synmaxcol=200                   " don't bother syntax highlighting long lines
 endif
+
+set splitright splitbelow             " more intuitive splits
 
 let &showbreak='↳ '
 set listchars=tab:\⎸\ ,trail:·,nbsp:~
@@ -22,7 +24,7 @@ set list
 set foldtext=mirco#fold#text()
 
 if !isdirectory($HOME."/.undo")
-		call mkdir($HOME."/.undo", "", 0700)
+	call mkdir($HOME."/.undo", "", 0700)
 endif
 set undodir=$HOME/.undo
 set undofile
@@ -43,24 +45,21 @@ set foldenable
 set foldmethod=manual
 set foldlevel=999
 
-
-
-
-
-
-
-
-set signcolumn=yes
+" these options still have to be sorted
 autocmd Filetype c,cpp set comments^=:///
 filetype indent plugin on
-set formatoptions-=c formatoptions-=r formatoptions-=o
+set formatoptions-=c
+set formatoptions-=r
+set formatoptions-=o
+set hidden
 set ignorecase incsearch
 set mouse=a
-set ruler hidden nowrap
-set shortmess+=I
+set noautochdir
+set nowrap
+set ruler
 set shortmess+=A
+set shortmess+=I
 set shortmess+=W
-set splitright splitbelow
+set signcolumn=yes
 set wildmode=longest,full
 syntax on
-set noautochdir
