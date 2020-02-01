@@ -9,19 +9,10 @@ function build_ignores {
 }
 export FZF_DEFAULT_COMMAND="fd $(build_ignores) -H --type f"
 
-export DOTTREE="$HOME"
-export DOTDIR="$DOTTREE/.dotfiles"
-
-export RECDIR="$HOME/recs"
-export SHOTDIR="$HOME/shots"
-export WALLDIR="$HOME/walls"
-
-export XDG_CONFIG_HOME=$HOME/.config
-
 export BROWSER="chromium"
-export EDITOR="nvim"
+export EDITOR="emacsclient -c"
 export READER="zathura"
-export TERMINAL="urxvtc"
+export TERMINAL="kitty"
 
 export PAGER="less"
 export LESS="-iMRS -x2"
