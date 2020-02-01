@@ -42,21 +42,3 @@ set statusline+=\ ℓ:%l/%L\ c:%c\  " Line and column
 
 hi StatusLine   ctermbg=8  ctermfg=7
 hi StatusLineNC ctermbg=18 ctermfg=7
-
-"function! StatusColor()
-  "if mode() == 'n'
-    "hi User1 ctermbg=4 ctermfg=8
-    "hi User2 ctermbg=8 ctermfg=4
-  "elseif mode() == 'i'
-    "hi User1 ctermbg=10 ctermfg=8
-    "hi User2 ctermbg=8  ctermfg=10
-  "elseif mode() == 'R'
-    "hi User1 ctermbg=1 ctermfg=8
-    "hi User2 ctermbg=8 ctermfg=1
-  "elseif mode() == 'v' || mode() == 'V' || mode() == '^V'
-    "hi User1 ctermbg=3 ctermfg=8
-    "hi User2 ctermbg=8 ctermfg=3
-  "endif
-  "redrawstatus!
-  "return ''
-"endfunction
