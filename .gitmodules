@@ -154,3 +154,6 @@
 [submodule "roles/vim/files/.config/nvim/pack/bundle/opt/vim-orgmode"]
 	path = roles/vim/files/.config/nvim/pack/bundle/opt/vim-orgmode
 	url = https://github.com/jceb/vim-orgmode
+[submodule "roles/ergodox/files/qmk_firmware"]
+	path = roles/ergodox/files/qmk_firmware
+	url = https://github.com/mircodezorzi/qmk_firmware
