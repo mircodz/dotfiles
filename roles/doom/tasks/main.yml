@@ -1,0 +1,23 @@
+- name: 'installing emacs'
+  pacman:
+    name: emacs
+    state: latest
+
+- name: 'downloading doom'
+  git:
+    repo: https://github.com/hlissner/doom-emacs
+    dest: ~/.emacs.d
+    clone: yes
+
+- name: 'copying files'
+  file:
+    src: '{{ ansible_env.PWD }}/roles/doom/files/.doom.d'
+    path: ~/.doom.d
+    state: link
+    force: yes
+
+- name: 'installing doom'
+  shell: ~/.emacs.d/bin/doom install -y
+
+- name: 'installing doom extensions'
+  shell: ~/.emacs.d/bin/doom install -y

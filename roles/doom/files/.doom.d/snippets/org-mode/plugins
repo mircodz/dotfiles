@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: plugins
+# key: plugins
+# --
+#+REVEAL_PLUGINS: (highlight)

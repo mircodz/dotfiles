@@ -1,0 +1,6 @@
+(package! key-chord)
+(package! evil-nerd-commenter)
+(package! evil-leader)
+(package! emojify)
+(package! ccls)
+(package! org-roam)

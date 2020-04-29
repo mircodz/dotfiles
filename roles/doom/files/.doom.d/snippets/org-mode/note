@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: header
+# key: header
+# --
+#+BEGIN_NOTES
+$0
+#+END_NOTES
