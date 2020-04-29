@@ -17,15 +17,8 @@ export HISTSIZE=100000
 export HISTFILE="$HOME/.zsh_history"
 export SAVEHIST=$HISTSIZE
 
-autoload history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end  history-search-end
-bindkey "^r" history-incremental-pattern-search-backward
-bindkey "^s" history-incremental-pattern-search-forward
-bindkey "\e[A" history-beginning-search-backward-end
-bindkey "\e[B" history-beginning-search-forward-end
-
 # fish like autocompletion
+autoload history-search-end
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=59'
 ZSH_AUTOSUGGEST_USE_ASYNC=true
@@ -140,3 +133,4 @@ function report-start-time() {
 
 add-zsh-hook preexec record-start-time
 add-zsh-hook precmd  report-start-time
+add-zsh-hook precmd  vcs_info
