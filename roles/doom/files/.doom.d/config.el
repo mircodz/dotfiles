@@ -2,17 +2,23 @@
   user-full-name "Mirco De Zorzi"
   user-mail-address "mircodezorzi@protonmail.com"
 
-  doom-font (font-spec :family "Source Code Pro" :size 17)
+  scroll-conservatively 101
+  gc-cons-threshold 100000000
+
+  doom-font (font-spec :family "Source Code Pro Light" :size 17)
   doom-theme 'doom-tomorrow-night
 
   evil-split-window-below  t
   evil-vsplit-window-right t
 
+  ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))
+  ivy-posframe-border-width 2
+
   yas-snippet-dirs '("~/.doom/snippets")
 
   org-directory "~/org/"
 
-  +pretty-code-symbols '(:name         "»"
+  +pretty-code-symbols '(:name          "»"
                          :src_block     "»"
                          :src_block_end "«"
                          :lambda        "λ"
@@ -25,8 +31,6 @@
   emojify-emoji-set "twemoji-v2")
 
 (evil-mode t)
-
-;; (add-hook 'after-init-hook #'global-emojify-mode)
 
 (global-evil-leader-mode)
 (evil-leader/set-leader ";")
@@ -46,36 +50,31 @@
  (setq company-idle-delay            0.5
        company-minimum-prefix-length 3))
 
-;; (map!
-;;   :after treemacs
-;;   :map treemacs-mode-map
-;;   :nvm (kbd "h") #'treemacs-next-line
-;;   :nvm (kbd "t") #'treemacs-previous-line)
+(map!
+  :after companny
+  :map company-mode-map
+  :nvm (kbd "C-SPC") #'company-complete-selection)
+
+(map!
+  :after treemacs
+  :map treemacs-mode-map
+  :nvm (kbd "h") #'treemacs-next-line
+  :nvm (kbd "t") #'treemacs-previous-line)
 
 (map!
   :after notmuch
   :map notmuch-search-mode-map
-  :nvm "d" #'evil-backward-char
-  :nvm "t" #'evil-previous-line
+  :nvm "d"   #'evil-backward-char
+  :nvm "t"   #'evil-previous-line
   :nvm "C-t" #'evil-window-up)
 
 (map!
  :after evil-org
  :map evil-org-mode-map
  :nvm "d" #'evil-backward-char
- :nvm (kbd "M-t") #'org-metaup
- :nvm (kbd "M-h") #'org-metadown
+ :nvm (kbd "M-t")  #'org-metaup
+ :nvm (kbd "M-h")  #'org-metadown
  :nvm (kbd "<f2>") #'org-latex-export-to-pdf)
-
-;; (map!
-;;  :after pass
-;;  :map pass-mode-map
-;;  "h" #'pass-next-entry
-;;  "t" #'pass-prev-entry
-;;  "C-d" #'evil-window-left
-;;  "C-h" #'evil-window-down
-;;  "C-t" #'evil-window-up
-;;  "C-n" #'evil-window-right)
 
 (map!
  :nvm "M-+" #'doom/increase-font-size
@@ -102,10 +101,3 @@
  :nvm "C-n" #'evil-window-right
 
  :nvm "C-k" #'evil-insert-digraph)
-
-(custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.1))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
