@@ -4,6 +4,7 @@ source ~/.zsh/aliases
 source ~/.zsh/exports
 source ~/.zsh/mappings
 source ~/.zsh/functions
+source ~/.zsh/fzf
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
