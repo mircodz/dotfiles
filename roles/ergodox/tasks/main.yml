@@ -1,0 +1,14 @@
+- name: installing dependencies
+  pacman:
+    name: '{{ item }}'
+  loop: '{{ [ packages ] }}'
+
+- name: installling submodules
+  make:
+    target: git-submodule
+    chdir: '{{ ansible_env.PWD }}/roles/ergodox/files/qmk_firmware'
+
+- name: compiling firmware
+  make:
+    target: 'ergodox_ez:dvorak:teensy'
+    chdir: '{{ ansible_env.PWD }}/roles/ergodox/files/qmk_firmware'
