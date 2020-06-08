@@ -1,0 +1,12 @@
+name: loki-cpp
+root: ~/code/loki-cpp
+
+windows:
+  - editor:
+      panes:
+        - nvim .
+
+  - build:
+      root: ~/code/loki-cpp/build
+      panes:
+        -

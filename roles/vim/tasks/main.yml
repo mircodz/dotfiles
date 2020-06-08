@@ -1,19 +1,17 @@
-- name: 'installing dependencies'
+- name: installing dependencies
   pacman:
     name: '{{ item }}'
-    state: installed
   loop: '{{ [ "python", "python-pip", "npm" ] }}'
 
-- name: 'compiling from source'
-  shell: make chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
+- name: installing from source
+  make:
+    target: install
+    chdir: '{{ ansible_env.PWD }}/roles/vim/files/neovim'
 
-- name: 'installing from source'
-  shell: sudo make install chdir={{ ansible_env.PWD }}/roles/vim/files/neovim
-
-- name: 'installing required python modules'
+- name: installing required python modules
   shell: python3 -m pip install --user neovim
 
-- name: 'symlinking configuration files'
+- name: symlinking configuration files
   file:
     src: '{{ ansible_env.PWD }}/roles/vim/files/{{ item }}'
     path: '~/{{ item }}'

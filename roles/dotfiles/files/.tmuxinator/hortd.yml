@@ -1,0 +1,12 @@
+name: hort/d
+root: ~/code/hort/daemon
+
+windows:
+  - editor:
+      panes:
+        - nvim .
+
+  - build:
+      root: ~/code/hort/daemon/build
+      panes:
+        - make

@@ -1,0 +1,9 @@
+name: dotfiles
+root: ~/code/dotfiles
+
+windows:
+  - git:
+      layout: main-vertical
+      panes:
+        - nvim
+        - git log

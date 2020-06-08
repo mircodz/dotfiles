@@ -1,0 +1,30 @@
+name: hort/f
+root: ~/code/hort/frontend
+
+windows:
+  - editor:
+      panes:
+        - nvim .
+
+  - server:
+      panes:
+        - npm start
+
+  - git:
+      panes:
+        -
+
+  - rest-editor:
+      root: ~/code/hort/rest
+      panes:
+        - nvim .
+
+  - rest-server:
+      root: ~/code/hort/rest
+      panes:
+        - nodemon
+
+  - rest-git:
+      root: ~/code/hort/rest
+      panes:
+        -

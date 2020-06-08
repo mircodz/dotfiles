@@ -1,0 +1,79 @@
+#!/usr/bin/env sh
+DIR="$HOME/qemu"
+ISO="$HOME/docs/isos"
+LOCK="/tmp/mountlock"
+[ ! -d $DIR ] && mkdir $DIR
+[ ! -d $ISO ] && mkdir $ISO
+
+choices="new"
+[ ! -z "$(find $DIR -type f)" ]  && choices="load\nboot\ndry run\nnew\nsnapshot\nconvert"
+
+choice=$(echo -e "$choices" | dmenu)
+
+case $choice in
+  "new")
+    name=$(echo -e "" | dmenu -p "name")
+    if [ -z $(echo "$name" | grep -E "\.(raw|iso|qed|qcow2?)$") ]; then
+      ext=$(echo -e "raw\niso\nqed\nqcow2" | dmenu -l 5) || exit
+      name=$name.$ext
+    fi
+    ext=$(echo "$name" | sed 's,.*\.,,')
+    size=$(echo -e "" | dmenu -p "size")
+    [ -z $(echo "$size" | grep "^[0-9]*[G|M|K]$") ] && exit
+    qemu-img create -f $ext "$DIR/$name" "$size"
+    $0
+    ;;
+  "load")
+    iso=$(find "$ISO" -type f | dmenu -l 5) || exit
+    drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    qemu-system-x86_64 -m 4096 -boot d -enable-kvm -vga std -smp 3 -net nic -net user -hda "$drive" -cdrom "$iso"
+    ;;
+  "boot")
+    drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    qemu-system-x86_64 -m 4096 \
+      -enable-kvm -machine type=pc,accel=kvm -vga virtio -display gtk,gl=on -smp 3 \
+      -boot d -hda "$drive" \
+      -net nic -net user \
+    ;;
+  "dry run")
+    drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    qemu_run_dry_run $drive
+    qemu-system-x86_64 -m 4096 -boot d -enable-kvm -vga std -smp 3 -net nic -net user -snapshot -hda "$drive"
+    ;;
+  "snapshot")
+    drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    filename="$DIR/snapshot_$(date "+%s")_$(echo "$drive" | sed 's,.*\/,,')"
+    cp "$drive" "$filename"
+    ;;
+  "convert")
+    drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    filename=$(echo "$drive" | sed 's,.*\/,,')
+    ext=$(echo "$drive" | sed 's,.*\.,,')
+    newfile=$(echo "" | dmenu) || exit
+    if [ -z $(echo "$newfile" | grep -E "(vdi|vmdk|vpc|vhdx|raw|iso|qed|qcow2?)$") ]; then
+      ext=$(echo -e "vdi\nvmdk\nvpc\nvhdx\nraw\niso\nqed\nqcow2" | dmenu -l 5) || exit
+      newfile+=$ext
+      newext=$ext
+    else
+      newext=$(echo "$newfile" | sed 's,.*\.,,')
+    fi
+    qemu-img convert -f "$ext" -O "$newext" "$DIR/$filename" "$DIR/$newfile"
+    ;;
+  "mount")
+    # TODO better lock files
+    #[ -f "$lockfile" ] && exit
+    #touch "$lockfile"
+    #sudo modprobe nbd
+    #drive=$(find "$DIR" -type f | dmenu -l 5) || exit
+    #qemu-nbd -c /dev/nbd0 "$drive"
+    ## TODO partix output formattig, dmenu selection for partition etc...
+    #sudo partix -l /dev/nbd0
+    #sudo mount /dev/nbd0$part /mnt
+    ;;
+  "umount")
+    [ ! -f "$lockfile" ] && exit
+    # TODO unmounting
+    rm "$lockfile"
+    ;;
+esac
+

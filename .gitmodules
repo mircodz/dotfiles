@@ -157,3 +157,9 @@
 [submodule "roles/ergodox/files/qmk_firmware"]
 	path = roles/ergodox/files/qmk_firmware
 	url = https://github.com/mircodezorzi/qmk_firmware
+[submodule "roles/dwm/files/dmenu"]
+	path = roles/dwm/files/dmenu
+	url = https://github.com/mircodezorzi/dmenu
+[submodule "library/ansible-yay"]
+	path = library/ansible-yay
+	url = https://github.com/mnussbaum/ansible-yay

@@ -1,14 +1,13 @@
-- name: 'installing'
-  pacman:
+- name: installing packages
+  yay:
     name: '{{ item }}'
-    state: installed
+    state: latest
   loop: '{{ software }}'
 
-- name: 'symlinking'
+- name: symlinking configuration files
   file:
     src: '{{ ansible_env.PWD }}/roles/dotfiles/files/{{ item }}'
     path: '~/{{ item }}'
     state: link
     force: yes
   loop: '{{ files }}'
-

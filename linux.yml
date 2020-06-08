@@ -1,8 +1,0 @@
-- hosts: localhost
-  become: true
-  become_user: mirco
-  become_method: sudo
-  roles:
-    - dwm
-    - vim
-    - zsh

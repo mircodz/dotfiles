@@ -1,11 +1,14 @@
-- name: 'installing dependencies'
+- name: installing dependencies
   pacman:
     name: '{{ item }}'
-    state: installed
-  loop: '{{ [ "libx11", "libxinerama", "libxft", "freetype2", "dmenu" ] }}'
+  loop: '{{ [ "libx11", "libxinerama", "libxft", "freetype2" ] }}'
 
-- name: 'compiling from source'
-  shell: make chdir={{ ansible_env.PWD }}/roles/dwm/files/dwm
+- name: installing dwm from source
+  make:
+    target: install
+    chdir: '{{ ansible_env.PWD }}/roles/dwm/files/dwm'
 
-- name: 'installing from source'
-  shell: sudo make install chdir={{ ansible_env.PWD }}/roles/dwm/files/dwm
+- name: installing dmenu from source
+  make:
+    target: install
+    chdir: '{{ ansible_env.PWD }}/roles/dwm/files/dmenu'

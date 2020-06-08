@@ -2,8 +2,7 @@ files:
   - bin
   - .config/kitty
   - .config/zathura
-  - .doom.d
-  - .dunstrc
+  - .config/dunst
   - .xinitrc
   - .xprofile
 
@@ -16,3 +15,7 @@ software:
   - ranger
   - weechat
   - zathura
+  - dropbox
+
+  - tff-twemoji
+  - otf-hasklig

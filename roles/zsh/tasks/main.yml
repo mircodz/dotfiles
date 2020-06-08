@@ -8,4 +8,4 @@
     path: '~/{{ item }}'
     state: link
     force: yes
-  loop: '{{ files }}'
+  loop: '{{ [ ".zsh", ".zshrc", ".zprofile" ] }}'
