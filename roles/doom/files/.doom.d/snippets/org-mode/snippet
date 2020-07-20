@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: Code snippets with line numbers
-# key: snip
+# key: snippet
 # --
 #+ATTR_REVEAL: :code_attribs data-line-numbers='${2: lines}'
 #+BEGIN_SRC ${1: lang}

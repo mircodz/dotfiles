@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: namespace
-# key: names
+# key: ns
 # --
 namespace $1 {
 
