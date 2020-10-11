@@ -1,0 +1,14 @@
+dependencies:
+  - gperf
+  - luajit
+  - msgpack-c
+  - libtermkey
+  - unibilium
+  - libutf8proc
+  - libuv
+  - libvterm
+  - luajit
+  - luarocks
+  - npm
+  - python
+  - python-pip

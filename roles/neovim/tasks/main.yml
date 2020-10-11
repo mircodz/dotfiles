@@ -1,19 +1,21 @@
 - name: installing dependencies
   pacman:
-    name: '{{ item }}'
-  loop: '{{ [ "python", "python-pip", "npm" ] }}'
+    name: '{{ dependencies }}'
+    state: latest
 
 - name: installing from source
   make:
     target: install
-    chdir: '{{ ansible_env.PWD }}/roles/vim/files/neovim'
+    chdir: '{{ role_path}}/files/neovim'
+    params:
+      CMAKE_BUILD_TYPE: RelWithDebInfo
 
 - name: installing required python modules
   shell: python3 -m pip install --user neovim
 
 - name: symlinking configuration files
   file:
-    src: '{{ ansible_env.PWD }}/roles/vim/files/{{ item }}'
+    src: '{{ role_path }}/files/{{ item }}'
     path: '~/{{ item }}'
     state: link
     force: yes
