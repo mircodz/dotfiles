@@ -9,6 +9,7 @@
     chdir: '{{ role_path}}/files/neovim'
     params:
       CMAKE_BUILD_TYPE: RelWithDebInfo
+  become: yes
 
 - name: installing required python modules
   shell: python3 -m pip install --user neovim
@@ -20,3 +21,12 @@
     state: link
     force: yes
   loop: '{{ [ ".config/nvim" ] }}'
+
+- name: installing coc bundle
+  command:
+    cmd: yarn install --frozen-lockfile
+    chdir: '{{ role_path }}/files/.config/nvim/pack/bundle/opt/coc.nvim/'
+
+- name: install extensions
+  command:
+    cmd: nvim +CocUpdateSync -cqa

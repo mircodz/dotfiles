@@ -118,3 +118,12 @@
 [submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/tmux-complete.vim"]
 	path = roles/neovim/files/.config/nvim/pack/bundle/opt/tmux-complete.vim
 	url = https://github.com/wellle/tmux-complete.vim
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/ctrlp.vim"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/command-t"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/command-t
+	url = https://github.com/wincent/command-t
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/--force"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/--force
+	url = https://github.com/gabrielelana/vim-markdown
