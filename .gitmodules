@@ -127,3 +127,6 @@
 [submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/--force"]
 	path = roles/neovim/files/.config/nvim/pack/bundle/opt/--force
 	url = https://github.com/gabrielelana/vim-markdown
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/nvim-lspconfig"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig
