@@ -28,15 +28,7 @@ function get_velocity {
 }
 
 function print_volume {
-  volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
-  if [ "$volume" -gt 0 ]; then
-    [ "$volume" -le  33 ] && icon=""
-    [ "$volume" -le  66 ] && icon=""
-    [ "$volume" -le 100 ] && icon=""
-    echo -e "$icon ${volume}%"
-  else
-    echo -e ""
-  fi
+  amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/'
 }
 
 function print_wifi {
@@ -54,18 +46,12 @@ function print_wifi {
 }
 
 function print_mem {
-  memfree=$(($(grep -m1 'MemAvailable:' /proc/meminfo | awk '{print $2}') / 1024))
-  echo -e " $memfree"
+  echo $(($(grep -m1 'MemAvailable:' /proc/meminfo | awk '{print $2}') / 1024))
 }
 
 function print_temp {
   test -f /sys/class/thermal/thermal_zone0/temp || return 0
-  temp=$(head -c 2 /sys/class/thermal/thermal_zone0/temp)
-  [ $temp -le 30 ] && icon=""
-  [ $temp -le 40 ] && icon=""
-  [ $temp -le 50 ] && icon=""
-  [ $temp -le 70 ] && icon=""
-  echo -e "$icon $temp°C"
+  head -c 2 /sys/class/thermal/thermal_zone0/temp
 }
 
 function print_date {
@@ -73,25 +59,11 @@ function print_date {
 }
 
 function print_battery {
-  charge=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/percentage/ { print substr($2, 0, length($2) - 1) }')
-  [ "$charge" -le  10 ] && icon=""
-  [ "$charge" -le  20 ] && icon=""
-  [ "$charge" -le  30 ] && icon=""
-  [ "$charge" -le  40 ] && icon=""
-  [ "$charge" -le  50 ] && icon=""
-  [ "$charge" -le  60 ] && icon=""
-  [ "$charge" -le  70 ] && icon=""
-  [ "$charge" -le  80 ] && icon=""
-  [ "$charge" -le  90 ] && icon=""
-  [ "$charge" -lt 100 ] && icon=""
-  [ "$charge" -eq 100 ] && icon=""
-  [ "$(acpi | grep Not)" ] || icon=" "$icon
-  echo -e "$icon $charge%"
+  upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/percentage/ { print substr($2, 0, length($2) - 1) }'
 }
 
 function print_mail() {
-  new=$(find mail/gmail/inbox/new | wc -l)
-  echo -e " $new"
+  find mail/personal/inbox/new -type f | wc -l
 }
 
 get_bytes
@@ -105,8 +77,8 @@ while true; do
   get_bytes
 
   # Calculates speeds
-  vel_recv=" $(get_velocity $received_bytes $old_received_bytes $now)"
-  vel_trans=" $(get_velocity $transmitted_bytes $old_transmitted_bytes $now)"
+  vel_recv="$(get_velocity $received_bytes $old_received_bytes $now)"
+  vel_trans="$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)"
 
   xsetroot -name "$(print_mail) $(print_mem) $vel_recv $vel_trans $(print_temp) $(print_wifi) $(print_volume) $(print_battery) $(print_date)"
 
