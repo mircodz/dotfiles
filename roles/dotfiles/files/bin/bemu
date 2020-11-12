@@ -1,0 +1,69 @@
+#!/usr/bin/env sh
+IMG="$HOME/vm/img"
+ISO="$HOME/vm/iso"
+SHR="$HOME/vm/shared"
+
+[ ! -d "$IMG" ] && mkdir "$IMG"
+[ ! -d "$ISO" ] && mkdir "$ISO"
+
+choices="load\nboot\nnew\nmountiso\nunmountiso"
+
+new() {
+  name=$(echo "" | dmenu -p "name")
+  if [ -z $(echo "$name" | grep -E "\.(raw|iso|qed|qcow2?)$") ]; then
+    ext=$(echo -e "raw\niso\nqed\nqcow2" | dmenu -l 5) || exit
+    name="$name.$ext"
+  fi
+  ext=$(echo "$name" | sed 's,.*\.,,')
+  size=$(echo "" | dmenu -p "size")
+  [ -z $(echo "$size" | grep "^[0-9]*[G|M|K]$") ] && exit
+  qemu-img create -f "$ext" "$IMG/$name" "$size"
+}
+
+load() {
+  iso=$(find "$ISO" -type f | dmenu -l 5) || exit
+  img=$(find "$IMG" -type f | dmenu -l 5) || exit
+  qemu-system-x86_64 -m 4096 \
+    -enable-kvm -vga std -smp 3 \
+    -net nic -net user,smb="$SHR" \
+    -net nic,model=virtio \
+    -boot d -hda "$img" \
+    -cdrom "$iso"
+}
+
+boot() {
+  img=$(find "$IMG" -type f | dmenu -l 5) || exit
+  qemu-system-x86_64 -m 4096 \
+    -enable-kvm -vga std -smp 3 \
+    -net nic -net user,smb="$SHR" \
+    -net nic,model=virtio \
+    -boot d -hda "$img"
+}
+
+mountiso() {
+  sudo modprobe nbd
+  img=$(find "$IMG" -type f | dmenu -l 5) || exit
+  connected=$(lsblk -l | awk '/nbd.*disk/ {print $1}')
+  if [ "$connected" ]; then
+    dev=$(find /dev | grep -E "nbd[0-9]{1,2}$" | grep -v "$connected" | dmenu -l 5) || exit
+  else 
+    dev=$(find /dev | grep -E "nbd[0-9]{1,2}$" | dmenu -l 5) || exit
+  fi
+  sudo qemu-nbd -c "$dev" "$img"
+  parts=$(lsblk -l | grep $(basename "$dev" -a) | awk '/nbd.*part/ {print $1}')
+  for part in $parts; do
+    sudo mkdir "/mnt/$part"
+    sudo mount "/dev/$part" "/mnt/$part"
+  done
+}
+
+unmountiso() {
+  dev=$(lsblk -l | awk '/nbd.*disk/ {printf "/dev/%s", $1}' | dmenu -l 5) || exit
+  parts=$(lsblk -l | grep $(basename "$dev" -a) | awk '/nbd.*part/ {print $1}')
+  for part in $parts; do
+    sudo umount "/mnt/$part"
+  done
+  sudo qemu-nbd -d "$dev"
+}
+
+$(echo -e "$choices" | dmenu)
