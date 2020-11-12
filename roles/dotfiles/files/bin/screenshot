@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DIR="$HOME/shots"
+DIR="$HOME/screenshots"
 [ ! -d $DIR ] && mkdir $DIR
 
 filename="$DIR/$(date '+%y%m%d-%H%M-%S').png"
