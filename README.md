@@ -8,22 +8,22 @@
 
 <details>
 <summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/neovim/files/.config/nvim">Neovim configuration</a></summary>
-<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/201102-1316-22.png"/>
+<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1316-22.png"/>
 </details>
 
 <details>
 <summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom/files/.doom.d)">Doom Emacs configuration</a></summary>
-<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/201102-1315-24.png"/>
+<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1315-24.png"/>
 </details>
 
 <details>
 <summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs/files/.emacs.d)">Vanilla Emacs configuration</a></summary>
-<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/201102-1200-31.png"/>
+<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1200-31.png"/>
 </details>
 
 <details>
 <summary>code: Visual Studio Code configuration</summary>
-<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/201102-1319-54.png"/>
+<img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1319-54.png"/>
 </details>
 
 ## Keyboard
