@@ -10,7 +10,7 @@ function build_ignores {
 export FZF_DEFAULT_COMMAND="fd $(build_ignores) -H --type f"
 
 export BROWSER="chromium"
-export EDITOR="emacsclient -c"
+export EDITOR="nvim"
 export READER="zathura"
 export TERMINAL="kitty"
 
@@ -19,7 +19,7 @@ export LESS="-iMRS -x2"
 
 export HISTCONTROL=ignoredups
 export HISTFILE="$HOME/.zsh_history"
-export HISTFILESIZE=-1
+export HISTFILESIZE=100000
 export HISTIGNORE="cat:ls:bg:fg:history"
-export HISTSIZE=-1
+export HISTSIZE=100000
 export SAVEHIST=$HISTSIZE

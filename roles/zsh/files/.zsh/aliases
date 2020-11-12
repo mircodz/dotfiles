@@ -1,3 +1,7 @@
+alias ch="cd $HOME"
+alias cc="cd $HOME/code"
+alias cdot="cd $HOME/code/dotfiles"
+
 alias pip="python3 -m pip install --user --upgrade"
 
 alias l="ls -la"
@@ -6,10 +10,8 @@ alias ls="ls --color=auto"
 alias lsa="ls -la"
 alias ldot="ls -ld .*"
 
+alias dl="youtube-dl"
+
 alias grep="grep --color=auto"
 
 alias zathura="zathura --fork"
-alias top="glances"
-
-alias e="emacsclient -c"
-alias emacs="emacsclient -c"
