@@ -25,7 +25,6 @@ function! s:leave()
 	set showcmd
 	set showmode
 	Limelight!
-	source ~/.config/nvim/plugin/highlight.vim
 	source ~/.config/nvim/plugin/statusline.vim
 endfunction
 

@@ -1,28 +1,51 @@
 " Author: Mirco De Zorzi
 
-if !exists('g:vscode') " disable plugins for daemon mode
+let use_coc = 1                         " either use integrated lsp or coc.nvim
+
+if !exists('g:vscode')                  " disable plugins for daemon mode
 	if has('packages')
-		packadd! UltiSnips
-		packadd! ack.vim
-		packadd! base16-vim
-		packadd! coc.nvim
-		packadd! fzf.vim
-		packadd! goyo.vim
-		packadd! grayout.vim
-		packadd! limelight.vim
-		packadd! nerdcommenter
-		packadd! undotree
-		packadd! vim-arpeggio
-		packadd! vim-devicons
-		packadd! vim-eunuch
-		packadd! vim-fugitive
-		packadd! vim-gitgutter
-		packadd! vim-lion
+		" Languages
+		if use_coc
+			packadd! coc.nvim                 " language server support
+		endif
+		packadd! grayout.vim                " clang grayout for inactive macros
 		packadd! vim-markdown
-		packadd! vim-projectionist
+		packadd! markdown-preview.nvim
+
+		" Snippets
+		packadd! UltiSnips
 		packadd! vim-snippets
+
+		" File Management
+		packadd! ack.vim
+		if executable('fzf')
+			packadd! fzf.vim
+		else
+			packadd! ctrlp.vim
+		endif
+		packadd! vim-arpeggio               " key chores
+		packadd! vim-eunuch
+
+		" Project Management
+		packadd! vim-projectionist          " switch between file alternatives
 		packadd! vim-surround
 		packadd! vim-textobj-comment
 		packadd! vim-textobj-user
+
+		" Editing
+		packadd! nerdcommenter
+		packadd! undotree
+		packadd! vim-lion
+
+		" Version Control
+		packadd! vim-fugitive
+		packadd! vim-gitgutter
+
+		" Theme
+		packadd! base16-vim
+
+		" Zen Mode
+		packadd! goyo.vim
+		packadd! limelight.vim
 	endif
 endif

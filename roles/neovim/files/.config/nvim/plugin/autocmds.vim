@@ -1,8 +1,5 @@
 function! s:autocommands() abort
 
-	" removes trailing spaces when saving
-	autocmd BufWritePre * call mirco#autocmds#zap()
-
 	" remember folds between vim sessions
 	augroup Folds
 		autocmd!
@@ -19,7 +16,7 @@ function! s:autocommands() abort
 	" indent settings based on filetype
 	augroup Indent
 		autocmd!
-		au FileType haskell,html,css,sh,zsh,tex,yaml,json,markdown,cmake
+		au FileType haskell,html,css,sh,zsh,tex,yaml,json,markdown,cmake,cpp,c,python
 			\ setlocal tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 	augroup END
 
@@ -27,38 +24,45 @@ function! s:autocommands() abort
 
 	augroup BetterFocus
 		autocmd!
-		au VimEnter,WinEnter,BufEnter,BufNewFile,BufWinEnter,FocusGained *
-			\ if g:goyoed == 0 |
-			\   let &l:colorcolumn=join(range(80, 254), ',') |
+		au VimEnter,WinEnter,BufEnter,BufNewFile,BufWinEnter,FocusGained * 
+			\ if &ft != "markdown" |
+			\ 	setlocal cursorline |
 			\ endif
-		au WinLeave,FocusLost *
-			\ if g:goyoed == 0 |
-			\   let &l:colorcolumn=join(range(1, 254), ',') |
-			\ endif
-		au InsertLeave,VimEnter,WinEnter *
-			\ if g:goyoed == 0 |
-			\   setlocal cursorline |
-			\ endif
-		au InsertEnter,VimLeave,WinLeave *
-			\ if g:goyoed == 0 |
-			\   setlocal nocursorline |
+		au WinLeave,FocusLost * 
+			\ if &ft != "markdown" |
+			\ 	setlocal cursorline! |
 			\ endif
 	augroup end
 
-	function! s:mycolors() abort
+	" set correct colors
+	function! s:colors() abort
+		hi link EndOfBuffer ColorColumn
+		hi Folded guibg=#282828
+		hi Search gui=underline guibg=none guifg=#ab4642
+		hi Substitute guibg=none guifg=#a1b56c
+
 		hi Comment gui=italic
 		hi NonText gui=none
-		hi link EndOfBuffer ColorColumn
 
-		hi User1 guibg=#ab4642 guifg=#383838
-		hi User2 guibg=#383838 guifg=#ab4642
-		hi User3 guibg=#383838 guifg=#ffffff
-		hi User4 guibg=#ffffff guifg=#181818
+		hi TabLineFill guibg=#282828
+		hi TabLine     guibg=#282828
+		hi TabLineSel  guibg=#181818 guifg=#787878
 	endfunction
 
 	augroup Colors
-    autocmd!
-    autocmd ColorScheme * call s:mycolors()
+		autocmd!
+		autocmd ColorScheme * call s:colors()
+	augroup end
+
+	" remove number line in terminal mode
+	function! s:term() abort
+		setlocal number!
+		setlocal relativenumber!
+	endfunction
+
+	augroup Terminal
+		autocmd!
+		autocmd TermOpen * call s:term()
 	augroup end
 
 endfunction

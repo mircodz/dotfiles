@@ -1,8 +1,14 @@
+colorscheme base16-default-dark       " set default colorscheme
+
 set autoindent                        " maintain indent of current line
 set backspace=indent,start,eol        " allow unrestricted backspacing in insert mode
 
-if exists('+colorcolumn')
-	let &l:colorcolumn='+' . join(range(0, 254), ',+')
+"if exists('+colorcolumn')
+"	let &l:colorcolumn='+' . join(range(80, 254), ',+')
+"endif
+
+if has('folding')
+	set foldenable                      " enable folding
 endif
 
 set cursorline                        " highlight current line
@@ -18,7 +24,7 @@ endif
 set splitright splitbelow             " more intuitive splits
 
 let &showbreak='↳ '
-set listchars=tab:\⎸\ ,trail:·,nbsp:~
+set listchars=tab:\┊\ ,trail:·,nbsp:~
 set list
 
 set foldtext=mirco#fold#text()
@@ -63,3 +69,6 @@ set shortmess+=W
 set signcolumn=yes
 set wildmode=longest,full
 syntax on
+
+" live preview in substitution comands
+set inccommand=nosplit
