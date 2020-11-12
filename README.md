@@ -12,17 +12,17 @@
 </details>
 
 <details>
-<summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom/files/.doom.d)">Doom Emacs configuration</a></summary>
+<summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom/files/.doom.d">Doom Emacs configuration</a></summary>
 <img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1315-24.png"/>
 </details>
 
 <details>
-<summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs/files/.emacs.d)">Vanilla Emacs configuration</a></summary>
+<summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs/files/.emacs.d">Vanilla Emacs configuration</a></summary>
 <img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1200-31.png"/>
 </details>
 
 <details>
-<summary>code: Visual Studio Code configuration</summary>
+<summary><a href="https://github.com/mircodezorzi/dotfiles/tree/master/roles/vscode/files/.config/Code - Insiders/User">Visual Studio Code configuration</a></summary>
 <img src="https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201102-1319-54.png"/>
 </details>
 
