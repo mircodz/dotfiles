@@ -12,7 +12,12 @@
   become: yes
 
 - name: installing required python modules
-  shell: python3 -m pip install --user neovim
+  shell: python3 -m pip install --user neovim sql-language-server
+
+- name: installing SQL linter
+  command:
+    cmd: npm install node-sql-parser -g
+  become: yes
 
 - name: symlinking configuration files
   file:
@@ -30,3 +35,9 @@
 - name: install extensions
   command:
     cmd: nvim +CocUpdateSync -cqa
+
+- name: installing coc dependencies
+  pacman:
+    name: '{{ coc_dependencies }}'
+    state: latest
+
