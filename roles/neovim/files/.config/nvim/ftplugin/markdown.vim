@@ -1,12 +1,8 @@
-if has('folding')
+if !exists('g:vscode') && has('packages') " Disable plugins when running under vscode
 	let g:markdown_enable_folding = 1
 	let g:markdown_folding = 1
-
-	set foldcolumn=4
-
-	let g:vim_markdown_folding_disabled = 1 " disable vim-markdown folding as it's broken
 endif
 
-setlocal cursorline!
+setlocal cursorline!                      " Remove all possible distractions, a middleground between normal and "zen mode"
 setlocal number!
 setlocal relativenumber!

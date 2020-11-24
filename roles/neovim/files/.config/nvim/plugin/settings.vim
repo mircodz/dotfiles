@@ -1,74 +1,72 @@
-colorscheme base16-default-dark       " set default colorscheme
+colorscheme base16-tomorrow-night     " Set default colorscheme
+filetype indent plugin on
+syntax on
 
-set autoindent                        " maintain indent of current line
-set backspace=indent,start,eol        " allow unrestricted backspacing in insert mode
+set autoindent                        " Maintain indent of current line
+set backspace=indent,start,eol        " Allow unrestricted backspacing in insert mode
 
-"if exists('+colorcolumn')
-"	let &l:colorcolumn='+' . join(range(80, 254), ',+')
-"endif
-
-if has('folding')
-	set foldenable                      " enable folding
+if exists('+colorcolumn')             " Highlight all columns after the 254th
+	let &l:colorcolumn='+' . join(range(80, 254), ',+')
 endif
 
-set cursorline                        " highlight current line
+if has('folding')
+	set foldenable                      " Enable folding
+	set foldmethod=manual
+	set foldlevel=999                   " Always start unfolded
+	set foldtext=mirco#fold#text()      " Change folding style to one inspired by Emacs
+	set fillchars+=fold:\ "             " Don't display any fill characters
+endif
+
+set cursorline                        " Highlight current line
+set inccommand=nosplit                " Live preview in substitution comands
 
 if has('termguicolors')
-	set termguicolors                   " use guifg/guibg instead of ctermfg/ctermbg in terminal
+	set termguicolors                   " Use guifg/guibg instead of ctermfg/ctermbg in terminal
+endif
+
+if has('mouse')
+	set mouse=a                         " Enable mounse
 endif
 
 if has('syntax')
-	set synmaxcol=200                   " don't bother syntax highlighting long lines
+	set synmaxcol=254                   " Don't bother syntax highlighting long lines
 endif
 
-set splitright splitbelow             " more intuitive splits
+set splitright splitbelow             " More intuitive splits
 
-let &showbreak='↳ '
-set listchars=tab:\┊\ ,trail:·,nbsp:~
+let &showbreak='↳ '                   " Line-break character
+set listchars=tab:\▏\ ,trail:·,nbsp:~
 set list
 
-set foldtext=mirco#fold#text()
-
-if !isdirectory($HOME."/.undo")
-	call mkdir($HOME."/.undo", "", 0700)
+if !isdirectory($HOME . '/.undo')     " Enable better undo
+	call mkdir($HOME . '/.undo', '', 0700)
 endif
 set undodir=$HOME/.undo
 set undofile
 set swapfile
 
-set number
+set number                            " Show line numbers
 if exists('+relativenumber')
-	set relativenumber                  " show relative numbers in gutter
+	set relativenumber                  " Show relative numbers
 endif
 
-set tabstop=2
-set softtabstop=0
-set noexpandtab
-set shiftwidth=2
-set smarttab
+set formatoptions+=c                  " Auto-wrap comments using textwidth and insert comment header
+set formatoptions-=r                  " Don't insert comment header after hitting 'enter'
+set formatoptions-=o                  " Don't insert comment header after hitting 'o'
+set formatoptions+=j                  " Remove leading comment when joining strings
 
-set foldenable
-set foldmethod=manual
-set foldlevel=999
+set shortmess+=A                      " Hide most of the annoying messages cause by swapfiles
+set shortmess+=I
+set shortmess+=W
 
-" these options still have to be sorted
-autocmd Filetype c,cpp set comments^=:///
-filetype indent plugin on
-set formatoptions-=c
-set formatoptions-=r
-set formatoptions-=o
+" Convert tabs to 2 spaces
+set tabstop=2 softtabstop=0 noexpandtab shiftwidth=2 smarttab
+
+" These options still have to be sorted
 set hidden
 set ignorecase incsearch
-set mouse=a
 set noautochdir
 set nowrap
 set ruler
-set shortmess+=A
-set shortmess+=I
-set shortmess+=W
 set signcolumn=yes
 set wildmode=longest,full
-syntax on
-
-" live preview in substitution comands
-set inccommand=nosplit

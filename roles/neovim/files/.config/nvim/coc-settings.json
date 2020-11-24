@@ -1,8 +1,14 @@
 {
   "suggest.detailMaxLength": 10,
   "suggest.labelMaxLength": 50,
+
+  "diagnostic.virtualText": false,
+
+  "diagnostic.errorSign": "✖",
+  "diagnostic.warningSign": "⚠",
+
   "explorer.icon.enableNerdfont": true,
-  "explorer.keyMappings": {
+  "explorer.keyMappings.global": {
     "h": "nodeNext",
     "t": "nodePrev",
 

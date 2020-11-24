@@ -1,31 +1,28 @@
 function! s:enter()
-	let g:goyoed = 1
 	if exists('$TMUX')
 		silent !tmux set status off
 		silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
 	endif
-	set colorcolumn=0
 	set scrolloff=999
-	set nocursorline
-	set noshowcmd
-	set noshowmode
+	set cursorline!
+	set showcmd!
+	set showmode!
+	set wrap
 	Limelight
-	hi NonText ctermfg=8
 endfunction
 
 function! s:leave()
-	let g:goyoed = 0
 	if exists('$TMUX')
 		silent !tmux set status on
 		silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
 	endif
-	let &l:colorcolumn=join(range(80, 255), ',')
 	set scrolloff=5
 	set cursorline
 	set showcmd
 	set showmode
+	set nowrap
 	Limelight!
-	source ~/.config/nvim/plugin/statusline.vim
+	call mirco#color#set()
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>enter()

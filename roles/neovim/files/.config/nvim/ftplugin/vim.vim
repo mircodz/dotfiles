@@ -1,8 +1,8 @@
 " Execute current buffer
-nnoremap <C-C><C-R> :source %
+nnoremap <C-c><C-r> :source %<cr>
 
 " Execute current line
-nnoremap <C-C><C-E> :execute getline(".")<CR>
+nnoremap <C-c><C-e> :execute getline(".")<cr>
 
 " Execute current selected region
-vnoremap <C-C><C-E> :<C-u>for line in getline("'<", "'>") \| execute line \| endfor<CR>
+vnoremap <C-c><C-e> y:@"<cr>

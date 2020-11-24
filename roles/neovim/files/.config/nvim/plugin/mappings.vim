@@ -4,20 +4,11 @@ let maplocalleader=","
 " removes trailing spaces
 map <leader>z :call mirco#autocmds#zap()<CR>
 
-imap <C-BS> <C-W>
-
-map <leader>e :CocCommand explorer<CR>
 map <leader>s :Goyo<CR>
-
-tnoremap <Esc> <C-\><C-n>
 
 cnoremap <C-A> <C-B>
 
 map <Tab> za
-
-map <F2> :w<CR>:!make<CR><CR>
-map <F3> :!zathura "%:r.pdf" &<CR>
-map <F4> :!wc %<CR>
 
 noremap d h
 noremap h j
