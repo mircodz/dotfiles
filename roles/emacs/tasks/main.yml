@@ -1,0 +1,11 @@
+- name: installing binary
+  pacman:
+    name: emacs
+    state: latest
+
+- name: symlinking configuration file
+  file:
+    src: '{{ role_path}}/files/.emacs.d/'
+    path: '~/.emacs.d'
+    state: link
+    force: yes
