@@ -6,7 +6,7 @@ if has('statusline')
 		set statusline+=\ %f                          " filename
 		set statusline+=\ %m                          " modified flag
 		set statusline+=%=                            " indent right
-		set statusline+=%b\ 0x%B                      " show character under cursor
+		set statusline+=%b\ 0x%B\                     " show character under cursor
 		set statusline+=ℓ:%l/%L\ c:%c                 " line and column
 	endif
 endif

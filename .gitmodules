@@ -136,3 +136,6 @@
 [submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/indentLine"]
 	path = roles/neovim/files/.config/nvim/pack/bundle/opt/indentLine
 	url = https://github.com/Yggdroot/indentLine
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/completion-nvim"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/completion-nvim
+	url = https://github.com/nvim-lua/completion-nvim
