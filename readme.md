@@ -1,15 +1,13 @@
 # Mirco's dotfiles
 
-![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/200429-1554-00.png)
-
 ## Roles
 
 ### Editors
 
-- [neovim](https://github.com/mircodezorzi/dotfiles/tree/master/roles/neovim")
-- [doom](https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom")
-- [emacs](https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs")
-- [vscode](https://github.com/mircodezorzi/dotfiles/tree/master/roles/vscode")
+- [neovim](https://github.com/mircodezorzi/dotfiles/tree/master/roles/neovim)
+- [doom](https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom)
+- [emacs](https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs)
+- [vscode](https://github.com/mircodezorzi/dotfiles/tree/master/roles/vscode)
 
 ## Keyboard
 
