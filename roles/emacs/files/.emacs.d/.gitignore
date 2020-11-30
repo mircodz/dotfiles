@@ -1,6 +1,9 @@
+.lsp-session-v1
 .python-environments
+auto-save-list
 config.el
 elpa
 network-security.data
 projectile-bookmarks.eld
 projectile.cache
+transient
