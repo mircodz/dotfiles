@@ -139,3 +139,12 @@
 [submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/completion-nvim"]
 	path = roles/neovim/files/.config/nvim/pack/bundle/opt/completion-nvim
 	url = https://github.com/nvim-lua/completion-nvim
+[submodule "roles/neovim/files/.config/nvim/pack/bundle/opt/vim-tmux-focus-events"]
+	path = roles/neovim/files/.config/nvim/pack/bundle/opt/vim-tmux-focus-events
+	url = https://github.com/tmux-plugins/vim-tmux-focus-events
+[submodule "roles/dotfiles/files/.config/.tmux/tmux-sensible"]
+	path = roles/dotfiles/files/.config/.tmux/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible
+[submodule "roles/dotfiles/files/.tmux/tmux-sensible"]
+	path = roles/dotfiles/files/.tmux/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible

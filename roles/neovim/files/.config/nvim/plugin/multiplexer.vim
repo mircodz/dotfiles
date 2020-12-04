@@ -3,6 +3,7 @@ if exists('$TMUX')
 		packadd vim-tmux-navigator
 		packadd vim-tmux-clipboard
 		packadd tmux-complete.vim
+		packadd vim-tmux-focus-events
 	endif
 else
 	noremap <C-d> <C-w>h
