@@ -1,30 +1,23 @@
 # Mirco's dotfiles
 
-## Roles
+## Features
+I'm somewhat of an indecisive person, so in the past year or so I've been going back and forth between neovim (+ tmux) and emacs. In the repository also includes doom emacs and vscode configuration files.
 
-### Editors
+### dwm
+![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201204-1739-32.png)
 
-- [neovim](https://github.com/mircodezorzi/dotfiles/tree/master/roles/neovim)
-- [doom](https://github.com/mircodezorzi/dotfiles/tree/master/roles/doom)
-- [emacs](https://github.com/mircodezorzi/dotfiles/tree/master/roles/emacs)
-- [vscode](https://github.com/mircodezorzi/dotfiles/tree/master/roles/vscode)
+### emacs
+![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201204-1737-13.png)
+
+### neovim + tmux
+![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201205-0058-41.png)
 
 ## Keyboard
-
-If the key bindings might seem strange is because I use the
-[Ergodox](https://www.ergodox.io/) keyboard with the
-[Dvorak](https://www.dvorak-keyboard.com/) layout...
+If the key bindings might seem strange it's probably because I use the [Ergodox](https://www.ergodox.io/) keyboard with the [Dvorak](https://www.dvorak-keyboard.com/) layout. Here's a view:
 
 ![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/keyboard-layout.png)
 
-| layer  | modifier                |
-|--------|-------------------------|
-| top    | mod                     |
-| center | mod + L2 (dvorak layer) |
-| bottom | mod + shift             |
-
 ## Installation
-
 ```
 $ ansible-playbook -K playbook.yml
 ```
