@@ -1,4 +1,3 @@
-alias ch="cd $HOME"
 alias cc="cd $HOME/code"
 alias cdot="cd $HOME/code/dotfiles"
 

@@ -15,9 +15,6 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-# docker autocompletion
-source ~/.zsh/fzf-docker.plugin.zsh
-
 # fish like autocompletion
 autoload history-search-end
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh

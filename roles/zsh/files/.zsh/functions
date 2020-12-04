@@ -5,6 +5,13 @@ function anonimize() {
 	mv "$1" "$filename"
 }
 
+function batch_rename() {
+  files=$(find . | grep ".$1$")
+  echo "rename?"
+  echo "$files"
+  echo $files | sed "s,.$1$,,g" | xargs -I:: /bin/sh -c "mv ::.$1 ::.$2"
+}
+
 function extract {
   if [ -f "$1" ] ; then
   case "$1" in
@@ -38,7 +45,7 @@ function pkgconf {
 # Package management
 
 function pa {
-  if [ -z "$@" ]; then
+  if [ $# -eq 0 ]; then
     yay -S --noconfirm $(cat "$HOME/.cache/yay/completion.cache.sorted" | fzf --multi --preview 'yay -Si {} | grep " : "')
   else
     yay -S --noconfirm $@
@@ -46,7 +53,7 @@ function pa {
 }
 
 function pr {
-  if [ -z "$@" ]; then
+  if [ $# -eq 0 ]; then
     sudo pacman -Rns --noconfirm $(pacman -Qq | fzf --multi --preview 'yay -Qi {} | grep " : "')
   else
     sudo pacman -Rns --noconfirm $@

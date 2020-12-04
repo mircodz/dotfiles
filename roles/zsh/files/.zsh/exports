@@ -1,13 +1,4 @@
-IGNORE_FILES=(.git build view site .undo .cache .local)
-function build_ignores {
-  s=""
-  for f in $IGNORE_FILES
-  do
-      s+="-E '$f' "
-  done
-  echo $s
-}
-export FZF_DEFAULT_COMMAND="fd $(build_ignores) -H --type f"
+export FZF_DEFAULT_COMMAND="fd"
 
 export BROWSER="chromium"
 export EDITOR="nvim"
@@ -23,3 +14,5 @@ export HISTFILESIZE=100000
 export HISTIGNORE="cat:ls:bg:fg:history"
 export HISTSIZE=100000
 export SAVEHIST=$HISTSIZE
+
+export LD_LIBRARY_PATH=/usr/local/lib
