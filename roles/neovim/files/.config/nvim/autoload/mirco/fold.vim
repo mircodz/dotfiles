@@ -9,6 +9,10 @@ function! mirco#fold#text() abort
 	let l:lines='[' . (v:foldend - v:foldstart + 1) . s:small_l . ']'
 	let l:first=substitute(getline(v:foldstart), '\v *', '', '')
 	let l:dashes=substitute(v:folddashes, '-', s:middot, 'g')
-	"return s:raquo . s:middot . s:middot . l:lines . l:dashes . ': ' . l:first
+	return s:raquo . s:middot . s:middot . l:lines . l:dashes . ': ' . l:first
+endfunction
+
+function! mirco#fold#markdown() abort
+	let l:first=substitute(getline(v:foldstart), '\v *', '', '')
 	return l:first . '...'
 endfunction

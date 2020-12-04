@@ -12,3 +12,8 @@ dependencies:
   - npm
   - python
   - python-pip
+
+coc_dependencies:
+  - ccls
+  - sql-language-server
+  - gopls

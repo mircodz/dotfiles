@@ -1,1 +1,1 @@
-setlocal comments^=:///
+set comments^=:///

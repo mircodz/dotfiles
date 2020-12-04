@@ -14,7 +14,6 @@ if has('folding')
 	set foldmethod=manual
 	set foldlevel=999                   " Always start unfolded
 	set foldtext=mirco#fold#text()      " Change folding style to one inspired by Emacs
-	set fillchars+=fold:\ "             " Don't display any fill characters
 endif
 
 set cursorline                        " Highlight current line
