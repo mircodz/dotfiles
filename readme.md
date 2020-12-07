@@ -7,7 +7,7 @@ I'm somewhat of an indecisive person, so in the past year or so I've been going 
 ![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201204-1739-32.png)
 
 ### emacs
-![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201204-1737-13.png)
+![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201204-1734-35.png)
 
 ### neovim + tmux
 ![](https://raw.githubusercontent.com/mircodezorzi/dotfiles/master/screenshots/201205-0058-41.png)

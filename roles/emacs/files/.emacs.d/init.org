@@ -1,5 +1,15 @@
-;;; -*- lexical-binding: t -*-
+#+TITLE: Emacs Configuration
+#+AUTHOR: Mirco De Zorzi
+#+EMAIL: mircodezorzi@protonmail.com
 
+* Meta
+Enable lexical scoping for the current file.
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;; -*- lexical-binding: t -*-
+#+END_SRC
+
+Automatically update configuration file when saving the document.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun tangle-init ()
   (when (equal (buffer-file-name)
                (expand-file-name (concat user-emacs-directory "init.org")))
@@ -9,7 +19,10 @@
       (byte-compile-file (concat user-emacs-directory "init.el")))))
 
 (add-hook 'after-save-hook 'tangle-init)
+#+END_SRC
 
+Tweak garbage collection configuration during initialization.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defvar last-file-name-handler-alist file-name-handler-alist)
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6
@@ -18,19 +31,31 @@
   (setq gc-cons-threshold 16777216
         gc-cons-percentage 0.1
         file-name-handler-alist last-file-name-handler-alist))
+#+END_SRC
 
+* Packages
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'package)
 (package-initialize)
+#+END_SRC
 
+Include extra package repositories.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
                          ;("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
+#+END_SRC
 
+Install =use-package= package manager.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
 (setf use-package-always-ensure t)
+#+END_SRC
 
+In case some packages are missing, install them.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (let* ((package--builtins nil)
        (packages
         '(auctex
@@ -72,7 +97,11 @@
       ;; Install uninstalled packages.
       (package-refresh-contents)
       (mapc 'package-install packages))))
+#+END_SRC
 
+* General
+** Reduce filesystem clutter
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defvar emacs-autosave-directory
   (concat user-emacs-directory "autosaves/"))
 
@@ -81,7 +110,10 @@
       `((".*" . ,emacs-autosave-directory))
       auto-save-file-name-transforms
       `((".*" ,emacs-autosave-directory t)))
+#+END_SRC
 
+** Cleanup UI
+#+BEGIN_SRC emacs-lisp :tangle yes
 (dolist (mode
          '(menu-bar-mode
            tool-bar-mode       
@@ -89,7 +121,10 @@
            scroll-bar-mode     
            blink-cursor-mode)) 
   (funcall mode 0))
+#+END_SRC
 
+** Font
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package olivetti
   :custom
   (olivetti-body-width 82))
@@ -103,7 +138,9 @@
 (set-face-attribute 'default nil :font "Source Code Pro 14")
 (set-face-attribute 'fixed-pitch nil :font "Source Code Pro 14")
 (set-face-attribute 'variable-pitch nil :font "Roboto Mono Light 12")
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun pretty () 
   (interactive)
   (load-theme 'base16-tomorrow)
@@ -111,30 +148,48 @@
   (setq-default olivetty-body-width 90)
   (olivetti-mode)
   (global-hl-line-mode 0))
+#+END_SRC
 
+** Personal information
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq user-full-name    "Mirco De Zorzi"
       user-mail-address "mircodezorzi@protonmail.com")
+#+END_SRC
 
+** Display battery in modeline
+#+BEGIN_SRC emacs-lisp :tangle yes
 (display-time-mode 1)
 (unless (equal "Battery status not avalible"
                (battery))
   (display-battery-mode 1))
+#+END_SRC
 
+** Indent guides
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package highlight-indent-guides
   :config
   (setq highlight-indent-guides-method 'character
         highlight-indent-guides-character ?\|)
   :hook (prog-mode . highlight-indent-guides-mode))
+#+END_SRC
 
+** Cursorline
+#+BEGIN_SRC emacs-lisp :tangle yes
 (global-hl-line-mode t)
+#+END_SRC
 
+** Indentation
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default
     ;; Disable annoying indentation behaviour
     electric-indent-inhibit t
     indent-tabs-mode        nil
     tab-width               2
     evil-shift-width        2)
+#+END_SRC
 
+Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]]
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/indent-setup (n)
   ;; java/c/c++
   (setq-local c-basic-offset n)
@@ -161,24 +216,39 @@
 ;(add-hook 'prog-mode-hook 'dz/indent-spaces)
 ;(add-hook 'lua-mode-hook 'dz/indent-spaces)
 ;(add-hook 'web-mode-hook 'dz/indent-spaces)
+#+END_SRC
 
+** Relative line numbers
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package linum-relative
   :config
   (setq linum-relative-backend 'display-line-numbers-mode
         linum-relative-current-symbol "")
   :hook (prog-mode . display-line-numbers-mode))
+#+END_SRC
 
+** Key chords
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package key-chord
   :config
   (key-chord-mode 1)
   (key-chord-define-global "eu" 'evil-normal-state))
+#+END_SRC
 
+** Theme
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package base16-theme
   :config
   (load-theme 'base16-tomorrow-night t))
+#+END_SRC
 
+** Workgroups
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package workgroups2)
+#+END_SRC
 
+* Evil Mode
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package general :config (general-override-mode))
 (use-package evil
   :config
@@ -220,7 +290,11 @@
       "C-h" 'evil-window-down
       "C-t" 'evil-window-up
       "C-n" 'evil-window-right))
+#+END_SRC
 
+* Language Server
+** lsp-mode
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package lsp-mode
   :commands lsp
   :bind (:map evil-normal-state-map
@@ -229,20 +303,30 @@
   :config
   (setq lsp-eldoc-hook nil)
   :hook ((c++-mode c-mode go-mode latex-mode python-mode) . lsp))
+#+END_SRC
 
+** lsp-ui
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package lsp-ui
   :commands lsp-ui-mode
   :config
   (setq lsp-ui-doc-enable    t
         lsp-ui-doc-position  'at-point
         lsp-ui-doc-border    "white"))
+#+END_SRC
 
+** Company
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-lsp
   :commands company-lsp
   :config
   (setq company-minimum-prefix-length 1)
   (push 'company-lsp company-backends))
+#+END_SRC
 
+* Languages
+** C++
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ccls
   :config
   ;(setq ccls-executable "ccls"
@@ -250,18 +334,27 @@
   ;(setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
+#+END_SRC
 
+*** XRefs
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-xref
   :config
   (setq xref-show-definitions-function #'ivy-xref-show-defs
         xref-show-xrefs-function       #'ivy-xref-show-xrefs))
+#+END_SRC
 
+** Python
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package lsp-python-ms
   :init (setq lsp-python-ms-auto-install-server t)
   :hook (python-mode . (lambda ()
                           (require 'lsp-python-ms)
                           (lsp))))
+#+END_SRC
 
+** Golang
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package go-mode)
 
 (use-package company-go
@@ -273,40 +366,60 @@
             (lambda ()
               (set (make-local-variable 'company-backends) '(company-go))
               (company-mode))))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package go-eldoc
   :defer t
   :hook (go-mode . go-eldoc-setup))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package go-guru
   :defer t
   :hook (go-mode . go-guru-hl-identifier-mode))
+#+END_SRC
 
+** Javascript/Typescript
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tide
   :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)))
+#+END_SRC
 
+** Web 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
   :config
   (setq web-mode-enable-current-element-highlight t)
   :mode ("\\.ts\\'" "\\.html?\\'" "\\.css?\\'" "\\.js\\'"))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-web)
 (use-package yasnippet)
 (use-package css-mode)
+#+END_SRC
 
+*** Vue
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package vue-mode
   :custom-face (mmm-default-submode-face ((t (:background "#181818" 
                                               :extend t)))))
+#+END_SRC
 
+*** Emmet
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package emmet-mode
   :preface (defvar emmet-mode-keymap (make-sparse-keymap))
   :bind (:map emmet-mode-keymap
           ("C-TAB" . emmet-expand-line))
   :hook ((css-mode web-mode html-mode) . emmet-mode))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;(eval-after-load "web-mode"
 ;  '(set-face-background 'web-mode-current-element-highlight-face "#181818"))
 
@@ -333,6 +446,11 @@
     	   (setq emmet-use-css-transform t)
       	 (setq emmet-use-css-transform nil)))))
 
+#+END_SRC
+
+* File Types
+** Org
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
   :config
   (add-to-list 'org-src-lang-modes '("x86asm" . asm) '("cmake" . text))
@@ -348,13 +466,18 @@
 
   :custom-face (org-block ((t (:background "#181818" 
                                :extend t)))))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;(use-package org-bullets
 ;  :after org
 ;  :custom
 ;  (org-ellipsis "⬎")
 ;  :hook (org-mode . org-bullets-mode))
+#+END_SRC
 
+** LaTeX
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-auctex)
 (use-package company-math)
 
@@ -362,10 +485,29 @@
 (add-hook 'LaTeX-mode-hook 'latex-math-mode)
 (add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
 (add-hook 'LaTeX-mode-hook 'TeX-fold-buffer t)
+#+END_SRC
 
+** YAML
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
+#+END_SRC
+* Snippets
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :bind (:map yas-minor-mode-map
+          ("TAB" . yas-expand))
+  :config
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
+  (yas-global-mode t)
+  (yas-reload-all))
 
+(use-package yasnippet-snippets)
+#+END_SRC
+
+* Tools
+** PDF Tools
+#+BEGIN_SRC emacs-lisp :tangle yes
 (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
 (add-hook 'pdf-view-mode-hook
           (lambda () (setq header-line-format nil)))
@@ -376,21 +518,30 @@
 ;; Update PDF buffers after successful LaTeX runs
 (add-hook 'TeX-after-compilation-finished-functions
            #'TeX-revert-document-buffer)
+#+END_SRC
 
+** Undo Tree
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package undo-tree
   ;:bind (:map evil-normal-state-map
   ;        ("C-u" . undo-tree-visualize))
   :config
   (global-undo-tree-mode)
   (evil-set-undo-system 'undo-tree))
+#+END_SRC
 
+** Ivy, Counsel, Swiper, and Projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/find-file ()
   "Call `counsel-projectile-find-file' if `projectile-project-p', otherwise fallback to `counsel-find-files'."
   (interactive)
   (if (projectile-project-p)
       (counsel-projectile-find-file)
       (counsel-find-file)))
+#+END_SRC
 
+*** Ivy
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
   :bind (:map ivy-mode-map
           ("C-'" . ivy-avy))
@@ -402,16 +553,25 @@
   (ivy-count-format          "")
   (ivy-initial-inputs-alist  nil)
   (ivy-re-builders-alist     '((t . ivy--regex-ignore-order))))
+#+END_SRC
 
+*** Counsel
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package counsel
   :after (ivy projectile swiper)
   :bind (:map evil-normal-state-map
           ("SPC SPC" . counsel-M-x)
           ("SPC C-p" . counsel-projectile-switch-project)
           ("C-p" . dz/find-file)))
+#+END_SRC
 
+*** Swiper
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package swiper)
+#+END_SRC
 
+*** Projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package projectile
   :config
   (projectile-mode)
@@ -421,12 +581,21 @@
 
 (use-package counsel-projectile
   :after (counsel projectile))
+#+END_SRC
 
+** VTerm
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package vterm
  :preface (setq vterm-install t))
+#+END_SRC
 
+** Magit
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit)
-
+#+END_SRC
+* Miscellaneous dz/functions
+** Wrap org source code blocks
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq def-language "")
 
 (defun dz/org-wrap-source ()
@@ -445,29 +614,22 @@
     (insert (format "#+BEGIN_SRC %s\n" def-language))))
 
 (define-key evil-visual-state-map (kbd "SPC w") 'dz/org-wrap-source)
+#+END_SRC
 
+** Reload configuration
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;(defun dz/reload ()
 ;  (interactive)
 ;  (org-babel-load-file "~/.emacs.d/config.org"))
 ;
 ;(define-key evil-normal-state-map (kbd "SPC r") 'dz/reload)
+#+END_SRC
 
+** Open configuration
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/open-config ()
   (interactive)
   (find-file "~/.emacs.d/init.org"))
 
 (define-key evil-normal-state-map (kbd "SPC o c") 'dz/open-config)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("cea3ec09c821b7eaf235882e6555c3ffa2fd23de92459751e18f26ad035d2142" default)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(mmm-default-submode-face ((t (:background "#181818" :extend t))))
- '(org-block ((t (:background "#181818" :extend t)))))
+#+END_SRC
