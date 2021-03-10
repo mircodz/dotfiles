@@ -1,5 +1,23 @@
+source ~/.zinit/bin/zinit.zsh
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+fpath+=$HOME/.zsh/pure
+
+#zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+#zinit light sindresorhus/pure
+
+zinit light zdharma/fast-syntax-highlighting
+zinit ice lucid wait='0' atload='_zsh_autosuggest_start'
+
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma/history-search-multi-word
+
+autoload -U promptinit; promptinit; prompt pure
+
 bindkey -e
 
+source ~/.zsh/prompt
 source ~/.zsh/aliases
 source ~/.zsh/exports
 source ~/.zsh/mappings
@@ -14,12 +32,3 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
-
-# fish like autocompletion
-autoload history-search-end
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=59'
-ZSH_AUTOSUGGEST_USE_ASYNC=true
-ZSH_AUTOSUGGEST_STRATEGY=history
-
-source ~/.zsh/prompt

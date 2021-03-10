@@ -148,3 +148,9 @@
 [submodule "roles/dotfiles/files/.tmux/tmux-sensible"]
 	path = roles/dotfiles/files/.tmux/tmux-sensible
 	url = https://github.com/tmux-plugins/tmux-sensible
+[submodule "roles/awesome/files/.config/awesome/awesome-wm-widgets"]
+	path = roles/awesome/files/.config/awesome/awesome-wm-widgets
+	url = https://github.com/streetturtle/awesome-wm-widgets
+[submodule "roles/zsh/files/.zsh/pure"]
+	path = roles/zsh/files/.zsh/pure
+	url = https://github.com/sindresorhus/pure
