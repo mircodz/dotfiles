@@ -1,0 +1,32 @@
+# Prevent errors
+$include /etc/inputrc
+
+# Ignore case when autocompleting
+set completion-ignore-case on
+
+# Addd a trailing slash when completing for symlinked directories
+set mark-symlinked-directories on
+
+# Don't match files or directories beginnig with a dot unless specified
+set match-hidden-files off
+
+# Show all completions at once
+set page-completions off
+
+# Vim mode remapped to Dvorak
+#set editing-mode vi
+
+#bind -x "\C-p":history-search-backward
+#bind -x "\C-n":history-search-forward
+
+#"b": self-insert
+
+#set keymap vi-command
+#"h": history-search-backward
+#"t": history-search-forward
+#"d": backward-char
+#"n": forward-char
+
+#set keymap vi-insert
+#"eu": vi-movement-mode
+#"ue": vi-movement-mode

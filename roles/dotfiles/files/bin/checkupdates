@@ -7,4 +7,11 @@ click=$(dunstify --action="replyAction,reply"\
     -i $HOME/bin/arch.png \
     -t 15000)
 
-[ $click == 2 ] && sudo pacman -Suu --noconfirm || notify-send "Error" "There has been an error while updating the system."
+function update {
+  sudo pacman -Suu --noconfirm
+  result=$?
+  cat "$HOME/.cache/yay/completion.cache" | sort | awk '{print $1}' > "$HOME/.cache/yay/completion.cache.sorted"
+  return $result
+}
+
+[ $click == 2 ] && update || notify-send "Error" "There has been an error while updating the system."

@@ -52,8 +52,8 @@ mountiso() {
   sudo qemu-nbd -c "$dev" "$img"
   parts=$(lsblk -l | grep $(basename "$dev" -a) | awk '/nbd.*part/ {print $1}')
   for part in $parts; do
-    sudo mkdir "/mnt/$part"
-    sudo mount "/dev/$part" "/mnt/$part"
+    sudo mkdir "$HOME/mnt/$part"
+    sudo mount "/dev/$part" "$HOME/mnt/$part"
   done
 }
 

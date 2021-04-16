@@ -1,21 +1,34 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-xrdb -load $HOME/.Xresources
-xsetroot -cursor_name left_ptr
 xset r rate 250 35
 
-# $KEYBOARD will be set by the calling script, normally .xinputrc
-[ "$KEYBOARD" = "dvp" ] && setxkbmap -layout us -variant dvp
+# If Ergodox keyboard is unplugged switch to Dvorak programmer keyboard layout.
+[ -z "$(lsusb | grep ErgoDox)" ] && setxkbmap -layout us -variant dvp
 
-[ "$WM" = "dwm" ] && status &
+case "$WM" in
 
-~/.fehbg
+  "dwm")
 
-pidof clipmenud && pkill clipmenud
-clipmenud &
+    kill_if_alive() {
+      pidof $1 && pkill $1
+      $@ &
+    }
 
-pidof unclutter && pkill unclutter
-unclutter --timeout 2 --fork
+    # Statusbar
+    bin/status
 
-pidof emacs && pkill emacs
-emacs --fg-daemon &
+    # Set Wallpaper
+    ~/.fehbg
+
+    kill_if_alive clipmenud
+    kill_if_alive dropbox
+    kill_if_alive dunst
+    kill_if_alive picom
+    kill_if_alive redshift
+    kill_if_alive unclutter --timeout 2 --fork
+
+    ;;
+
+  *) exec $WM ;;
+
+esac

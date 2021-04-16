@@ -1,16 +1,14 @@
 #!/usr/bin/env sh
 
-export GOPATH=$HOME/go
-export PATH=$HOME/bin:$HOME/.local/bin:$HOME/.gem/ruby/*/bin:$GOPATH/bin:$HOME/.cargo/bin:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export WM="awesome"
 
-# dvorak programmer keyboard layout
-#export KEYBOARD="dvp"
+export GOPATH="$HOME/go"
+export PATH="$HOME/bin:$PATH"
+export PATH="$GOPATH/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
-export WM="dwm"
-
-# if passed, set first arg as WM
-[ -n "$1" ] && export WM="$1"
+export LD_LIBRARY_PATH=/usr/local/lib
 
 [ -f ~/.xprofile ] && . ~/.xprofile
 
