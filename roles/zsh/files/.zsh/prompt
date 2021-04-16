@@ -4,4 +4,6 @@ zstyle :prompt:pure:git:stash show yes
 
 PURE_CMD_MAX_EXEC_TIME=0
 
-prompt_newline=$(echo -n "\u200B ")
+print() {
+  [ 0 -eq $# -a "prompt_pure_precmd" = "${funcstack[-1]}" ] || builtin print "$@";
+}
