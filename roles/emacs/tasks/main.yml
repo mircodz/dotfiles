@@ -5,7 +5,7 @@
 
 - name: symlinking configuration file
   file:
-    src: '{{ role_path}}/files/.emacs.d/'
+    src: '{{ role_path }}/files/.emacs.d/'
     path: '~/.emacs.d'
     state: link
     force: yes
