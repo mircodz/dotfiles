@@ -154,3 +154,6 @@
 [submodule "roles/zsh/files/.zsh/pure"]
 	path = roles/zsh/files/.zsh/pure
 	url = https://github.com/sindresorhus/pure
+[submodule "roles/awesome/files/.config/awesome/lain"]
+	path = roles/awesome/files/.config/awesome/lain
+	url = https://github.com/lcpz/lain
