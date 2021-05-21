@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+pkg=$(pkg-config --list-all\
+				| awk '{print $1}'\
+				| fzf --reverse --height 10 --preview 'pkg-config --cflags --libs {}')
+[ ! -z $pkg ] && pkg-config --cflags --libs $pkg | xclip -sel clip

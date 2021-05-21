@@ -30,7 +30,6 @@ source ~/.zsh/prompt
 source ~/.zsh/aliases
 source ~/.zsh/exports
 source ~/.zsh/mappings
-source ~/.zsh/functions
 
 # press c-x-e to open comand line in the editor
 autoload -U edit-command-line

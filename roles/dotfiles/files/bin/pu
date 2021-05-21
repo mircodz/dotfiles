@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+sudo pacman  -Syyu --noconfirm
+cat "$HOME/.cache/yay/completion.cache" \
+	| sort \
+	| awk '{print $1}' > "$HOME/.cache/yay/completion.cache.sorted"

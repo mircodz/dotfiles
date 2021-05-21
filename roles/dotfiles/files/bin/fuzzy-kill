@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+ps -aux \
+	| awk 'NR>1' \
+	| fzf -m \
+	| awk '{print $2}' \
+	| xargs kill -9
