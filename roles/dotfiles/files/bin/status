@@ -66,11 +66,6 @@ function print_mail() {
   find mail/personal/inbox/new -type f | wc -l
 }
 
-get_bytes
-old_received_bytes=$received_bytes
-old_transmitted_bytes=$transmitted_bytes
-old_time=$now
-
 while true; do
 
   # Get new transmitted, received byte number values and current time

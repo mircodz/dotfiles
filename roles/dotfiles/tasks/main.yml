@@ -1,8 +1,7 @@
 - name: installing packages
   yay:
-    name: '{{ item }}'
+    name: '{{ software }}'
     state: latest
-  loop: '{{ software }}'
 
 - name: symlinking configuration files
   file:

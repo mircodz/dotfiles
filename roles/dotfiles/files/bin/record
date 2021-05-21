@@ -1,42 +1,108 @@
 #!/usr/bin/env bash
-DIR="$HOME/recs"
-[ ! -d $DIR ] && mkdir $DIR
 
-choices="entire screen\nscreen portion\nmicrophone only"
-choice=$(echo -e $choices | dmenu)
+# Select audio interfaces
+DIR="$HOME/recordings"
+[ ! -d "$DIR" ] && mkdir "$DIR"
 
-case $choice in
+# Get filename
+filename=$(sleep 0 | dmenu -p "Filename")
+[ -z "$filename" ] && filename="$(date '+%y%m%d-%H%M%S')"
 
-  "entire screen")
-    res=$(xrandr | grep '*' | awk '{print $1}')
-    filename=$(sleep 0 | dmenu -p "Filename")
-    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
-    ffmpeg -video_size $res\
-           -framerate 60\
-           -f x11grab -i :0.0\
-           -f pulse -ac 2 -i default\
-           -c:v libx264 -crf 0\
-           -preset ultrafast\
-           "$DIR/$filename.mkv" ;;
+selected=""
+devices=$(pacmd list-sources | awk '/name:/ {print $2}' | sed 's/[<>]//g')
+while [ ! -z "$devices" ]; do
+  device=$(echo -e "$devices" | dmenu -l 10 -p "Audio Sources")
+  [ -z "$device" ] && break
+  devices=$(echo -e "$devices" | sed "/$device/d")
+  selected=$selected$device"\n"
+done
 
-  "screen portion")
-    read cancelled x y d < <(slop -f "%c %x %y %wx%h")
-    [ -z $cancelled ] && exit
-    filename=$(sleep 0 | dmenu -p "Filename")
-    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
-    ffmpeg -video_size $d\
-           -framerate 25\
-           -f x11grab -i :0.0+$x,$y\
-           -f pulse -ac 2 -i default\
-           -c:v libx264 -crf 0\
-           -preset ultrafast\
-           "$DIR/$filename.mkv" ;;
+audio=""
+for i in $devices; do
+  audio=$audio"-f pulse -ac 2 -i "$i" "
+done
 
-  "microphone only")
-    filename=$(sleep 0 | dmenu -p "Filename")
-    [ -z $filename ] && filename="$(date '+%y%m%d-%H%M%S')"
-    ffmpeg -f pulse -ac 2 -i default\
-           -acodec flac\
-           "$DIR/$filename.flac" ;;
+function close() {
+	ps -aux \
+		| grep "sh.*bin/record" \
+		| grep -v "grep" \
+		| dmenu -l 5 \
+		| xargs kill -9
+}
 
-esac
+function get_webcam() {
+	find /dev | grep /dev/video | dmenu -l 5
+}
+
+function screen() {
+	res=$(xrandr | grep '*' | awk '{print $1}' | head -n 1)
+	ffmpeg 
+		-s $res\
+		-framerate 60\
+		-f x11grab -i :0.0\
+		$audio\
+		-filter_complex amerge\
+		-c:v libx264 -c:a libvorbis\
+		-preset ultrafast\
+		"$DIR/$filename.mkv"
+}
+
+function webcam() {
+	web=$(get_webcam)
+	ffmpeg \
+		-f v4l2 \
+		-framerate 25 \
+		-s 640x480 \
+		-i $web\
+		-preset ultrafast\
+		"$DIR/$filename.mkv"
+}
+
+function broadcast() {
+	read cancelled x y d < <(slop -f "%c %x %y %wx%h")
+	[ -z $cancelled ] && exit
+	ffmpeg \
+		-f x11grab -framerate 15 \
+		-video_size $d -i :0.0+$x,$y \
+		-f v4l2 \
+		-pix_fmt yuv420p \
+		-threads 0 \
+		-vcodec rawvideo \
+		-vf 'scale=800:600' \
+		/dev/video10
+}
+
+function loopback() {
+	ffmpeg -re \
+		-stream_loop -1 \
+		-i ~/recordings/.mkv \
+		-f v4l2 \
+		-pix_fmt yuv420p \
+		-threads 0 \
+		-vcodec rawvideo \
+		-vf 'scale=800:600' \
+		/dev/video10
+}
+
+function portion() {
+	read cancelled x y d < <(slop -f "%c %x %y %wx%h")
+	[ -z $cancelled ] && exit
+	ffmpeg -s $d\
+				 -framerate 60\
+				 -f x11grab -i :0.0+$x,$y\
+				 $audio\
+				 -filter_complex amerge\
+				 -c:v libx264 -c:a libvorbis\
+				 -preset ultrafast\
+				 "$DIR/$filename.mkv"
+}
+
+function none() {
+	ffmpeg $audio\
+				 -filter_complex amerge\
+				 -c:a libvorbis\
+				 -preset ultrafast\
+				 "$DIR/$filename.mkv"
+}
+
+$(echo -e 'screen\nbroadcast\nloopback\nwebcam\nportion\nnone' | dmenu)

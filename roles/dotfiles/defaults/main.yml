@@ -1,0 +1,52 @@
+files:
+  - .config/dunst
+  - .config/kitty
+  - .config/picom
+  - .config/ranger
+  - .config/zathura
+  - .inputrc
+  - .tmux
+  - .tmux.conf
+  - .tmuxinator
+  - .xinitrc
+  - .xprofile
+  - bin
+
+software:
+  - asciinema
+  - chromium
+  - clipnotify
+  - cloc
+  - docker
+  - docker-compose
+  - dropbox
+  - dunst
+  - fzf
+  - gdrive-bin
+  - glances
+  - iw
+  - iwd
+  - kitty
+  - maim
+  - nerd-fonts-hack
+  - npm
+  - openvpn
+  - otf-hasklig
+  - ranger
+  - spotify
+  - spotify-tray-git
+  - telegram-desktop
+  - texlive-bibtexextra
+  - texlive-bin
+  - texlive-core
+  - texlive-fontsextra
+  - texlive-formatsextra
+  - texlive-latexextra
+  - texlive-pictures
+  - texlive-publishers
+  - scrcpy # android screen capture
+  - texlive-science
+  - typescript
+  - weechat
+  - zathura
+  - zathura-pdf-poppler
