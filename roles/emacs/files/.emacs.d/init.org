@@ -10,17 +10,17 @@ What follows is my literate emacs configuration. Feel free to copy any snippet y
 
 * Meta
 Enable lexical scoping for the current file.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
 
 Enable native compilation
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-native-compile t)
 #+END_SRC
 
 Automatically update configuration file when saving the document.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq user-emacs-directory "~/code/dotfiles/roles/emacs/files/.emacs.d/")
 
 (defun tangle-init ()
@@ -35,31 +35,31 @@ Automatically update configuration file when saving the document.
 #+END_SRC
 
 Tweak garbage collection configuration during initialization.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defvar last-file-name-handler-alist file-name-handler-alist)
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6
       file-name-handler-alist nil)
 (add-hook 'emacs-startup-hook
-  (setq gc-cons-threshold 16777216
-        gc-cons-percentage 0.1
-        file-name-handler-alist last-file-name-handler-alist))
+  (lambda () (setq gc-cons-threshold 16777216
+                   gc-cons-percentage 0.1
+                   file-name-handler-alist last-file-name-handler-alist)))
 #+END_SRC
 
 * Packages
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (require 'package)
 (package-initialize)
 #+END_SRC
 
 Include extra package repositories.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 #+END_SRC
 
 Install =use-package= package manager.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
@@ -67,7 +67,7 @@ Install =use-package= package manager.
 #+END_SRC
 
 In case some packages are missing, install them.
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (let* ((package--builtins nil)
        (packages
         '(auctex
@@ -76,7 +76,6 @@ In case some packages are missing, install them.
           beacon
           ccls
           company-auctex
-          company-box
           company-go
           company-lsp
           company-math
@@ -96,8 +95,6 @@ In case some packages are missing, install them.
           ivy-xref
           key-chord
           lsp-mode
-          lsp-python-ms
-          lsp-treemacs
           lsp-ui
           magit
           mixed-pitch
@@ -106,19 +103,13 @@ In case some packages are missing, install them.
           ox-hugo
           pdf-tools
           ialign
-          dimmer
           projectile
           protobuf-mode
           swiper
           tide
           toml-mode
-          treemacs
-          treemacs-all-the-icons
-          treemacs-projectile
           undo-tree
           use-package
-          vterm
-          vterm-toggle
           web-mode
           yasnippet-snippets
           yaml-mode)))
@@ -131,13 +122,13 @@ In case some packages are missing, install them.
 
 * General
 ** Personal information
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq user-full-name    "Mirco De Zorzi"
       user-mail-address "mircodezorzi@protonmail.com")
 #+END_SRC
 
 ** Reduce filesystem clutter
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defvar emacs-autosave-directory
   (concat user-emacs-directory "autosaves/"))
 
@@ -152,7 +143,7 @@ In case some packages are missing, install them.
 #+END_SRC
 
 ** Cleanup UI
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (dolist (mode
          '(menu-bar-mode
            tool-bar-mode       
@@ -163,7 +154,7 @@ In case some packages are missing, install them.
 #+END_SRC
 
 ** Saner defaults
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq inhibit-startup-screen    t
       initial-scratch-message   nil
       sentence-end-double-space nil
@@ -172,14 +163,30 @@ In case some packages are missing, install them.
       kill-whole-line           t
       case-fold-search          nil)
 
-(set-face-attribute 'default nil :font "Source Code Pro 14")
-(setq electric-indent-inhibit t)
+(set-face-attribute 'default nil :font "Source Code Pro 16")
+(set-face-attribute 'fixed-pitch nil :font "Source Code Pro 16")
+(set-face-attribute 'variable-pitch nil :font "Bitter 16")
+
+(show-paren-mode t)         ;; Show matching parenthesis
+(global-so-long-mode)       ;; Handle long lines better
+(global-font-lock-mode 1)   ;; Always highlight code
+(global-auto-revert-mode 1) ;; Refresh a buffer if changed on disk
+
 (setq-default indent-tabs-mode nil)
+
 (defalias 'yes-or-no-p 'y-or-n-p) ;; Accept 'y' in lieu of 'yes'.
 #+END_SRC
 
+** Mixed pitch
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package mixed-pitch
+  :defer 3
+  :hook (text-mode . mixed-pitch-mode)
+  :custom (mixed-pitch-set-height t))
+#+END_SRC
+
 ** Beacon
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package beacon
   :config
   (beacon-mode 1)
@@ -187,37 +194,60 @@ In case some packages are missing, install them.
   (beacon-blink-when-window-changes t) ;; Only flash on window/buffer changes.
   (beacon-blink-when-window-scrolls nil)
   (beacon-blink-when-point-moves    nil)
-  (beacon-blink-duration            .2)
-  (beacon-blink-delay               .2)   
+  (beacon-blink-duration            .5)
+  (beacon-blink-delay               .5)   
   (beacon-size                      20))
 #+END_SRC
 
 ** Theme
-#+BEGIN_SRC lisp :tangle yes
-(defun dz/dark-theme ()
-  (interactive)
-  (dolist (i custom-enabled-themes)
-      (disable-theme i))
-  (load-theme 'base16-gruvbox-material-dark-medium t))
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :config
+  (defun dz/dark-theme ()
+    (interactive)
+    (dolist (i custom-enabled-themes)
+        (disable-theme i))
+    (load-theme 'doom-one t))
+
+  (defun dz/light-theme ()
+    (interactive)
+    (dolist (i custom-enabled-themes)
+        (disable-theme i)))
+
+  (dz/dark-theme))
 #+END_SRC
 
-When working on org and latex documents I like to use the default Emacs light theme.
-#+BEGIN_SRC lisp :tangle yes
-(defun dz/light-theme ()
-  (interactive)
-  (dolist (i custom-enabled-themes)
-      (disable-theme i))
-  (load-theme 'base16-atelier-forest-light t))
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package solarized-theme
+  :config
+  (defun dz/dark-theme ()
+    (interactive)
+    (dolist (i custom-enabled-themes)
+        (disable-theme i))
+    (load-theme 'solarized-dark t))
+
+  (defun dz/light-theme ()
+    (interactive)
+    (dolist (i custom-enabled-themes)
+        (disable-theme i)))
+
+  (dz/dark-theme))
 #+END_SRC
 
-Use dark theme by default.
-#+BEGIN_SRC lisp :tangle yes
-(use-package base16-theme
-  :config (dz/dark-theme))
+** Faster Scrolling
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package fast-scroll
+  :defer 1
+  :hook
+  (fast-scroll-start . (lambda () (flycheck-mode -1)))
+  (fast-scroll-end . (lambda () (flycheck-mode 1)))
+  :config
+  (fast-scroll-config)
+  (fast-scroll-mode 1))
 #+END_SRC
 
 ** Display battery in modeline
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (display-time-mode 1)
 (unless (equal "Battery status not avalible"
                (battery))
@@ -225,7 +255,7 @@ Use dark theme by default.
 #+END_SRC
 
 ** Indent guides
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
   :custom
@@ -233,12 +263,13 @@ Use dark theme by default.
 #+END_SRC
 
 ** Cursorline
-#+BEGIN_SRC lisp :tangle yes
-(global-hl-line-mode t)
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
 #+END_SRC
 
 ** Indentation
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq-default
     electric-indent-inhibit t ;; Disable annoying indentation behaviour.
     indent-tabs-mode        nil
@@ -247,7 +278,7 @@ Use dark theme by default.
 #+END_SRC
 
 Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]]
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/indent-setup (n)
   ;; java/c/c++
   (setq-local c-basic-offset n)
@@ -259,7 +290,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 (defun dz/indent-tabs ()
   (interactive)
   (setq-local indent-tabs-mode t) ;; Use tab instead of space.
-  (dz/indent-setup 2))            ;; Indent 4 spaces width.
+  (dz/indent-setup 2))            ;; Indent 2 spaces width.
 
 (defun dz/indent-spaces ()
   (interactive)
@@ -268,20 +299,26 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** Origami
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package origami
   :defer 3
   :config (origami-mode))
 #+END_SRC
 
 ** ialign
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ialign
   :defer 3)
 #+END_SRC
 
+** Nyan mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package nyan-mode
+  :config (nyan-mode))
+#+END_SRC
+
 ** Relative line numbers
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package linum-relative
   :hook (prog-mode . display-line-numbers-mode)
   :custom
@@ -290,7 +327,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** Key chords
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package key-chord
   :config
   (key-chord-mode 1)
@@ -300,7 +337,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 
 ** Fix scrolling
 
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq
   scroll-conservatively 1000                     ;; Only 'jump' when moving this far
   scroll-margin         4                        ;; Scroll N lines to screen edge
@@ -317,107 +354,22 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 
 * Tools
 ** Terminal Emulator
-#+BEGIN_SRC lisp :tangle yes
-(defun @dz/vterm-init () 
-  (setq mode-line-format       nil
-        confirm-kill-processes nil
-        hscroll-margin         0))
+Use line mode by default. This allows to manipulate the terminal buffer while being in normal mode.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun @dz/term-init (&rest ignored)
+  (term-line-mode))
 
-(defun dz/open-vterm () 
+(advice-add 'ansi-term :after #'@dz/term-init)
+(advice-add 'term :after #'@dz/term-init)
+
+(defun dz/open-term () 
   (interactive)
   (split-window-vertically)
-  (vterm-toggle))
-
-(use-package vterm
-  :defer 3
-  :preface (setq vterm-install t)
-  :commands vterm vterm-mode
-  :hook (vterm-mode . @dz/vterm-init)
-  :config  
-
-  (use-package vterm-toggle
-    :defer 3
-    :bind ("C-c t" . #'vterm-toggle))
-
-  ;; Once vterm is dead, the vterm buffer is useless.
-  (setq vterm-kill-buffer-on-exit t)
-
-  (defun +vterm-goto-insert-point-h ()
-    "Go to the point we were at when we left insert mode."
-    (when +vterm--insert-point
-      (goto-char +vterm--insert-point)
-      (setq-local +vterm--insert-point nil)))
-
-  (defun +vterm-remember-insert-point-h ()
-    "Remember point when leaving insert mode."
-    (setq-local +vterm--insert-point (point)))
-  
-  ;; Restore the point's location when leaving and re-entering insert mode.
-  (add-hook 'vterm-mode-hook
-    (defun +vterm-init-remember-point-h ()
-      (add-hook 'evil-insert-state-exit-hook #'+vterm-remember-insert-point-h nil t)
-      (add-hook 'evil-insert-state-entry-hook #'+vterm-goto-insert-point-h nil t))))
-#+END_SRC
-
-** Treemacs
-#+BEGIN_SRC lisp :tangle yes
-(use-package treemacs
-  :defer 3
-
-  :config
-  (use-package all-the-icons)
-  (use-package lsp-treemacs)
-  (use-package treemacs-projectile)
-  (use-package treemacs-all-the-icons)
-
-  (add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 2)))
-
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t)
-  (treemacs-fringe-indicator-mode t)
-  (treemacs-load-theme "all-the-icons")
-
-  :custom
-  (treemacs-deferred-git-apply-delay      0.5)
-  (treemacs-directory-name-transformer    #'identity)
-  (treemacs-display-in-side-window        t)
-  (treemacs-eldoc-display                 t)
-  (treemacs-file-event-delay              5000)
-  (treemacs-file-extension-regex          treemacs-last-period-regex-value)
-  (treemacs-file-follow-delay             0.2)
-  (treemacs-file-name-transformer         #'identity)
-  (treemacs-follow-after-init             t)
-  (treemacs-git-command-pipe              "")
-  (treemacs-goto-tag-strategy             'refetch-index)
-  (treemacs-indentation                   2)
-  (treemacs-indentation-string            " ")
-  (treemacs-is-never-other-window         nil)
-  (treemacs-max-git-entries               5000)
-  (treemacs-missing-project-action        'ask)
-  (treemacs-no-png-images                 nil)
-  (treemacs-no-delete-other-windows       t)
-  (treemacs-project-follow-cleanup        nil)
-  (treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
-  (treemacs-position                      'left)
-  (treemacs-recenter-distance             0.1)
-  (treemacs-recenter-after-file-follow    nil)
-  (treemacs-recenter-after-tag-follow     nil)
-  (treemacs-recenter-after-project-jump   'always)
-  (treemacs-recenter-after-project-expand 'on-distance)
-  (treemacs-show-cursor                   nil)
-  (treemacs-show-hidden-files             t)
-  (treemacs-silent-filewatch              nil)
-  (treemacs-silent-refresh                nil)
-  (treemacs-sorting                       'alphabetic-asc)
-  (treemacs-space-between-root-nodes      t)
-  (treemacs-tag-follow-cleanup            t)
-  (treemacs-tag-follow-delay              1.5)
-  (treemacs-user-mode-line-format         nil)
-  (treemacs-width                         35))
+  (term "/bin/zsh"))
 #+END_SRC
 
 ** Undo Tree
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package undo-tree
   :defer 3
   :after evil
@@ -427,7 +379,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** Magit
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package magit
   :defer 3
   :bind (:map evil-normal-state-map
@@ -435,7 +387,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** Git Gutter
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package git-gutter
   :defer 3
   :config
@@ -467,7 +419,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** Ivy
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/find-file ()
   "Call `counsel-projectile-find-file' if `projectile-project-p', otherwise fallback to `counsel-find-files'."
   (interactive)
@@ -476,7 +428,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
       (counsel-find-file)))
 #+END_SRC
 
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
   :custom
   (enable-recursive-minibuffers t)
@@ -488,13 +440,6 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
   :config
   (ivy-mode 1)
 
-  (use-package ivy-posframe
-    :diminish ivy-posframe-mode
-    :config
-    (setq ivy-posframe-display-functions-alist
-      '((t . ivy-posframe-display-at-frame-top-center)))
-    :hook (ivy-mode . ivy-posframe-enable))
-
   (use-package swiper)
 
   (use-package counsel 
@@ -503,7 +448,9 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
     :bind (:map evil-normal-state-map
             ("SPC SPC" . counsel-M-x)
             ("SPC C-p" . counsel-projectile-switch-project)
-            ("C-p"     . dz/find-file)))
+            ("C-p"     . dz/find-file)
+           :map ivy-mode-map
+            ("C-c"      . ivy-dispatching-done)))
 
   (use-package projectile
     :config (projectile-mode)
@@ -513,8 +460,6 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 
   (use-package counsel-projectile
     :after (counsel projectile))
-
-  (ivy-posframe-mode) ;; for some reason ivy-posframe-mode only works when enabled from here
 
   (defun find-file-right (filename)
     (interactive)
@@ -536,7 +481,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 * Evil Mode
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package evil
   :config (evil-mode)
 
@@ -552,6 +497,13 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
   (popup-use-optimized-column-computation nil)
 
   :config
+
+  (use-package evil-commentary
+    :config (evil-commentary-mode 1))
+
+  (use-package evil-surround
+    :config (global-evil-surround-mode 1))
+
   (use-package general
     :config (general-override-mode))
 
@@ -587,10 +539,11 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 
 * Language Server
 ** lsp-mode
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package lsp-mode
   :defer 3
   :commands lsp
+  :hook ((typescript-mode vue-mode c++-mode c-mode latex-mode python-mode) . lsp)
   :bind (:map evil-normal-state-map
           ("g r" . lsp-find-references)
           ("g d" . lsp-find-definition)
@@ -600,38 +553,37 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
           ("g I" . lsp-ui-peek-find-implementation)
 
           ("SPC s" . swiper-isearch))
-  :custom (lsp-eldoc-hook nil)
-  :hook ((typescript-mode 
-          c++-mode 
-          c-mode 
-          java-mode
-          latex-mode 
-          python-mode) . lsp))
+  :custom
+  (lsp-eldoc-hook nil)
+  (lsp-vetur-format-default-formatter-css "none")
+  (lsp-vetur-format-default-formatter-html "none")
+  (lsp-vetur-format-default-formatter-js "none")
+  (lsp-vetur-validation-template nil))
 #+END_SRC
 
 ** lsp-ui
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 ;; disable annoying breadcrumbs
 (setq lsp-headerline-breadcrumb-enable nil)
 
 (use-package lsp-ui
   :commands lsp-ui-mode
+
   :custom
+  ;; lsp-ui-doc
+  ;(lsp-ui-doc-enable              t)
+  ;(lsp-ui-doc-position            'at-point)
+  ;(lsp-ui-doc-border              "orange")
+  ;(lsp-ui-doc-header              nil)
+  ;(lsp-ui-doc-include-signature   t)
+  ;(lsp-ui-doc-max-width           120)
+  ;(lsp-ui-doc-max-height          30)
 
-  ; lsp-ui-doc
 
-  (lsp-ui-doc-enable              t)
-  (lsp-ui-doc-position            'at-point)
-  (lsp-ui-doc-border (face-foreground 'default))
-  (lsp-ui-doc-header              t)
-  (lsp-ui-doc-include-signature   nil)
-  (lsp-ui-doc-max-width           120)
-  (lsp-ui-doc-max-height          30)
-
-  ; lsp-ui-sidebar
+  ;; lsp-ui-sidebar
   (lsp-ui-sideline-enable         nil)
 
-  ; lsp-ui-peek
+  ;; lsp-ui-peek
   (lsp-ui-peek-enable             t)
   (lsp-ui-peek-peek-height        20)
   (lsp-ui-peek-list-width         50)
@@ -639,7 +591,7 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 ** XRefs
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy-xref
   :defer 3
   :after ivy
@@ -649,169 +601,106 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+END_SRC
 
 * Auto Complete
-#+BEGIN_SRC lisp :tangle yes
+To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we must use this package.
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-lsp
+  :after company
   :commands company-lsp
-  :config
-  (push 'company-lsp company-backends)
-  (global-company-mode)
   :custom
   (company-minimum-prefix-length     1)
   (company-idle-delay                0)
   (company-lsp-async                 t)
-  (company-tooltip-align-annotations t))
-#+END_SRC
+  (company-tooltip-align-annotations t)
 
-#+BEGIN_SRC lisp :tangle yes
-(use-package company-box
-  :after company
-  :diminish company-box-mode
-  :hook (global-company-mode . company-box-mode)
-  :custom
-  (company-box-backends-colors       nil)
-  (company-box-show-single-candidate t)
-  (company-box-max-candidates        50))
-#+END_SRC
-
-To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we must use this package.
-#+BEGIN_SRC lisp :tangle yes
-(use-package company-posframe
-  :after company
-  :diminish company-posframe-mode
-  :hook (global-company-mode . company-box-mode)
   :config
-  (company-posframe-mode 1))
+  (use-package company-posframe
+    :diminish company-posframe-mode
+    :hook (global-company-mode . company-box-mode)
+    :config (company-posframe-mode 1))
+
+  (push 'company-lsp company-backends)
+  (global-company-mode))
 #+END_SRC
 
 * Languages
 ** C++
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ccls
-  :defer 3
-  :config (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+  :defer 3); (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 #+END_SRC
 
 ** Python
-#+BEGIN_SRC lisp :tangle yes
-(use-package lsp-python-ms
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package python-mode
   :defer 3
-  :init (setq lsp-python-ms-auto-install-server t))
-#+END_SRC
-
-** Scala
-#+BEGIN_SRC lisp :tangle yes
-(use-package scala-mode
-  :defer 3
-  :interpreter
-    ("scala" . scala-mode))
-
-(use-package sbt-mode
-  :defer 3
-  :commands sbt-start sbt-command
+  :custom (python-shell-interpreter "python3")
+  :hook (python-mode . lsp-deferred)
   :config
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-   (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-(use-package lsp-metals
-  :defer 3
-  :config (setq lsp-metals-treeview-show-when-views-received t))
+  (use-package lsp-pyright
+    :hook (python-mode . lsp-deferred))
+
+  (use-package pyvenv
+    :config (pyvenv-mode 1))
+
+  (use-package py-isort
+    :hook ((python-mode . pyvenv-mode)
+           (before-save . py-isort-before-save)))
+
+  (use-package blacken
+    :hook (python-mode . blacken-mode)
+    :custom (blacken-line-length 79)))
 #+END_SRC
 
 ** Golang
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package go-mode
-  :defer 3
   :mode "\\.go\\'"
-  :bind (:map go-mode-map
-         ("C-c C-n" . go-run))
   :hook ((go-mode     . lsp-deferred)
          (before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports)))
-#+END_SRC
+         (before-save . lsp-organize-imports))
 
-#+BEGIN_SRC lisp :tangle yes
-(use-package company-go
-  :defer 3
-  :after go-mode
-  :custom
-  (company-go-show-annotation t)
-  :hook (go-mode .
-            (lambda ()
-              (set (make-local-variable 'company-backends) '(company-go)))))
-#+END_SRC
+  :config
+  (use-package company-go
+    :custom (company-go-show-annotation t) 
+    :config
+    (defun dz/go-mode-hook () 
+      (set (make-local-variable 'company-backends) 
+        '(company-go)))
+    :hook (go-mode . dz/go-mode-hook))
 
-#+BEGIN_SRC lisp :tangle yes
-(use-package go-eldoc
-  :defer 3
-  :after go-mode
-  :hook (go-mode . go-eldoc-setup))
-#+END_SRC
+  (use-package go-eldoc
+    :hook (go-mode . go-eldoc-setup))
 
-#+BEGIN_SRC lisp :tangle yes
-(use-package go-guru
-  :defer 3
-  :after go-mode
-  :hook (go-mode . go-guru-hl-identifier-mode))
+  (use-package go-guru
+    :hook (go-mode . go-guru-hl-identifier-mode))
+
+  (use-package go-tag ;;; binary dependency: gomodifytags
+    :custom (go-tag-args (list "-transform" "camelcase"))))
 #+END_SRC
 
 ** Javascript/Typescript
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package tide
   :mode "\\.ts\\'"
-  :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)))
 #+END_SRC
 
 ** Web
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
-  :config
-  (setq web-mode-enable-current-element-highlight t)
-  :mode ("\\.ts\\'" "\\.html?\\'" "\\.css?\\'" "\\.js\\'"))
-#+END_SRC
+  :mode ("\\.html\\'" "\\.css\\'" "\\.js\\'" "\\.ts\\'")
 
-#+BEGIN_SRC lisp :tangle yes
-(use-package company-web 
-  :defer 3 
-  :after web-mode)
-#+END_SRC
-
-#+BEGIN_SRC lisp :tangle yes
-(use-package css-mode 
-  :defer 3)
-#+END_SRC
-
-*** Vue
-#+BEGIN_SRC lisp :tangle yes
-(use-package vue-mode
-  :defer 3
-  :config
-  (add-hook 'mmm-mode-hook
-            (lambda ()
-              (set-face-background 'mmm-default-submode-face nil))))
-#+END_SRC
-
-*** Emmet
-#+BEGIN_SRC lisp :tangle yes
-(use-package emmet-mode
-  :preface (defvar emmet-mode-keymap (make-sparse-keymap))
-  :bind (:map emmet-mode-keymap
-          ("C-TAB" . emmet-expand-line))
-  :hook ((css-mode web-mode html-mode) . emmet-mode))
-#+END_SRC
-
-#+BEGIN_SRC lisp :tangle yes
-(use-package web-mode
-  :defer 3
-  :mode ("\\.php\\'" "\\.html\\'")
+  :custom
+  (web-mode-enable-current-element-highlight t)
 
   :config
-  (defun my-web-mode-hook ()
+  (use-package company-web)
+  (use-package css-mode)
+
+  (defun dz/web-mode-hook ()
     "Hooks for Web mode."
     (setq web-mode-markup-indent-offset 2
           web-mode-code-indent-offset   2
@@ -823,50 +712,47 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
         company-yasnippet
         company-files)))
 
-  (add-hook 'web-mode-hook 'prog-mode-hook)    
-  (add-hook 'web-mode-hook 'my-web-mode-hook)    
-  (add-hook 'web-mode-hook 'company-mode)    
+  :hook ((web-mode . prog-mode)
+         (web-mode . dz/web-mode-hook)
+         (web-mode . company-mode)))
+#+END_SRC
 
-  (add-hook 'web-mode-before-auto-complete-hooks
-      '(lambda ()
-       (let ((web-mode-cur-language
-          (web-mode-language-at-pos)))
-                 (if (string= web-mode-cur-language "php")
-           (yas-activate-extra-mode 'php-mode)
-           (yas-deactivate-extra-mode 'php-mode))
-                 (if (string= web-mode-cur-language "css")
-           (setq emmet-use-css-transform t)
-           (setq emmet-use-css-transform nil))))))
+*** Emmet
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package emmet-mode
+  :preface (defvar emmet-mode-keymap (make-sparse-keymap))
+  :bind (:map emmet-mode-keymap
+          ("C-TAB" . emmet-expand-line))
+  :hook ((css-mode web-mode html-mode) . emmet-mode))
+#+END_SRC
+
+** Vue
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package vue-mode
+  :mode "\\.vue\\'"
+  :hook ((vue-mode . prettier-js-mode)
+         (vue-mode . lsp)
+         (vue-mode . (lambda () (set-face-background 'mmm-default-submode-face nil))))
+  :config
+  (setq prettier-js-args '("--parser vue")))
 #+END_SRC
 
 * Org
-#+BEGIN_SRC lisp :tangle yes
-(defun dz/org-faces ()
-  (require 'color)
-  (set-face-attribute 'org-block-begin-line nil :slant 'italic)
-  (set-face-attribute 'org-block-end-line nil :slant 'italic)
-  (set-face-attribute 'org-block nil :background
-                      (color-darken-name
-                        (face-attribute 'default :background) 3)))
-#+END_SRC
-
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package org
   :defer 3
   :config
 
-  (use-package ox-hugo 
-    :after ox)
+  (use-package ox-hugo :after ox)
+  (use-package ox-reveal :after ox)
 
-  (use-package ox-reveal
-    :after ox)
+  (require 'ox)
 
   (use-package org-bullets 
     :hook (org-mode . org-bullets-mode))
 
   (setq org-log-done 'time) ;; mark done tasks with current time
-  (electric-indent-mode) ;; remove annoying indent behaviour
-  (require 'ox)
+  ;(electric-indent-mode) ;; remove annoying indent behaviour
 
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
@@ -887,7 +773,28 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
+  (dolist (face '(org-level-1 
+                  org-level-2 
+                  org-level-3 
+                  org-level-4 
+                  org-level-5 
+                  org-level-6 
+                  org-level-7 
+                  org-level-8))
+    (set-face-attribute face nil :inherit 'mixed-pitch))
+
+  (defun dz/org-faces ()
+    (require 'color)
+    (set-face-attribute 'org-block-begin-line nil :slant 'italic)
+    (set-face-attribute 'org-block-end-line nil :slant 'italic)
+    (set-face-attribute 'org-block nil :background
+                        (color-darken-name
+                          (face-attribute 'default :background) 3)))
+
   :custom (org-directory "~/org")
+
+  :bind (:map evil-normal-state-map
+    ("C-c C-e" . org-export-dispatch))
 
   :hook ((org-mode . org-indent-mode)
          (org-mode . flyspell-mode)
@@ -895,7 +802,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 #+END_SRC
 
 * LaTeX
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package company-auctex :defer 3)
 (use-package company-math :defer 3)
 
@@ -926,7 +833,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 
 * Configuration Files
 ** Terraform
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package terraform-mode
   :defer 3
   :mode ("\\.tf$" . terraform-mode)
@@ -939,37 +846,37 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 #+END_SRC
 
 ** Yaml
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
 #+END_SRC
 
 ** Protobuf
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package protobuf-mode
   :mode ("\\.pb$" . protobuf-mode))
 #+END_SRC
 
 ** CMake
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package cmake-mode
   :mode ("CMakeLists\\.txt\\'" . cmake-mode))
 #+END_SRC
 
 ** Dockerfile
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package dockerfile-mode
   :mode ("Dockerfile" . dockerfile-mode))
 #+END_SRC
 
 ** Toml
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package toml-mode
   :mode ("\\.toml$" . toml-mode))
 #+END_SRC
 
 * Spelling
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package flycheck
   :defer 3
   :init (global-flycheck-mode)
@@ -978,7 +885,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 #+END_SRC
 
 * Snippets
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (use-package yasnippet
   :defer 3
   :hook (after-init . yas-global-mode)
@@ -996,7 +903,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 
 * Miscellaneous dz/functions
 ** Wrap org source code blocks
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (setq def-language "")
 
 (defun dz/org-wrap-source ()
@@ -1018,7 +925,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 #+END_SRC
 
 ** Open configuration
-#+BEGIN_SRC lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle yes
 (defun dz/open-config ()
   (interactive)
   (find-file "~/.emacs.d/init.org"))

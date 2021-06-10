@@ -1,0 +1,9 @@
+yay_lsp_dependencies:
+  - gopls
+
+pip_lsp_dependencies:
+  - pyls
+
+npm_lsp_dependencies:
+  - vue-language-server
+  - vscode-css-languageserver-bin
