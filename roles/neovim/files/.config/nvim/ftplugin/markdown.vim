@@ -10,4 +10,4 @@ setlocal foldtext=mirco#fold#markdown()   " Change folding style to one inspired
 setlocal cursorline!
 setlocal number!
 setlocal relativenumber!
-setlocal concealcursor=
+setlocal conceallevel=0

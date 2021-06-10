@@ -1,9 +1,9 @@
-- name: installing dependencies
-  pacman:
+- name: install dependencies
+  yay:
     name: '{{ dependencies }}'
     state: latest
 
-- name: installing from source
+- name: compile and install from source
   make:
     target: install
     chdir: '{{ role_path}}/files/neovim'
@@ -11,15 +11,7 @@
       CMAKE_BUILD_TYPE: RelWithDebInfo
   become: yes
 
-- name: installing required python modules
-  shell: python3 -m pip install --user neovim sql-language-server
-
-- name: installing SQL linter
-  command:
-    cmd: npm install node-sql-parser -g
-  become: yes
-
-- name: symlinking configuration files
+- name: symlink configuration files
   file:
     src: '{{ role_path }}/files/{{ item }}'
     path: '~/{{ item }}'
@@ -27,17 +19,26 @@
     force: yes
   loop: '{{ [ ".config/nvim" ] }}'
 
-- name: installing coc bundle
+- name: install neovim extensions
   command:
-    cmd: yarn install --frozen-lockfile
-    chdir: '{{ role_path }}/files/.config/nvim/pack/bundle/opt/coc.nvim/'
+    cmd: nvim +PlugInstall -cqa
 
-- name: install extensions
+- name: install treesitter extensions
   command:
-    cmd: nvim +CocUpdateSync -cqa
+    cmd: nvim +TSInstallSync go python cpp lua -cqa
 
-- name: installing coc dependencies
-  pacman:
-    name: '{{ coc_dependencies }}'
+- name: installing language servers through yay
+  yay:
+    name: '{{ aur_lsp_dependencies }}'
     state: latest
 
+- name: installing language servers through pip
+  pip:
+    name: '{{ pip_lsp_dependencies }}'
+
+- name: installing language servers through npm
+  npm:
+    name: '{{ item }}'
+    global: yes
+  with_items: '{{ npm_lsp_dependencies }}'
+  become: true

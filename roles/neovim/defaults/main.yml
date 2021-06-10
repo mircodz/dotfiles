@@ -1,19 +1,27 @@
 dependencies:
   - gperf
-  - luajit
-  - msgpack-c
   - libtermkey
-  - unibilium
   - libutf8proc
   - libuv
   - libvterm
   - luajit
+  - luajit
   - luarocks
+  - msgpack-c
   - npm
   - python
   - python-pip
+  - unibilium
 
-coc_dependencies:
+aur_lsp_dependencies:
   - ccls
-  - sql-language-server
   - gopls
+  - terraform-ls
+
+pip_lsp_dependencies:
+  - pyls
+
+npm_lsp_dependencies:
+  - typescript
+  - typescript-language-server
+  - vue-language-server

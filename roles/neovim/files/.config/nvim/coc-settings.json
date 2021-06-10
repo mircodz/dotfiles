@@ -27,12 +27,6 @@
       "command": "gopls",
       "rootPatterns": ["go.mod", ".git/"],
       "filetypes": ["go"]
-    },
-    "sql": {
-      "command": "sqls",
-      "args": ["-config", "$HOME/.config/sqls/config.yml"],
-      "filetypes": ["sql"],
-      "shell": true
     }
   }
 }

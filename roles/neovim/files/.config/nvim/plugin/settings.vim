@@ -1,4 +1,5 @@
-colorscheme base16-tomorrow-night     " Set default colorscheme
+"colorscheme base16-gruvbox-dark-soft  " Set default colorscheme
+colorscheme NeoSolarized
 filetype indent plugin on
 syntax on
 
