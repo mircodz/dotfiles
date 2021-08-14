@@ -4,10 +4,6 @@ autoload -Uz _zinit
 
 fpath+=$HOME/.zsh/pure
 
-# Theme, currently not working
-#zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-#zinit light sindresorhus/pure
-
 # Syntax Highligthing
 zinit light zdharma/fast-syntax-highlighting
 zinit ice lucid wait='0' atload='_zsh_autosuggest_start'
@@ -21,7 +17,6 @@ zinit ice from"gh-r" as"program"
 zinit load junegunn/fzf-bin
 
 autoload colors; colors
-
 autoload -U promptinit; promptinit; prompt pure
 
 bindkey -e
@@ -36,3 +31,5 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

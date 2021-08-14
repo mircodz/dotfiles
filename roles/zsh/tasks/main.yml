@@ -2,10 +2,10 @@
   pacman:
     name: zsh
 
-- name: symlinking configuration files
+- name: installing configuration files
   file:
-    src: '{{ ansible_env.PWD }}/roles/zsh/files/{{ item }}'
+    src: '{{ role_path }}/files/{{ item }}'
     path: '~/{{ item }}'
     state: link
     force: yes
-  loop: '{{ [ ".zsh", ".zshrc", ".zprofile" ] }}'
+  loop: '{{ [ ".zsh", ".zinit", ".zshrc", ".zprofile" ] }}'

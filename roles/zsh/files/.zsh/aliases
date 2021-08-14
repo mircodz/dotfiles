@@ -1,19 +1,5 @@
-alias dc="docker-compose up"
-alias dcb="docker-compose up --build"
-
-alias pip="python3 -m pip install --user --upgrade"
-
-alias gap="git add ."
-alias gca="git commit --amend"
-alias gpf="git push -f"
-
 alias l="ls -la"
 alias ll="ls -la"
 alias ls="ls --color=auto"
 alias lsa="ls -la"
 alias ldot="ls -ld .*"
-
-alias grep="grep --color=auto"
-
-alias dl="youtube-dlc"
-alias zathura="zathura --fork"

@@ -73,3 +73,6 @@
 [submodule "roles/awesome/files/.config/awesome/lain"]
 	path = roles/awesome/files/.config/awesome/lain
 	url = https://github.com/lcpz/lain
+[submodule "roles/zsh/files/.zinit/bin"]
+	path = roles/zsh/files/.zinit/bin
+	url = https://github.com/zdharma/zinit.git
