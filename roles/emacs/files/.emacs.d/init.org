@@ -1,12 +1,7 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Mirco De Zorzi
 #+EMAIL: mircodezorzi@protonmail.com
-#+DATE: 2021-01-26
-
-* Introduction
-[[https://mircodezorzi.github.io/doc/emacs-configuration/210520-1305-53.png]]
-
-What follows is my literate emacs configuration. Feel free to copy any snippet you wish, as I did with many other configuration over the past year or so.
+#+TAGS[]: emacs
 
 * Meta
 Enable lexical scoping for the current file.
@@ -14,7 +9,7 @@ Enable lexical scoping for the current file.
 ;;; -*- lexical-binding: t -*-
 #+END_SRC
 
-Enable native compilation
+Enable native compilation.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (setq package-native-compile t)
 #+END_SRC
@@ -71,53 +66,81 @@ In case some packages are missing, install them.
 (let* ((package--builtins nil)
        (packages
         '(auctex
-          all-the-icons
           base16-theme
           beacon
+          blacken
           ccls
+          cmake-mode
+          company
           company-auctex
+          company-box
           company-go
           company-lsp
           company-math
           company-posframe
+          company-terraform
           company-web
           counsel
           counsel-projectile
+          delight
           dockerfile-mode
+          docker-compose-mode
+          docker
           emmet-mode
           evil
+          evil-commentary
+          evil-surround
+          fast-scroll
+          flycheck
           general
+          git-gutter
+          git-gutter-fringe
           go-eldoc
           go-guru
           go-mode
+          go-tag
           highlight-indent-guides
+          ialign
           ivy
           ivy-xref
           key-chord
+          linum-relative
           lsp-mode
+          lsp-pyright
+          lsp-treemacs
           lsp-ui
           magit
           mixed-pitch
           org
-          ormolu
+          origami
           ox-hugo
-          pdf-tools
-          ialign
+          ox-reveal
           projectile
           protobuf-mode
+          py-isort
+          python-mode
+          pyvenv
+          solarized-theme
           swiper
-          tide
+          terraform-mode
           toml-mode
+          tree-sitter
+          treemacs
+          treemacs-all-the-icons
+          treemacs-projectile
+          typescript-mode
           undo-tree
-          use-package
+          vue-mode
           web-mode
-          yasnippet-snippets
-          yaml-mode)))
+          yaml-mode
+          yasnippet
+          yasnippet-snippets)))
   (let ((packages (seq-remove 'package-installed-p packages)))
     (when packages
       ;; Install uninstalled packages.
       (package-refresh-contents)
       (mapc 'package-install packages))))
+(use-package delight) ;; fide minor mode symbols in modeline, keeping it much cleaner
 #+END_SRC
 
 * General
@@ -146,10 +169,10 @@ In case some packages are missing, install them.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (dolist (mode
          '(menu-bar-mode
-           tool-bar-mode       
+           tool-bar-mode
            tooltip-mode
-           scroll-bar-mode     
-           blink-cursor-mode)) 
+           scroll-bar-mode
+           blink-cursor-mode))
   (funcall mode 0))
 #+END_SRC
 
@@ -163,16 +186,33 @@ In case some packages are missing, install them.
       kill-whole-line           t
       case-fold-search          nil)
 
-(set-face-attribute 'default nil :font "Source Code Pro 16")
-(set-face-attribute 'fixed-pitch nil :font "Source Code Pro 16")
-(set-face-attribute 'variable-pitch nil :font "Bitter 16")
+(setq-default
+  indent-tabs-mode        nil
+  tab-width               2
+  evil-shift-width        2)
 
-(show-paren-mode t)         ;; Show matching parenthesis
-(global-so-long-mode)       ;; Handle long lines better
-(global-font-lock-mode 1)   ;; Always highlight code
-(global-auto-revert-mode 1) ;; Refresh a buffer if changed on disk
+(set-face-attribute 'default nil 
+  :font "SF Mono" ;:font "SpaceMono Nerd Font"
+  :height 160
+  :weight 'normal
+  :width 'normal)
 
-(setq-default indent-tabs-mode nil)
+(set-face-attribute 'fixed-pitch nil 
+  :font "SF Mono" ;:font "SpaceMono Nerd Font"
+  :height 160
+  :weight 'normal
+  :width 'normal)
+
+(set-face-attribute 'variable-pitch nil 
+  :font "ETbb"
+  :height 180
+  :weight 'normal
+  :width 'normal)
+
+(show-paren-mode t)         ;; Show matching parenthesis.
+(global-so-long-mode)       ;; Handle long lines better.
+(global-font-lock-mode 1)   ;; Always highlight code.
+(global-auto-revert-mode 1) ;; Refresh a buffer if changed on disk.
 
 (defalias 'yes-or-no-p 'y-or-n-p) ;; Accept 'y' in lieu of 'yes'.
 #+END_SRC
@@ -195,49 +235,31 @@ In case some packages are missing, install them.
   (beacon-blink-when-window-scrolls nil)
   (beacon-blink-when-point-moves    nil)
   (beacon-blink-duration            .5)
-  (beacon-blink-delay               .5)   
+  (beacon-blink-delay               .5)
   (beacon-size                      20))
 #+END_SRC
 
 ** Theme
 #+BEGIN_SRC emacs-lisp
-(use-package doom-themes
-  :config
-  (defun dz/dark-theme ()
-    (interactive)
-    (dolist (i custom-enabled-themes)
-        (disable-theme i))
-    (load-theme 'doom-one t))
-
-  (defun dz/light-theme ()
-    (interactive)
-    (dolist (i custom-enabled-themes)
-        (disable-theme i)))
-
-  (dz/dark-theme))
+(use-package solarized-theme
+  :config (load-theme 'solarized-dark t)
+  :custom-face
+  (font-lock-contant-face ((t (:bold nil :foreground nil))))
+  (font-lock-keyword-face ((t (:bold nil))))
+  (mode-line              ((t (:inverse-video t :underline nil))))
+  (mode-line-buffer-id    ((t (:inverse-video t :foreground nil))))
+  (mode-line-inactive     ((t (:inverse-video t :underline nil)))))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package solarized-theme
+(use-package base16-theme
   :config
-  (defun dz/dark-theme ()
-    (interactive)
-    (dolist (i custom-enabled-themes)
-        (disable-theme i))
-    (load-theme 'solarized-dark t))
-
-  (defun dz/light-theme ()
-    (interactive)
-    (dolist (i custom-enabled-themes)
-        (disable-theme i)))
-
-  (dz/dark-theme))
+  (load-theme 'base16-tomorrow-night t))
 #+END_SRC
 
-** Faster Scrolling
+** Better Scrolling
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package fast-scroll
-  :defer 1
   :hook
   (fast-scroll-start . (lambda () (flycheck-mode -1)))
   (fast-scroll-end . (lambda () (flycheck-mode 1)))
@@ -246,20 +268,26 @@ In case some packages are missing, install them.
   (fast-scroll-mode 1))
 #+END_SRC
 
-** Display battery in modeline
 #+BEGIN_SRC emacs-lisp :tangle yes
-(display-time-mode 1)
-(unless (equal "Battery status not avalible"
-               (battery))
-  (display-battery-mode 1))
+(setq
+  ;scroll-conservatively 1000                     ;; Only 'jump' when moving this far.
+  ;scroll-margin         4                        ;; Scroll N lines to screen edge.
+  ;scroll-step           1                        ;; Keyboard scroll one line at a time.
+
+  mouse-wheel-scroll-amount '(6 ((shift) . 1))   ;; Mouse scroll N lines.
+  mouse-wheel-progressive-speed nil              ;; Don't accelerate scrolling.
+  redisplay-dont-pause t                         ;; Don't pause display on input.
+
+  ;; Always redraw immediately when scrolling, more responsive and doesn't hang!
+  fast-but-imprecise-scrolling nil
+  jit-lock-defer-time          0)
 #+END_SRC
 
 ** Indent guides
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
-  :custom
-  (highlight-indent-guides-method 'character))
+  :custom (highlight-indent-guides-method 'character))
 #+END_SRC
 
 ** Cursorline
@@ -269,17 +297,11 @@ In case some packages are missing, install them.
 #+END_SRC
 
 ** Indentation
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq-default
-    electric-indent-inhibit t ;; Disable annoying indentation behaviour.
-    indent-tabs-mode        nil
-    tab-width               2
-    evil-shift-width        2)
-#+END_SRC
-
 Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]]
 #+BEGIN_SRC emacs-lisp :tangle yes
+;;;###autoload
 (defun dz/indent-setup (n)
+
   ;; java/c/c++
   (setq-local c-basic-offset n)
   ;; web development
@@ -287,11 +309,13 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
               web-mode-css-indent-offset    n
               web-mode-code-indent-offset   n))
 
+;;;###autoload
 (defun dz/indent-tabs ()
   (interactive)
   (setq-local indent-tabs-mode t) ;; Use tab instead of space.
   (dz/indent-setup 2))            ;; Indent 2 spaces width.
 
+;;;###autoload
 (defun dz/indent-spaces ()
   (interactive)
   (setq-local indent-tabs-mode nil) ;; Use space instead of tab.
@@ -309,12 +333,6 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ialign
   :defer 3)
-#+END_SRC
-
-** Nyan mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package nyan-mode
-  :config (nyan-mode))
 #+END_SRC
 
 ** Relative line numbers
@@ -335,34 +353,19 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
   (key-chord-define-global "eu" 'evil-normal-state))
 #+END_SRC
 
-** Fix scrolling
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq
-  scroll-conservatively 1000                     ;; Only 'jump' when moving this far
-  scroll-margin         4                        ;; Scroll N lines to screen edge
-  scroll-step           1                        ;; Keyboard scroll one line at a time
-  
-  mouse-wheel-scroll-amount '(6 ((shift) . 1))   ;; Mouse scroll N lines
-  mouse-wheel-progressive-speed nil              ;; Don't accelerate scrolling
-  redisplay-dont-pause t                         ;; Don't pause display on input
-  
-  ;; Always redraw immediately when scrolling, more responsive and doesn't hang!
-  fast-but-imprecise-scrolling nil
-  jit-lock-defer-time          0)
-#+END_SRC
-
 * Tools
 ** Terminal Emulator
 Use line mode by default. This allows to manipulate the terminal buffer while being in normal mode.
 #+BEGIN_SRC emacs-lisp :tangle yes
+;;;###autoload
 (defun @dz/term-init (&rest ignored)
   (term-line-mode))
 
 (advice-add 'ansi-term :after #'@dz/term-init)
 (advice-add 'term :after #'@dz/term-init)
 
-(defun dz/open-term () 
+;;;###autoload
+(defun dz/open-term ()
   (interactive)
   (split-window-vertically)
   (term "/bin/zsh"))
@@ -372,7 +375,6 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package undo-tree
   :defer 3
-  :after evil
   :config
   (global-undo-tree-mode)
   (evil-set-undo-system 'undo-tree))
@@ -393,33 +395,31 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   :config
 
   (use-package git-gutter-fringe
-    :diminish git-gutter-mode
     :config
-
-    ;; subtle diff indicators in the fringe 
-    ;; places the git gutter outside the margins. 
-    (setq-default fringes-outside-margins t) 
-      ;; thin fringe bitmaps 
+    ;; Subtle diff indicators in the fringe places the git gutter outside the margins.
+    (setq-default fringes-outside-margins t)
+    ;; Thin fringe bitmaps.
     (define-fringe-bitmap 'git-gutter-fr:added
-      [224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224] nil nil 'center) 
+      [224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224] nil nil 'center)
     (define-fringe-bitmap 'git-gutter-fr:modified
-      [224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224 
-       224 224 224 224 224] nil nil 'center) 
-    (define-fringe-bitmap 'git-gutter-fr:deleted 
-      [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248] nil nil 'center)) 
+      [224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224
+       224 224 224 224 224] nil nil 'center)
+    (define-fringe-bitmap 'git-gutter-fr:deleted
+      [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248] nil nil 'center))
 
   (global-git-gutter-mode))
 #+END_SRC
 
 ** Ivy
 #+BEGIN_SRC emacs-lisp :tangle yes
+;;;###autoload
 (defun dz/find-file ()
   "Call `counsel-projectile-find-file' if `projectile-project-p', otherwise fallback to `counsel-find-files'."
   (interactive)
@@ -430,7 +430,9 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ivy
-  :custom
+  :init (ivy-mode 1)
+
+  :custom 
   (enable-recursive-minibuffers t)
   (ivy-height                   10)
   (ivy-initial-inputs-alist     nil)
@@ -438,29 +440,6 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   (ivy-use-virtual-buffers      t)
 
   :config
-  (ivy-mode 1)
-
-  (use-package swiper)
-
-  (use-package counsel 
-    :after evil
-    :config (counsel-mode)
-    :bind (:map evil-normal-state-map
-            ("SPC SPC" . counsel-M-x)
-            ("SPC C-p" . counsel-projectile-switch-project)
-            ("C-p"     . dz/find-file)
-           :map ivy-mode-map
-            ("C-c"      . ivy-dispatching-done)))
-
-  (use-package projectile
-    :config (projectile-mode)
-    :custom
-    (projectile-enable-caching     t)
-    (projectile-completion-system 'ivy))
-
-  (use-package counsel-projectile
-    :after (counsel projectile))
-
   (defun find-file-right (filename)
     (interactive)
     (split-window-right)
@@ -476,18 +455,91 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   (dolist (command '(counsel-projectile-find-file
                      counsel-find-file))
     (ivy-set-actions command
-    '(("|" find-file-right "open right") 
-      ("%" find-file-below "open below")))))
+    '(("|" find-file-right "open right")
+      ("%" find-file-below "open below"))))
+
+  :bind (:map ivy-minibuffer-map
+         ("C-h" . ivy-next-line)
+         ("C-t" . ivy-previous-line)
+         :map ivy-mode-map
+         ("C-c" . ivy-dispatching-done)))
+
+(use-package ivy-xref
+  :after ivy
+  :custom
+  (xref-show-definitions-function #'ivy-xref-show-defs)
+  (xref-show-xrefs-function       #'ivy-xref-show-xrefs))
+
+(use-package swiper
+  :after ivy)
+
+(use-package counsel
+  :after ivy evil
+  :config (counsel-mode)
+  :bind (:map evil-normal-state-map
+          ("SPC SPC" . counsel-M-x)
+          ("SPC C-p" . counsel-projectile-switch-project)
+          ("SPC s" . swiper-isearch)
+          ("C-p" . dz/find-file)))
+
+(use-package projectile
+  :after ivy
+  :config (projectile-mode)
+  :custom
+  (projectile-enable-caching     t)
+  (projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+  :after counsel projectile)
+#+END_SRC
+
+** Treesitter
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package tree-sitter
+  :defer 3
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+END_SRC
+
+** Treemacs
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package treemacs
+  :defer 3
+  :custom
+  (treemacs-width 20)
+  (treemacs-indentation 2)
+  (treemacs-follow-after-init t)
+  (treemacs-git-integration t)
+  (treemacs-show-hidden-files t)
+  :config
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t))
+
+(use-package treemacs-projectile
+  :after treemacs projectile evil
+  :bind (:map evil-normal-state-map
+         ("C-c o t" . treemacs-projectile)))
+
+(use-package lsp-treemacs
+  :after treemacs
+  :config (lsp-treemacs-sync-mode 1))
+
+(use-package treemacs-all-the-icons
+  :after treemacs
+  :config (treemacs-load-theme 'all-the-icons))
 #+END_SRC
 
 * Evil Mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package evil
-  :config (evil-mode)
+(use-package general
+  :config (general-override-mode))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package evil
   :custom
-  (scroll-step                            1)
-  (scroll-conservatively                  10000)
   (evil-search-module                     'evil-search)
   (evil-ex-complete-emacs-commands        nil)
   (evil-shift-round                       nil)
@@ -497,136 +549,152 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   (popup-use-optimized-column-computation nil)
 
   :config
+  (evil-mode)
 
-  (use-package evil-commentary
-    :config (evil-commentary-mode 1))
+  (defun dz/evil-visual-shift-left ()
+    "Shift visual selection left, retains the selection."
+    (interactive)
+    (evil-shift-left (region-beginning) (region-end))
+    (funcall (evil-visual-restore)))
 
-  (use-package evil-surround
-    :config (global-evil-surround-mode 1))
-
-  (use-package general
-    :config (general-override-mode))
+  (defun dz/evil-visual-shift-right ()
+    "Shift visual selection left, retains the selection."
+    (interactive)
+    (evil-shift-right (region-beginning) (region-end))
+    (funcall (evil-visual-restore)))
 
   (general-define-key
     :states '(insert)
       "TAB" 'tab-to-tab-stop)
 
   (general-define-key
+
+    :states '(visual) 
+      "<" #'dz/evil-visual-shift-left
+      ">" #'dz/evil-visual-shift-right)
+
+  (general-define-key
     :states '(normal visual motion)
-      "d" 'evil-backward-char
-      "n" 'evil-forward-char
-      "h" 'evil-next-line
-      "t" 'evil-previous-line
+      "d" #'evil-backward-char
+      "n" #'evil-forward-char
+      "h" #'evil-next-line
+      "t" #'evil-previous-line
 
-      "s" 'evil-ex
+      "s" #'evil-ex
 
-      "j" 'evil-delete
-      "k" 'evil-find-char-to
+      "j" #'evil-delete
+      "k" #'evil-find-char-to
 
-      "l" 'evil-search-next
-      "L" 'evil-search-previous
+      "l" #'evil-search-next
+      "L" #'evil-search-previous
 
-      "D" 'evil-beginning-of-line
-      "N" 'evil-end-of-line
+      "D" #'evil-beginning-of-line
+      "N" #'evil-end-of-line
       "H" (kbd "5h")
       "T" (kbd "5t")
 
-      "C-d" 'evil-window-left
-      "C-h" 'evil-window-down
-      "C-t" 'evil-window-up
-      "C-n" 'evil-window-right))
+      "C-d" #'evil-window-left
+      "C-h" #'evil-window-down
+      "C-t" #'evil-window-up
+      "C-n" #'evil-window-right))
+
+(use-package evil-commentary
+  :after evil
+  :config (evil-commentary-mode 1))
+
+(use-package evil-surround
+  :after evil
+  :config (global-evil-surround-mode 1))
 #+END_SRC
 
 * Language Server
 ** lsp-mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package lsp-mode
-  :defer 3
-  :commands lsp
-  :hook ((typescript-mode vue-mode c++-mode c-mode latex-mode python-mode) . lsp)
-  :bind (:map evil-normal-state-map
-          ("g r" . lsp-find-references)
-          ("g d" . lsp-find-definition)
+  (use-package lsp-mode
+    :defer 3
+    :commands lsp
+    :hook ((typescript-mode
+            javascript-mode
+            vue-mode
+            c++-mode
+            c-mode
+            latex-mode
+            python-mode) . lsp-deferred)
+    :bind (:map evil-normal-state-map
+            ("g r" . lsp-find-references)
+            ("g d" . lsp-find-definition))
+    :custom
+    ;; disable breadcrumbs
+    (lsp-headerline-breadcrumb-enable nil)
 
-          ("g D" . lsp-ui-peek-find-definitions)
-          ("g R" . lsp-ui-peek-find-references)
-          ("g I" . lsp-ui-peek-find-implementation)
+    ;; vue related configuration
+    (lsp-vetur-format-default-formatter-css "none")
+    (lsp-vetur-format-default-formatter-html "none")
+    (lsp-vetur-format-default-formatter-js "none")
+    (lsp-vetur-validation-template nil))
 
-          ("SPC s" . swiper-isearch))
-  :custom
-  (lsp-eldoc-hook nil)
-  (lsp-vetur-format-default-formatter-css "none")
-  (lsp-vetur-format-default-formatter-html "none")
-  (lsp-vetur-format-default-formatter-js "none")
-  (lsp-vetur-validation-template nil))
-#+END_SRC
-
-** lsp-ui
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; disable annoying breadcrumbs
-(setq lsp-headerline-breadcrumb-enable nil)
-
-(use-package lsp-ui
-  :commands lsp-ui-mode
-
-  :custom
-  ;; lsp-ui-doc
-  ;(lsp-ui-doc-enable              t)
-  ;(lsp-ui-doc-position            'at-point)
-  ;(lsp-ui-doc-border              "orange")
-  ;(lsp-ui-doc-header              nil)
-  ;(lsp-ui-doc-include-signature   t)
-  ;(lsp-ui-doc-max-width           120)
-  ;(lsp-ui-doc-max-height          30)
-
-
-  ;; lsp-ui-sidebar
-  (lsp-ui-sideline-enable         nil)
-
-  ;; lsp-ui-peek
-  (lsp-ui-peek-enable             t)
-  (lsp-ui-peek-peek-height        20)
-  (lsp-ui-peek-list-width         50)
-  (lsp-ui-peek-fontify            'on-demand))
-#+END_SRC
-
-** XRefs
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ivy-xref
-  :defer 3
-  :after ivy
-  :custom
-  (xref-show-definitions-function #'ivy-xref-show-defs)
-  (xref-show-xrefs-function       #'ivy-xref-show-xrefs))
+  (use-package lsp-ui
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :custom
+    (lsp-ui-doc-enable   t)
+    (lsp-ui-doc-position 'at-point)
+    (lsp-ui-doc-border   "white"))
 #+END_SRC
 
 * Auto Complete
 To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we must use this package.
 #+BEGIN_SRC emacs-lisp :tangle yes
+(use-package company
+  :defer 3
+  :custom
+  (company-idle-delay 0)
+  (company-echo-delay 0)
+  (company-minimum-prefix-length 1)
+  (company-tooltip-align-annotations t)
+  :config
+  (global-company-mode))
+
 (use-package company-lsp
   :after company
   :commands company-lsp
   :custom
-  (company-minimum-prefix-length     1)
-  (company-idle-delay                0)
-  (company-lsp-async                 t)
-  (company-tooltip-align-annotations t)
-
+  (company-lsp-async t)
+  (company-lsp-enable-snippet t)
+  (company-lsp-enable-recompletion t)
+  (company-lsp-cache-candidates 'auto)
   :config
-  (use-package company-posframe
-    :diminish company-posframe-mode
-    :hook (global-company-mode . company-box-mode)
-    :config (company-posframe-mode 1))
+  (push 'company-lsp company-backends))
 
-  (push 'company-lsp company-backends)
-  (global-company-mode))
+(use-package company-posframe
+  :delight
+  :after company
+  :config (company-posframe-mode 1))
+
+(use-package company-box
+  :delight
+  :after company
+  :hook (company-mode . company-box-mode))
 #+END_SRC
 
 * Languages
+** Emacs Lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ielm
+  :defer 3
+  :commands ielm)
+
+(use-package paredit
+  :hook ((lisp-mode emacs-lisp-mode ielm-mode) . paredit-mode))
+
+(use-package rainbow-delimiters
+  :hook ((lisp-mode emacs-lisp-mode ielm-mode) . rainbow-delimiters-mode))
+#+END_SRC
+
 ** C++
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package ccls
-  :defer 3); (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+  :defer 3)
 #+END_SRC
 
 ** Python
@@ -634,22 +702,28 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package python-mode
   :defer 3
   :custom (python-shell-interpreter "python3")
-  :hook (python-mode . lsp-deferred)
-  :config
+  :hook ((python-mode . lsp-deferred)
+         (python-mode . (lambda () 
+          (setq tab-width        (py-guess-indent-offset)
+                evil-shift-width (py-guess-indent-offset))))))
 
-  (use-package lsp-pyright
-    :hook (python-mode . lsp-deferred))
+(use-package lsp-pyright
+  :after python-mode
+  :hook (python-mode . lsp-deferred))
 
-  (use-package pyvenv
-    :config (pyvenv-mode 1))
+(use-package pyvenv
+  :after python-mode
+  :config (pyvenv-mode 1))
 
-  (use-package py-isort
-    :hook ((python-mode . pyvenv-mode)
-           (before-save . py-isort-before-save)))
+(use-package py-isort
+  :after python-mode
+  :hook ((python-mode . pyvenv-mode)
+         (before-save . py-isort-before-save)))
 
-  (use-package blacken
-    :hook (python-mode . blacken-mode)
-    :custom (blacken-line-length 79)))
+(use-package blacken
+  :after python-mode
+  :hook (python-mode . blacken-mode)
+  :custom (blacken-line-length 79))
 #+END_SRC
 
 ** Golang
@@ -658,40 +732,42 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :mode "\\.go\\'"
   :hook ((go-mode     . lsp-deferred)
          (before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports))
+         (before-save . lsp-organize-imports)))
 
+(use-package company-go
+  :after company go-mode
+  :custom (company-go-show-annotation t)
   :config
-  (use-package company-go
-    :custom (company-go-show-annotation t) 
-    :config
-    (defun dz/go-mode-hook () 
-      (set (make-local-variable 'company-backends) 
-        '(company-go)))
-    :hook (go-mode . dz/go-mode-hook))
+  (defun dz/go-mode-hook ()
+    (set (make-local-variable 'company-backends)
+      '(company-go)))
+  :hook (go-mode . dz/go-mode-hook))
 
-  (use-package go-eldoc
-    :hook (go-mode . go-eldoc-setup))
+(use-package go-eldoc
+  :after go-mode
+  :hook (go-mode . go-eldoc-setup))
 
-  (use-package go-guru
-    :hook (go-mode . go-guru-hl-identifier-mode))
+(use-package go-guru 
+  :after go-mode
+  :hook (go-mode . go-guru-hl-identifier-mode))
 
-  (use-package go-tag ;;; binary dependency: gomodifytags
-    :custom (go-tag-args (list "-transform" "camelcase"))))
+(use-package go-tag
+  :after go-mode
+  :custom (go-tag-args (list "-transform" "camelcase")))
 #+END_SRC
 
 ** Javascript/Typescript
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tide
+(use-package typescript-mode
   :mode "\\.ts\\'"
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)))
+  :hook (typescript-mode . lsp-deferred)
+  :custom (typescript-indent-level 2))
 #+END_SRC
 
 ** Web
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package web-mode
-  :mode ("\\.html\\'" "\\.css\\'" "\\.js\\'" "\\.ts\\'")
+  :mode ("\\.html\\'" "\\.css\\'")
 
   :custom
   (web-mode-enable-current-element-highlight t)
@@ -733,8 +809,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :hook ((vue-mode . prettier-js-mode)
          (vue-mode . lsp)
          (vue-mode . (lambda () (set-face-background 'mmm-default-submode-face nil))))
-  :config
-  (setq prettier-js-args '("--parser vue")))
+  :config (setq prettier-js-args '("--parser vue")))
 #+END_SRC
 
 * Org
@@ -743,16 +818,15 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :defer 3
   :config
 
-  (use-package ox-hugo :after ox)
-  (use-package ox-reveal :after ox)
-
   (require 'ox)
+  (require 'color)
 
-  (use-package org-bullets 
-    :hook (org-mode . org-bullets-mode))
+  (setq org-directory "~/org")
 
-  (setq org-log-done 'time) ;; mark done tasks with current time
-  ;(electric-indent-mode) ;; remove annoying indent behaviour
+  ;; Mark done tasks with current time.
+  (setq org-log-done 'time) 
+  ;; Disable annoying indentation behaviour.
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 
@@ -772,26 +846,18 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
         org-latex-pdf-process
         '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
           "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-  (dolist (face '(org-level-1 
-                  org-level-2 
-                  org-level-3 
-                  org-level-4 
-                  org-level-5 
-                  org-level-6 
-                  org-level-7 
-                  org-level-8))
+ 
+  ;; Use mixed pitch font for headers.
+  (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4
+                  org-level-5 org-level-6 org-level-7 org-level-8))
     (set-face-attribute face nil :inherit 'mixed-pitch))
 
   (defun dz/org-faces ()
-    (require 'color)
     (set-face-attribute 'org-block-begin-line nil :slant 'italic)
     (set-face-attribute 'org-block-end-line nil :slant 'italic)
     (set-face-attribute 'org-block nil :background
                         (color-darken-name
                           (face-attribute 'default :background) 3)))
-
-  :custom (org-directory "~/org")
 
   :bind (:map evil-normal-state-map
     ("C-c C-e" . org-export-dispatch))
@@ -799,50 +865,86 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :hook ((org-mode . org-indent-mode)
          (org-mode . flyspell-mode)
          (org-mode . dz/org-faces)))
+
+;(use-package org-bullets
+;  :after org
+;  :hook (org-mode . org-bullets-mode))
+#+END_SRC
+
+** Org Export
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package ox-hugo 
+  :after ox)
+
+(use-package ox-reveal 
+  :after ox)
 #+END_SRC
 
 * LaTeX
 #+BEGIN_SRC emacs-lisp :tangle yes
-(use-package company-auctex :defer 3)
-(use-package company-math :defer 3)
+(use-package auctex
+  :mode
+  ("\\.tex\\'" . latex-mode)
 
-;(add-hook 'latex-mode-hook 'TeX-fold-mode)
-;(add-hook 'latex-mode-hook 'latex-math-mode)
-;(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
-(add-hook 'latex-mode-hook (lambda ()
-  (add-to-list 'org-latex-classes
-               '("report"
-                 "\\documentclass{report}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))))
+  :custom
+	(TeX-save-query                    nil)
+	(TeX-source-correlate-method       'synctex)
+	(TeX-source-correlate-mode         t)
+  (TeX-PDF-mode                      t)
+  (TeX-source-correlate-start-server t)
+  (TeX-view-program-selection        '((output-pdf "PDF Tools")))
 
-(add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
-(add-hook 'pdf-view-mode-hook
-          (lambda () (setq header-line-format nil)))
+  :config
 
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
+  ;(add-hook 'latex-mode-hook 'TeX-fold-mode)
+  ;(add-hook 'latex-mode-hook 'latex-math-mode)
+  ;(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
 
-;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-           #'TeX-revert-document-buffer)
+  (add-hook 'latex-mode-hook (lambda ()
+    (add-to-list 'org-latex-classes
+                 '("report"
+                   "\\documentclass{report}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))))
+
+  (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
+
+  (add-hook 'pdf-view-mode-hook
+            (lambda () (setq header-line-format nil)))
+
+  ;; Update PDF buffers after successful LaTeX runs.
+  (add-hook 'TeX-after-compilation-finished-functions
+             #'TeX-revert-document-buffer))
+
+(use-package company-auctex 
+  :after company tex)
+
+(use-package company-math 
+  :after company tex)
+
+(use-package reftex
+  :after tex
+  :commands turn-on-reftex
+  :custom
+  (reftex-plug-into-AUCTeX t)
+	;; RefTeX list of sections, labels and figures shows as vertical bar to the left of the window.
+	(reftex-toc-split-windows-horizontally t)
+	;; RefTeX table of contents does not indicate which sections are in which files.
+	(reftex-toc-include-file-boundaries nil))
 #+END_SRC
 
 * Configuration Files
 ** Terraform
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package terraform-mode
-  :defer 3
-  :mode ("\\.tf$" . terraform-mode)
-  :diminish terraform-mode
-  :config 
-  (use-package company-terraform
-    :defer 3
-    :after company-mode
-    :config (company-terraform-init)))
+  :mode ("\\.tf$" . terraform-mode))
+
+(use-package company-terraform
+  :after company-mode
+  :config (company-terraform-init))
 #+END_SRC
 
 ** Yaml
@@ -867,6 +969,11 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package dockerfile-mode
   :mode ("Dockerfile" . dockerfile-mode))
+
+(use-package docker-compose-mode)
+
+(use-package docker
+  :bind ("C-c d" . docker))
 #+END_SRC
 
 ** Toml
@@ -880,7 +987,6 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package flycheck
   :defer 3
   :init (global-flycheck-mode)
-  :diminish flycheck-mode
   :custom (flycheck-global-modes '(not org-mode)))
 #+END_SRC
 
@@ -889,23 +995,32 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package yasnippet
   :defer 3
   :hook (after-init . yas-global-mode)
-  :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
           ("TAB" . yas-expand))
-  :custom (yas-prompt-functions '(yas-completing-prompt))
-  :config
-  (use-package yasnippet-snippets
-    :defer 3
-    :after yasnippet
-    :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))))
+  :custom (yas-prompt-functions '(yas-completing-prompt)))
 
+(use-package yasnippet-snippets
+  :after yasnippet
+  :custom (yas-snippet-dirs '("~/.emacs.d/snippets")))
 #+END_SRC
 
-* Miscellaneous dz/functions
+* Miscellaneous functions
+** Open configuration
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;;###autoload
+(defun dz/open-config ()
+  (interactive)
+  (find-file "~/.emacs.d/init.org"))
+
+(define-key evil-normal-state-map (kbd "SPC o c") #'dz/open-config)
+#+END_SRC
+
 ** Wrap org source code blocks
 #+BEGIN_SRC emacs-lisp :tangle yes
+(defvar def-language nil)
 (setq def-language "")
 
+;;;###autoload
 (defun dz/org-wrap-source ()
   (interactive)
   (let ((lang (read-string (format "Language [%s]: " def-language) nil nil def-language))
@@ -921,15 +1036,5 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
     (setq def-language lang)
     (insert (format "#+BEGIN_SRC %s\n" def-language))))
 
-(define-key evil-visual-state-map (kbd "SPC w") 'dz/org-wrap-source)
-#+END_SRC
-
-** Open configuration
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun dz/open-config ()
-  (interactive)
-  (find-file "~/.emacs.d/init.org"))
-
-(define-key evil-normal-state-map (kbd "SPC o c") 'dz/open-config)
-(define-key evil-normal-state-map (kbd "SPC o a") (lambda () (find-file "~/org/agenda.org")))
+(define-key evil-visual-state-map (kbd "SPC w") #'dz/org-wrap-source)
 #+END_SRC

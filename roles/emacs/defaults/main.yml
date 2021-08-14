@@ -1,9 +1,22 @@
 yay_lsp_dependencies:
+  # Fonts
+  - otf-apple-sf-mono
+  - otf-etbb
+
+  # C/C++ Language Server
+  - ccls
+
+  # Golang Language Server
+  - gomodifytags
   - gopls
 
+  # Better syntax highligthing
+  - tree-sitter
+
 pip_lsp_dependencies:
-  - pyls
+  - python-language-server
 
 npm_lsp_dependencies:
-  - vue-language-server
+  - typescript-language-server
   - vscode-css-languageserver-bin
+  - vue-language-server
