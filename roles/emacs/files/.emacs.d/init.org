@@ -1,1040 +1,1391 @@
-#+TITLE: Emacs Configuration
-#+AUTHOR: Mirco De Zorzi
-#+EMAIL: mircodezorzi@protonmail.com
-#+TAGS[]: emacs
+Content-Type: text/enriched
+Text-Width: 70
 
-* Meta
-Enable lexical scoping for the current file.
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;; -*- lexical-binding: t -*-
-#+END_SRC
+#+TITLE: <x-color><param>#93a1a1</param>Emacs Configuration
 
-Enable native compilation.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq package-native-compile t)
-#+END_SRC
+</x-color>#+AUTHOR: <x-color><param>#839496</param>Mirco De Zorzi
 
-Automatically update configuration file when saving the document.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-emacs-directory "~/code/dotfiles/roles/emacs/files/.emacs.d/")
+</x-color>#+EMAIL: <x-color><param>#839496</param>mircodezorzi@protonmail.com
 
-(defun tangle-init ()
-  (when (equal (buffer-file-name)
-               (expand-file-name (concat user-emacs-directory "init.org")))
-    ;; Avoid running hooks when tangling.
-    (let ((prog-mode-hook nil))
-      (org-babel-tangle)
-      (byte-compile-file (concat user-emacs-directory "init.el")))))
+</x-color><x-color><param>#586e75</param>#+TAGS[]: emacs</x-color>
 
-(add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
+
+<x-color><param>#cb4b16</param>* Meta</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Enable lexical scoping for the current file.</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#586e75</param><x-bg-color><param>#00001eef26d9</param>;;; -*- lexical-binding: t -*-
+</x-bg-color></x-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Enable native compilation.</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> package-native-compile t<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Defer Garbage Collection</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> gc-cons-threshold 100000000<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Unset </x-color><x-color><param>#859900</param>=file-name-handler-alist=</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>file-name-handler-alist-original</x-color> file-name-handler-alist<x-color><param>#2aa198</param>)</x-color>
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>setq</x-color> file-name-handler-alist nil<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Garbage Collection</x-color>
 
 Tweak garbage collection configuration during initialization.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defvar last-file-name-handler-alist file-name-handler-alist)
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6
-      file-name-handler-alist nil)
-(add-hook 'emacs-startup-hook
-  (lambda () (setq gc-cons-threshold 16777216
-                   gc-cons-percentage 0.1
-                   file-name-handler-alist last-file-name-handler-alist)))
-#+END_SRC
 
-* Packages
-#+BEGIN_SRC emacs-lisp :tangle yes
-(require 'package)
-(package-initialize)
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>better-gc-cons-threshold</x-color> 402653184
+  <x-color><param>#2aa198</param>"The default value to use for `<x-color><param>#268bd2</param>gc-cons-threshold</x-color>'.")</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>better-gc-cons-percentage</x-color> 0.6
+  <x-color><param>#2aa198</param>"The default value to use for `<x-color><param>#268bd2</param>gc-cons-percentage</x-color>'.")</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color>add-hook 'emacs-startup-hook
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq</x-color> gc-cons-threshold better-gc-cons-threshold
+          gc-cons-percentage better-gc-cons-percentage
+          file-name-handler-alist file-name-handler-alist-original<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>makunbound 'file-name-handler-alist-original<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+Garbage Collect when Emacs is out of focus and avoid garbage collection when using minibuffer.
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param>add-hook 'emacs-startup-hook
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>if</x-color> <x-color><param>#6c71c4</param>(</x-color>boundp 'after-focus-change-function<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>add-function</x-color> <x-color><param>#839496</param>:after</x-color> after-focus-change-function
+        <x-color><param>#859900</param>(lambda</x-color> <x-color><param>#b58900</param>()</x-color>
+          <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>unless</x-color> <x-color><param>#268bd2</param>(</x-color>frame-focus-state<x-color><param>#268bd2</param>)</x-color>
+            <x-color><param>#268bd2</param>(</x-color>garbage-collect<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>add-hook 'after-focus-change-function 'garbage-collect<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+
+
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>gc-minibuffer-setup-hook</x-color> <x-color><param>#6c71c4</param>()</x-color>
+      <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>setq</x-color> gc-cons-threshold <x-color><param>#859900</param>(</x-color>* better-gc-cons-threshold 2<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+
+
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>gc-minibuffer-exit-hook</x-color> <x-color><param>#6c71c4</param>()</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>garbage-collect<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>setq</x-color> gc-cons-threshold better-gc-cons-threshold<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+
+
+    <x-color><param>#268bd2</param>(</x-color>add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Literate Configuration Compilation</x-color>
+
+Automatically update configuration file when saving the document.
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> user-emacs-directory <x-color><param>#2aa198</param>"~/code/dotfiles/roles/emacs/files/.emacs.d/")</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>tangle-init</x-color> <x-color><param>#b58900</param>()</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>when</x-color> <x-color><param>#268bd2</param>(</x-color>equal <x-color><param>#6c71c4</param>(</x-color>buffer-file-name<x-color><param>#6c71c4</param>)</x-color>
+               <x-color><param>#6c71c4</param>(</x-color>expand-file-name <x-color><param>#859900</param>(</x-color>concat user-emacs-directory <x-color><param>#2aa198</param>"init.org"</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#586e75</param>;; Avoid running hooks when tangling.
+</x-color>    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>let</x-color> <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>(</x-color>prog-mode-hook nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>org-babel-tangle<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>byte-compile-file <x-color><param>#859900</param>(</x-color>concat user-emacs-directory <x-color><param>#2aa198</param>"init.el"</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color>add-hook 'after-save-hook 'tangle-init<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Packages</x-color>
 
 Include extra package repositories.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-#+END_SRC
 
-Install =use-package= package manager.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setf use-package-always-ensure t)
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> package-user-dir <x-color><param>#b58900</param>(</x-color>expand-file-name <x-color><param>#2aa198</param>"elpa"</x-color> user-emacs-directory<x-color><param>#b58900</param>)</x-color>
+      package-archives
+      '<x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"gnu"</x-color>   . <x-color><param>#2aa198</param>"https://elpa.gnu.org/packages/"</x-color><x-color><param>#268bd2</param>)</x-color>
+        <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"melpa"</x-color> . <x-color><param>#2aa198</param>"https://melpa.org/packages/"</x-color><x-color><param>#268bd2</param>)</x-color>
+        <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"cselpa"</x-color> . <x-color><param>#2aa198</param>"https://elpa.thecybershadow.net/packages/"</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+Configure package manager.
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>unless</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>bound-and-true-p</x-color> package--initialized<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> package-enable-at-startup nil<x-color><param>#b58900</param>)</x-color> <x-color><param>#586e75</param>; To prevent initializing twice.
+</x-color>  <x-color><param>#b58900</param>(</x-color>package-initialize<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>eval-and-compile</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> use-package-verbose <x-color><param>#268bd2</param>(</x-color>not <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>bound-and-true-p</x-color> byte-compile-current-file<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+Configure and install =use-package=.
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#586e75</param><x-bg-color><param>#00001eef26d9</param>;; Install use-package if not installed
+</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>unless</x-color> <x-color><param>#b58900</param>(</x-color>package-installed-p 'use-package<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>package-refresh-contents<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>package-install 'use-package<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>eval-and-compile</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> use-package-always-ensure t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> use-package-expand-minimally t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> use-package-enable-imenu-support t<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>eval-when-compile</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>use-package</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>bind-key</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
 
 In case some packages are missing, install them.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(let* ((package--builtins nil)
-       (packages
-        '(auctex
-          base16-theme
-          beacon
-          blacken
-          ccls
-          cmake-mode
-          company
-          company-auctex
-          company-box
-          company-go
-          company-lsp
-          company-math
-          company-posframe
-          company-terraform
-          company-web
-          counsel
-          counsel-projectile
-          delight
-          dockerfile-mode
-          docker-compose-mode
-          docker
-          emmet-mode
-          evil
-          evil-commentary
-          evil-surround
-          fast-scroll
-          flycheck
-          general
-          git-gutter
-          git-gutter-fringe
-          go-eldoc
-          go-guru
-          go-mode
-          go-tag
-          highlight-indent-guides
-          ialign
-          ivy
-          ivy-xref
-          key-chord
-          linum-relative
-          lsp-mode
-          lsp-pyright
-          lsp-treemacs
-          lsp-ui
-          magit
-          mixed-pitch
-          org
-          origami
-          ox-hugo
-          ox-reveal
-          projectile
-          protobuf-mode
-          py-isort
-          python-mode
-          pyvenv
-          solarized-theme
-          swiper
-          terraform-mode
-          toml-mode
-          tree-sitter
-          treemacs
-          treemacs-all-the-icons
-          treemacs-projectile
-          typescript-mode
-          undo-tree
-          vue-mode
-          web-mode
-          yaml-mode
-          yasnippet
-          yasnippet-snippets)))
-  (let ((packages (seq-remove 'package-installed-p packages)))
-    (when packages
-      ;; Install uninstalled packages.
-      (package-refresh-contents)
-      (mapc 'package-install packages))))
-(use-package delight) ;; fide minor mode symbols in modeline, keeping it much cleaner
-#+END_SRC
 
-* General
-** Personal information
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-full-name    "Mirco De Zorzi"
-      user-mail-address "mircodezorzi@protonmail.com")
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-** Reduce filesystem clutter
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defvar emacs-autosave-directory
-  (concat user-emacs-directory "autosaves/"))
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>let*</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>package--builtins nil<x-color><param>#268bd2</param>)</x-color>
+       <x-color><param>#268bd2</param>(</x-color>packages
+        '<x-color><param>#6c71c4</param>(</x-color>auctex blacken ccls cmake-mode company company-auctex company-box company-go company-math company-posframe company-terraform company-web counsel counsel-projectile docker docker-compose-mode dockerfile-mode emmet-mode evil evil-commentary evil-surround flycheck general git-gutter git-gutter-fringe go-eldoc go-guru go-mode go-tag highlight-indent-guides ialign ivy ivy-xref key-chord linum-relative lsp-mode lsp-pyright lsp-treemacs lsp-ui magit org org-bullets origami ox-hugo ox-reveal paredit projectile protobuf-mode py-isort python-mode pyvenv rainbow-delimiters swiper terraform-mode toml-mode tree-sitter treemacs treemacs-all-the-icons treemacs-projectile typescript-mode undo-tree vterm vterm-toggle vue-mode web-mode yaml-mode yasnippet yasnippet-snippets<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>let</x-color> <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>packages <x-color><param>#859900</param>(</x-color>seq-remove 'package-installed-p packages<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>when</x-color> packages
+      <x-color><param>#586e75</param>;; Install uninstalled packages.
+</x-color>      <x-color><param>#6c71c4</param>(</x-color>package-refresh-contents<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>mapc 'package-install packages<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-;; Sets all files to be backed up and auto saved in a single directory.
-(setq backup-directory-alist
-      `((".*" . ,emacs-autosave-directory))
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Auto Update Packages</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> auto-package-update
+  <x-color><param>#839496</param>:if</x-color> <x-color><param>#b58900</param>(</x-color>not <x-color><param>#268bd2</param>(</x-color>daemonp<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>auto-package-update-interval             7<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>auto-package-update-prompt-before-update t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>auto-package-update-delete-old-versions  t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>auto-package-update-hide-results         t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>auto-package-update-maybe<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Diminish</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> delight<x-color><param>#2aa198</param>)</x-color> <x-color><param>#586e75</param>;; Hide minor mode symbols in modeline.
+</x-color></x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* General</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Personal information</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> user-full-name    <x-color><param>#2aa198</param>"Mirco De Zorzi"</x-color>
+      user-mail-address <x-color><param>#2aa198</param>"mircodezorzi@protonmail.com")</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Reduce filesystem clutter</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>emacs-autosave-directory</x-color>
+  <x-color><param>#b58900</param>(</x-color>concat user-emacs-directory <x-color><param>#2aa198</param>"autosaves/"</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#586e75</param>;; Sets all files to be backed up and auto saved in a single directory.
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>setq</x-color> backup-directory-alist
+      `<x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>".*"</x-color> . ,emacs-autosave-directory<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
       auto-save-file-name-transforms
-      `((".*" ,emacs-autosave-directory t)))
+      `<x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>".*"</x-color> ,emacs-autosave-directory t<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-;; Don't generate lock files. Prevents Angular from breaking.
-(setq create-lockfiles nil)
-#+END_SRC
 
-** Cleanup UI
-#+BEGIN_SRC emacs-lisp :tangle yes
-(dolist (mode
-         '(menu-bar-mode
+<x-color><param>#586e75</param>;; Don't generate lock files. Prevents Angular from breaking.
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>setq</x-color> create-lockfiles nil<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Cleanup UI</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>dolist</x-color> <x-color><param>#b58900</param>(</x-color>mode
+         '<x-color><param>#268bd2</param>(</x-color>menu-bar-mode
            tool-bar-mode
            tooltip-mode
            scroll-bar-mode
-           blink-cursor-mode))
-  (funcall mode 0))
-#+END_SRC
+           blink-cursor-mode<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>funcall mode 0<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** Saner defaults
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq inhibit-startup-screen    t
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Fonts</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>dolist</x-color> <x-color><param>#b58900</param>(</x-color>face '<x-color><param>#268bd2</param>(</x-color>default fixed-pitch<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>set-face-attribute `,face nil <x-color><param>#839496</param>:font</x-color> <x-color><param>#2aa198</param>"Source Code Pro 16"</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+<x-color><param>#2aa198</param>(</x-color>set-face-attribute 'variable-pitch nil <x-color><param>#839496</param>:font</x-color> <x-color><param>#2aa198</param>"Bitter 16")</x-color>
+</x-bg-color><italic>#+END_SRC
+</italic>
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Saner defaults</x-color>
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color> inhibit-startup-screen    t
       initial-scratch-message   nil
       sentence-end-double-space nil
       use-dialog-box            nil
       mark-even-if-inactive     nil
       kill-whole-line           t
-      case-fold-search          nil)
+      case-fold-search          nil<x-color><param>#2aa198</param>)</x-color>
 
-(setq-default
-  indent-tabs-mode        nil
-  tab-width               2
-  evil-shift-width        2)
+<x-color><param>#586e75</param>;; Set better default tab settings.
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>setq-default</x-color> 
+  indent-tabs-mode nil
+  tab-width        2
+  evil-shift-width 2<x-color><param>#2aa198</param>)</x-color>
 
-(set-face-attribute 'default nil 
-  :font "SF Mono" ;:font "SpaceMono Nerd Font"
-  :height 160
-  :weight 'normal
-  :width 'normal)
+<x-color><param>#2aa198</param>(</x-color>show-paren-mode t<x-color><param>#2aa198</param>)</x-color>         <x-color><param>#586e75</param>;; Show matching parenthesis.
+</x-color><x-color><param>#2aa198</param>(</x-color>global-so-long-mode<x-color><param>#2aa198</param>)</x-color>       <x-color><param>#586e75</param>;; Handle long lines better.
+</x-color><x-color><param>#2aa198</param>(</x-color>global-font-lock-mode 1<x-color><param>#2aa198</param>)</x-color>   <x-color><param>#586e75</param>;; Always highlight code.
+</x-color><x-color><param>#2aa198</param>(</x-color>global-auto-revert-mode 1<x-color><param>#2aa198</param>)</x-color> <x-color><param>#586e75</param>;; Refresh a buffer if changed on disk.
+</x-color>
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defalias</x-color> '<x-color><param>#268bd2</param>yes-or-no-p</x-color> 'y-or-n-p<x-color><param>#2aa198</param>)</x-color> <x-color><param>#586e75</param>;; Accept 'y' in lieu of 'yes'.
+</x-color></x-bg-color><italic>#+END_SRC
 
-(set-face-attribute 'fixed-pitch nil 
-  :font "SF Mono" ;:font "SpaceMono Nerd Font"
-  :height 160
-  :weight 'normal
-  :width 'normal)
+</italic>
 
-(set-face-attribute 'variable-pitch nil 
-  :font "ETbb"
-  :height 180
-  :weight 'normal
-  :width 'normal)
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Mixed pitch</x-color>
 
-(show-paren-mode t)         ;; Show matching parenthesis.
-(global-so-long-mode)       ;; Handle long lines better.
-(global-font-lock-mode 1)   ;; Always highlight code.
-(global-auto-revert-mode 1) ;; Refresh a buffer if changed on disk.
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-(defalias 'yes-or-no-p 'y-or-n-p) ;; Accept 'y' in lieu of 'yes'.
-#+END_SRC
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> mixed-pitch
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>text-mode . mixed-pitch-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>mixed-pitch-set-height t<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** Mixed pitch
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package mixed-pitch
-  :defer 3
-  :hook (text-mode . mixed-pitch-mode)
-  :custom (mixed-pitch-set-height t))
-#+END_SRC
+</italic>
 
-** Beacon
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package beacon
-  :config
-  (beacon-mode 1)
-  :custom
-  (beacon-blink-when-window-changes t) ;; Only flash on window/buffer changes.
-  (beacon-blink-when-window-scrolls nil)
-  (beacon-blink-when-point-moves    nil)
-  (beacon-blink-duration            .5)
-  (beacon-blink-delay               .5)
-  (beacon-size                      20))
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Beacon</x-color>
 
-** Theme
-#+BEGIN_SRC emacs-lisp
-(use-package solarized-theme
-  :config (load-theme 'solarized-dark t)
-  :custom-face
-  (font-lock-contant-face ((t (:bold nil :foreground nil))))
-  (font-lock-keyword-face ((t (:bold nil))))
-  (mode-line              ((t (:inverse-video t :underline nil))))
-  (mode-line-buffer-id    ((t (:inverse-video t :foreground nil))))
-  (mode-line-inactive     ((t (:inverse-video t :underline nil)))))
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package base16-theme
-  :config
-  (load-theme 'base16-tomorrow-night t))
-#+END_SRC
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> beacon
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-mode 1<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-blink-when-window-changes t<x-color><param>#b58900</param>)</x-color> <x-color><param>#586e75</param>;; Only flash on window/buffer changes.
+</x-color>  <x-color><param>#b58900</param>(</x-color>beacon-blink-when-window-scrolls nil<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-blink-when-point-moves    nil<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-blink-duration            .5<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-blink-delay               .5<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>beacon-size                      20<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** Better Scrolling
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package fast-scroll
-  :hook
-  (fast-scroll-start . (lambda () (flycheck-mode -1)))
-  (fast-scroll-end . (lambda () (flycheck-mode 1)))
-  :config
-  (fast-scroll-config)
-  (fast-scroll-mode 1))
-#+END_SRC
+</italic>
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq
-  ;scroll-conservatively 1000                     ;; Only 'jump' when moving this far.
-  ;scroll-margin         4                        ;; Scroll N lines to screen edge.
-  ;scroll-step           1                        ;; Keyboard scroll one line at a time.
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Theme</x-color>
 
-  mouse-wheel-scroll-amount '(6 ((shift) . 1))   ;; Mouse scroll N lines.
-  mouse-wheel-progressive-speed nil              ;; Don't accelerate scrolling.
-  redisplay-dont-pause t                         ;; Don't pause display on input.
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-  ;; Always redraw immediately when scrolling, more responsive and doesn't hang!
-  fast-but-imprecise-scrolling nil
-  jit-lock-defer-time          0)
-#+END_SRC
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> solarized-theme
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>load-theme 'solarized-dark t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom-face</x-color>
+  <x-color><param>#b58900</param>(</x-color>font-lock-contant-face <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>t <x-color><param>#859900</param>(</x-color><x-color><param>#839496</param>:bold</x-color> nil <x-color><param>#839496</param>:foreground</x-color> nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>font-lock-keyword-face <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>t <x-color><param>#859900</param>(</x-color><x-color><param>#839496</param>:bold</x-color> nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>mode-line              <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>t <x-color><param>#859900</param>(</x-color><x-color><param>#839496</param>:inverse-video</x-color> t <x-color><param>#839496</param>:underline</x-color> nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>mode-line-buffer-id    <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>t <x-color><param>#859900</param>(</x-color><x-color><param>#839496</param>:inverse-video</x-color> t <x-color><param>#839496</param>:foreground</x-color> nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>mode-line-inactive     <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>t <x-color><param>#859900</param>(</x-color><x-color><param>#839496</param>:inverse-video</x-color> t <x-color><param>#839496</param>:underline</x-color> nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** Indent guides
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package highlight-indent-guides
-  :hook (prog-mode . highlight-indent-guides-mode)
-  :custom (highlight-indent-guides-method 'character))
-#+END_SRC
+</italic>
 
-** Cursorline
-#+BEGIN_SRC emacs-lisp :tangle yes
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Better Scrolling</x-color>
 
-** Indentation
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> fast-scroll
+  <x-color><param>#839496</param>:hook</x-color>
+  <x-color><param>#b58900</param>(</x-color>fast-scroll-start . <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#6c71c4</param>()</x-color> <x-color><param>#6c71c4</param>(</x-color>flycheck-mode -1<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>fast-scroll-end . <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#6c71c4</param>()</x-color> <x-color><param>#6c71c4</param>(</x-color>flycheck-mode 1<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>fast-scroll-config<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>fast-scroll-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>setq</x-color>
+  mouse-wheel-scroll-amount '<x-color><param>#b58900</param>(</x-color>6 <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>shift<x-color><param>#6c71c4</param>)</x-color> . 1<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>   <x-color><param>#586e75</param>;; Mouse scroll N lines.
+</x-color>  mouse-wheel-progressive-speed nil              <x-color><param>#586e75</param>;; Don't accelerate scrolling.
+</x-color>  redisplay-dont-pause t                         <x-color><param>#586e75</param>;; Don't pause display on input.
+
+</x-color>
+
+  <x-color><param>#586e75</param>;; Always redraw immediately when scrolling, more responsive and doesn't hang!
+</x-color>  fast-but-imprecise-scrolling nil
+  jit-lock-defer-time          0<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Indent guides</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> highlight-indent-guides
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>prog-mode . highlight-indent-guides-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>highlight-indent-guides-method 'character<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Cursorline</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param>add-hook 'prog-mode-hook #'hl-line-mode<x-color><param>#2aa198</param>)</x-color>
+<x-color><param>#2aa198</param>(</x-color>add-hook 'text-mode-hook #'hl-line-mode<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Indentation</x-color>
+
 Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]]
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;;###autoload
-(defun dz/indent-setup (n)
 
-  ;; java/c/c++
-  (setq-local c-basic-offset n)
-  ;; web development
-  (setq-local web-mode-markup-indent-offset n
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#586e75</param><x-bg-color><param>#00001eef26d9</param>;;;###autoload
+</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/indent-setup</x-color> <x-color><param>#b58900</param>(</x-color>n<x-color><param>#b58900</param>)</x-color>
+
+  <x-color><param>#586e75</param>;; java/c/c++
+</x-color>  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> c-basic-offset n<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#586e75</param>;; web development
+</x-color>  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> web-mode-markup-indent-offset n
               web-mode-css-indent-offset    n
-              web-mode-code-indent-offset   n))
+              web-mode-code-indent-offset   n<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-;;;###autoload
-(defun dz/indent-tabs ()
-  (interactive)
-  (setq-local indent-tabs-mode t) ;; Use tab instead of space.
-  (dz/indent-setup 2))            ;; Indent 2 spaces width.
 
-;;;###autoload
-(defun dz/indent-spaces ()
-  (interactive)
-  (setq-local indent-tabs-mode nil) ;; Use space instead of tab.
-  (dz/indent-setup 2))              ;; Indent 2 spaces width.
-#+END_SRC
+<x-color><param>#586e75</param>;;;###autoload
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/indent-tabs</x-color> <x-color><param>#b58900</param>()</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> indent-tabs-mode t<x-color><param>#b58900</param>)</x-color> <x-color><param>#586e75</param>;; Use tab instead of space.
+</x-color>  <x-color><param>#b58900</param>(</x-color>dz/indent-setup 2<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>            <x-color><param>#586e75</param>;; Indent 2 spaces width.
 
-** Origami
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package origami
-  :defer 3
-  :config (origami-mode))
-#+END_SRC
+</x-color>
 
-** ialign
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ialign
-  :defer 3)
-#+END_SRC
+<x-color><param>#586e75</param>;;;###autoload
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/indent-spaces</x-color> <x-color><param>#b58900</param>()</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> indent-tabs-mode nil<x-color><param>#b58900</param>)</x-color> <x-color><param>#586e75</param>;; Use space instead of tab.
+</x-color>  <x-color><param>#b58900</param>(</x-color>dz/indent-setup 2<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>              <x-color><param>#586e75</param>;; Indent 2 spaces width.
+</x-color></x-bg-color><italic>#+END_SRC
 
-** Relative line numbers
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package linum-relative
-  :hook (prog-mode . display-line-numbers-mode)
-  :custom
-  (linum-relative-backend        'display-line-numbers-mode)
-  (linum-relative-current-symbol ""))
-#+END_SRC
+</italic>
 
-** Key chords
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package key-chord
-  :config
-  (key-chord-mode 1)
-  (setq key-chord-two-keys-delay 0.05)
-  (key-chord-define-global "eu" 'evil-normal-state))
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Origami</x-color>
 
-* Tools
-** Terminal Emulator
-Use line mode by default. This allows to manipulate the terminal buffer while being in normal mode.
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;;###autoload
-(defun @dz/term-init (&rest ignored)
-  (term-line-mode))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-(advice-add 'ansi-term :after #'@dz/term-init)
-(advice-add 'term :after #'@dz/term-init)
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> origami
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>origami-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-;;;###autoload
-(defun dz/open-term ()
-  (interactive)
-  (split-window-vertically)
-  (term "/bin/zsh"))
-#+END_SRC
+</italic>
 
-** Undo Tree
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package undo-tree
-  :defer 3
-  :config
-  (global-undo-tree-mode)
-  (evil-set-undo-system 'undo-tree))
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* ialign</x-color>
 
-** Magit
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package magit
-  :defer 3
-  :bind (:map evil-normal-state-map
-    ("SPC C-c" . magit-dispatch)))
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-** Git Gutter
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package git-gutter
-  :defer 3
-  :config
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> ialign
+  <x-color><param>#839496</param>:defer</x-color> 3<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-  (use-package git-gutter-fringe
-    :config
-    ;; Subtle diff indicators in the fringe places the git gutter outside the margins.
-    (setq-default fringes-outside-margins t)
-    ;; Thin fringe bitmaps.
-    (define-fringe-bitmap 'git-gutter-fr:added
-      [224 224 224 224 224
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Relative line numbers</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> linum-relative
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>prog-mode . display-line-numbers-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>linum-relative-backend 'display-line-numbers-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>linum-relative-current-symbol <x-color><param>#2aa198</param>""</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Key chords</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> key-chord
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>key-chord-mode 1<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>key-chord-define-global <x-color><param>#2aa198</param>"eu"</x-color> 'evil-normal-state<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> 
+  <x-color><param>#b58900</param>(</x-color>key-chord-two-keys-delay 0.05<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Tools</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Terminal Emulator</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>@dz/vterm-init</x-color> <x-color><param>#b58900</param>()</x-color> 
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> mode-line-format       nil
+        confirm-kill-processes nil
+        hscroll-margin         0<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/open-term</x-color> <x-color><param>#b58900</param>()</x-color> 
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>split-window-vertically<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>vterm-toggle<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> vterm
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:preface</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> vterm-install t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:commands</x-color> vterm vterm-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>vterm-mode . @dz/vterm-init<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>  
+
+  <x-color><param>#586e75</param>;; Once vterm is dead, the vterm buffer is useless.
+</x-color>  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> vterm-kill-buffer-on-exit t<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>+vterm-goto-insert-point-h</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#2aa198</param>"Go to the point we were at when we left insert mode."</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>when</x-color> +vterm--insert-point
+      <x-color><param>#6c71c4</param>(</x-color>goto-char +vterm--insert-point<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> +vterm--insert-point nil<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>+vterm-remember-insert-point-h</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#2aa198</param>"Remember point when leaving insert mode."</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq-local</x-color> +vterm--insert-point <x-color><param>#6c71c4</param>(</x-color>point<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#586e75</param>;; Restore the point's location when leaving and re-entering insert mode.
+</x-color>  <x-color><param>#b58900</param>(</x-color>add-hook 'vterm-mode-hook
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>+vterm-init-remember-point-h</x-color> <x-color><param>#6c71c4</param>()</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>add-hook 'evil-insert-state-exit-hook #'+vterm-remember-insert-point-h nil t<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>add-hook 'evil-insert-state-entry-hook #'+vterm-goto-insert-point-h nil t<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> vterm-toggle
+  <x-color><param>#839496</param>:after</x-color> vterm
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"C-c t"</x-color> . #'vterm-toggle<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Undo Tree</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> undo-tree
+  <x-color><param>#839496</param>:after</x-color> evil
+  <x-color><param>#839496</param>:diminish</x-color> undo-tree-mode
+  <x-color><param>#839496</param>:preface</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>bind-key</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:init</x-color> <x-color><param>#b58900</param>(</x-color>global-undo-tree-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>evil-set-undo-system 'undo-tree<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>undo-tree-visualizer-diff t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>undo-tree-visualizer-timestamps t<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Magit</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> magit
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"SPC C-c"</x-color> . magit-dispatch<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Git Gutter</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> git-gutter
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:config</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>use-package</x-color> git-gutter-fringe
+    <x-color><param>#839496</param>:config</x-color>
+    <x-color><param>#586e75</param>;; Subtle diff indicators in the fringe places the git gutter outside the margins.
+</x-color>    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq-default</x-color> fringes-outside-margins t<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#586e75</param>;; Thin fringe bitmaps.
+</x-color>    <x-color><param>#268bd2</param>(</x-color>define-fringe-bitmap 'git-gutter-fr:added
+      <x-color><param>#6c71c4</param>[</x-color>224 224 224 224 224
        224 224 224 224 224
        224 224 224 224 224
        224 224 224 224 224
-       224 224 224 224 224] nil nil 'center)
-    (define-fringe-bitmap 'git-gutter-fr:modified
-      [224 224 224 224 224
+       224 224 224 224 224<x-color><param>#6c71c4</param>]</x-color> nil nil 'center<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>define-fringe-bitmap 'git-gutter-fr:modified
+      <x-color><param>#6c71c4</param>[</x-color>224 224 224 224 224
        224 224 224 224 224
        224 224 224 224 224
        224 224 224 224 224
-       224 224 224 224 224] nil nil 'center)
-    (define-fringe-bitmap 'git-gutter-fr:deleted
-      [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248] nil nil 'center))
+       224 224 224 224 224<x-color><param>#6c71c4</param>]</x-color> nil nil 'center<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>define-fringe-bitmap 'git-gutter-fr:deleted
+      <x-color><param>#6c71c4</param>[</x-color>0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248<x-color><param>#6c71c4</param>]</x-color> nil nil 'center<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-  (global-git-gutter-mode))
-#+END_SRC
 
-** Ivy
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;;###autoload
-(defun dz/find-file ()
-  "Call `counsel-projectile-find-file' if `projectile-project-p', otherwise fallback to `counsel-find-files'."
-  (interactive)
-  (if (projectile-project-p)
-      (counsel-projectile-find-file)
-      (counsel-find-file)))
-#+END_SRC
+  <x-color><param>#b58900</param>(</x-color>global-git-gutter-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ivy
-  :init (ivy-mode 1)
+</italic>
 
-  :custom 
-  (enable-recursive-minibuffers t)
-  (ivy-height                   10)
-  (ivy-initial-inputs-alist     nil)
-  (ivy-count-format             "[%d/%d] ")
-  (ivy-use-virtual-buffers      t)
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Ivy</x-color>
 
-  :config
-  (defun find-file-right (filename)
-    (interactive)
-    (split-window-right)
-    (other-window 1)
-    (find-file filename))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-  (defun find-file-below (filename)
-    (interactive)
-    (split-window-below)
-    (other-window 1)
-    (find-file filename))
+</italic><x-bg-color><param>#00001eef26d9</param>  <x-color><param>#586e75</param>;;;###autoload
+</x-color>  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/find-file</x-color> <x-color><param>#b58900</param>()</x-color>
+    <x-color><param>#2aa198</param>"Call `<x-color><param>#268bd2</param>counsel-projectile-find-file</x-color>' if `<x-color><param>#268bd2</param>projectile-project-p</x-color>', otherwise fallback to `<x-color><param>#268bd2</param>counsel-find-files</x-color>'."</x-color>
+    <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>if</x-color> <x-color><param>#268bd2</param>(</x-color>projectile-project-p<x-color><param>#268bd2</param>)</x-color>
+        <x-color><param>#268bd2</param>(</x-color>counsel-projectile-find-file<x-color><param>#268bd2</param>)</x-color>
+        <x-color><param>#268bd2</param>(</x-color>counsel-find-file<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-  (dolist (command '(counsel-projectile-find-file
-                     counsel-find-file))
-    (ivy-set-actions command
-    '(("|" find-file-right "open right")
-      ("%" find-file-below "open below"))))
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> ivy
+    <x-color><param>#839496</param>:init</x-color> <x-color><param>#b58900</param>(</x-color>ivy-mode 1<x-color><param>#b58900</param>)</x-color>
 
-  :bind (:map ivy-minibuffer-map
-         ("C-h" . ivy-next-line)
-         ("C-t" . ivy-previous-line)
-         :map ivy-mode-map
-         ("C-c" . ivy-dispatching-done)))
+    <x-color><param>#839496</param>:custom</x-color> 
+    <x-color><param>#b58900</param>(</x-color>enable-recursive-minibuffers t<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>ivy-count-format <x-color><param>#2aa198</param>"[%d/%d] "</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>ivy-initial-inputs-alist nil<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>ivy-use-virtual-buffers t<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>ivy-height 10<x-color><param>#b58900</param>)</x-color>
 
-(use-package ivy-xref
-  :after ivy
-  :custom
-  (xref-show-definitions-function #'ivy-xref-show-defs)
-  (xref-show-xrefs-function       #'ivy-xref-show-xrefs))
+    <x-color><param>#839496</param>:config</x-color>
+    <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>find-file-right</x-color> <x-color><param>#268bd2</param>(</x-color>filename<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>split-window-right<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>other-window 1<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>find-file filename<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-(use-package swiper
-  :after ivy)
+    <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>find-file-below</x-color> <x-color><param>#268bd2</param>(</x-color>filename<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>split-window-below<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>other-window 1<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>find-file filename<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-(use-package counsel
-  :after ivy evil
-  :config (counsel-mode)
-  :bind (:map evil-normal-state-map
-          ("SPC SPC" . counsel-M-x)
-          ("SPC C-p" . counsel-projectile-switch-project)
-          ("SPC s" . swiper-isearch)
-          ("C-p" . dz/find-file)))
+    <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>dolist</x-color> <x-color><param>#268bd2</param>(</x-color>command '<x-color><param>#6c71c4</param>(</x-color>counsel-projectile-find-file
+                       counsel-find-file<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#268bd2</param>(</x-color>ivy-set-actions command
+      '<x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>(</x-color><x-color><param>#2aa198</param>"|"</x-color> find-file-right <x-color><param>#2aa198</param>"open right"</x-color><x-color><param>#859900</param>)</x-color>
+        <x-color><param>#859900</param>(</x-color><x-color><param>#2aa198</param>"%"</x-color> find-file-below <x-color><param>#2aa198</param>"open below"</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-(use-package projectile
-  :after ivy
-  :config (projectile-mode)
-  :custom
-  (projectile-enable-caching     t)
-  (projectile-completion-system 'ivy))
+    <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> ivy-minibuffer-map
+           <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-h"</x-color> . ivy-next-line<x-color><param>#268bd2</param>)</x-color>
+           <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-t"</x-color> . ivy-previous-line<x-color><param>#268bd2</param>)</x-color>
+           <x-color><param>#839496</param>:map</x-color> ivy-mode-map
+           <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-c"</x-color> . ivy-dispatching-done<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package counsel-projectile
-  :after counsel projectile)
-#+END_SRC
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> ivy-xref
+    <x-color><param>#839496</param>:after</x-color> ivy
+    <x-color><param>#839496</param>:custom</x-color>
+    <x-color><param>#b58900</param>(</x-color>xref-show-definitions-function #'ivy-xref-show-defs<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>xref-show-xrefs-function #'ivy-xref-show-xrefs<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-** Treesitter
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package tree-sitter
-  :defer 3
-  :config
-  (require 'tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-#+END_SRC
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> swiper
+    <x-color><param>#839496</param>:after</x-color> ivy
+    <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"SPC s"</x-color> . swiper-isearch<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-** Treemacs
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package treemacs
-  :defer 3
-  :custom
-  (treemacs-width 20)
-  (treemacs-indentation 2)
-  (treemacs-follow-after-init t)
-  (treemacs-git-integration t)
-  (treemacs-show-hidden-files t)
-  :config
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t))
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> counsel
+    <x-color><param>#839496</param>:after</x-color> ivy evil
+    <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>counsel-mode<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"SPC SPC"</x-color> . counsel-M-x<x-color><param>#268bd2</param>)</x-color>
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"SPC C-p"</x-color> . counsel-projectile-switch-project<x-color><param>#268bd2</param>)</x-color>
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-p"</x-color> . dz/find-file<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package treemacs-projectile
-  :after treemacs projectile evil
-  :bind (:map evil-normal-state-map
-         ("C-c o t" . treemacs-projectile)))
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> projectile
+    <x-color><param>#839496</param>:after</x-color> ivy
+    <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>projectile-mode<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#839496</param>:custom</x-color>
+    <x-color><param>#b58900</param>(</x-color>projectile-enable-caching t<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>projectile-completion-system 'ivy<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package lsp-treemacs
-  :after treemacs
-  :config (lsp-treemacs-sync-mode 1))
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> counsel-projectile
+    <x-color><param>#839496</param>:after</x-color> counsel projectile<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-(use-package treemacs-all-the-icons
-  :after treemacs
-  :config (treemacs-load-theme 'all-the-icons))
-#+END_SRC
+</italic>
 
-* Evil Mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package general
-  :config (general-override-mode))
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Treesitter</x-color>
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package evil
-  :custom
-  (evil-search-module                     'evil-search)
-  (evil-ex-complete-emacs-commands        nil)
-  (evil-shift-round                       nil)
-  (evil-vsplit-window-right               t)
-  (evil-split-window-below                t)
-  (evil-want-C-u-scroll                   t)
-  (popup-use-optimized-column-computation nil)
+<italic>#+BEGIN_SRC emacs-lisp
 
-  :config
-  (evil-mode)
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> tree-sitter
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>tree-sitter-langs</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>global-tree-sitter-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-  (defun dz/evil-visual-shift-left ()
-    "Shift visual selection left, retains the selection."
-    (interactive)
-    (evil-shift-left (region-beginning) (region-end))
-    (funcall (evil-visual-restore)))
+</italic>
 
-  (defun dz/evil-visual-shift-right ()
-    "Shift visual selection left, retains the selection."
-    (interactive)
-    (evil-shift-right (region-beginning) (region-end))
-    (funcall (evil-visual-restore)))
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Treemacs</x-color>
 
-  (general-define-key
-    :states '(insert)
-      "TAB" 'tab-to-tab-stop)
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-  (general-define-key
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> treemacs
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-width 20<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-indentation 2<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-follow-after-init t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-git-integration t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-show-hidden-files t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-follow-mode t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>treemacs-filewatch-mode t<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-    :states '(visual) 
-      "<" #'dz/evil-visual-shift-left
-      ">" #'dz/evil-visual-shift-right)
 
-  (general-define-key
-    :states '(normal visual motion)
-      "d" #'evil-backward-char
-      "n" #'evil-forward-char
-      "h" #'evil-next-line
-      "t" #'evil-previous-line
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> treemacs-projectile
+  <x-color><param>#839496</param>:after</x-color> treemacs projectile evil
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+         <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-c o t"</x-color> . treemacs-projectile<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-      "s" #'evil-ex
 
-      "j" #'evil-delete
-      "k" #'evil-find-char-to
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> lsp-treemacs
+  <x-color><param>#839496</param>:after</x-color> treemacs
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>lsp-treemacs-sync-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-      "l" #'evil-search-next
-      "L" #'evil-search-previous
 
-      "D" #'evil-beginning-of-line
-      "N" #'evil-end-of-line
-      "H" (kbd "5h")
-      "T" (kbd "5t")
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> treemacs-all-the-icons
+  <x-color><param>#839496</param>:after</x-color> treemacs
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>treemacs-load-theme 'all-the-icons<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-      "C-d" #'evil-window-left
-      "C-h" #'evil-window-down
-      "C-t" #'evil-window-up
-      "C-n" #'evil-window-right))
+</italic>
 
-(use-package evil-commentary
-  :after evil
-  :config (evil-commentary-mode 1))
+<x-color><param>#cb4b16</param>* Evil Mode</x-color>
 
-(use-package evil-surround
-  :after evil
-  :config (global-evil-surround-mode 1))
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-* Language Server
-** lsp-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package lsp-mode
-    :defer 3
-    :commands lsp
-    :hook ((typescript-mode
-            javascript-mode
-            vue-mode
-            c++-mode
-            c-mode
-            latex-mode
-            python-mode) . lsp-deferred)
-    :bind (:map evil-normal-state-map
-            ("g r" . lsp-find-references)
-            ("g d" . lsp-find-definition))
-    :custom
-    ;; disable breadcrumbs
-    (lsp-headerline-breadcrumb-enable nil)
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> general
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>general-override-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-    ;; vue related configuration
-    (lsp-vetur-format-default-formatter-css "none")
-    (lsp-vetur-format-default-formatter-html "none")
-    (lsp-vetur-format-default-formatter-js "none")
-    (lsp-vetur-validation-template nil))
+</italic>
 
-  (use-package lsp-ui
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :custom
-    (lsp-ui-doc-enable   t)
-    (lsp-ui-doc-position 'at-point)
-    (lsp-ui-doc-border   "white"))
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-* Auto Complete
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> evil
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-search-module                     'evil-search<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-ex-complete-emacs-commands        nil<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-shift-round                       nil<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-vsplit-window-right               t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-split-window-below                t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-want-C-u-scroll                   t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>popup-use-optimized-column-computation nil<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>evil-mode<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/evil-visual-shift-left</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#2aa198</param>"Shift visual selection left, retains the selection."</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>evil-shift-left <x-color><param>#6c71c4</param>(</x-color>region-beginning<x-color><param>#6c71c4</param>)</x-color> <x-color><param>#6c71c4</param>(</x-color>region-end<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>funcall <x-color><param>#6c71c4</param>(</x-color>evil-visual-restore<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/evil-visual-shift-right</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#2aa198</param>"Shift visual selection left, retains the selection."</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>evil-shift-right <x-color><param>#6c71c4</param>(</x-color>region-beginning<x-color><param>#6c71c4</param>)</x-color> <x-color><param>#6c71c4</param>(</x-color>region-end<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>funcall <x-color><param>#6c71c4</param>(</x-color>evil-visual-restore<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color>general-define-key
+    <x-color><param>#839496</param>:states</x-color> '<x-color><param>#268bd2</param>(</x-color>insert<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#2aa198</param>"TAB"</x-color> 'tab-to-tab-stop<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color>general-define-key
+
+    <x-color><param>#839496</param>:states</x-color> '<x-color><param>#268bd2</param>(</x-color>visual<x-color><param>#268bd2</param>)</x-color> 
+      <x-color><param>#2aa198</param>"<<"</x-color> #'dz/evil-visual-shift-left
+      <x-color><param>#2aa198</param>">"</x-color> #'dz/evil-visual-shift-right<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color>general-define-key
+    <x-color><param>#839496</param>:states</x-color> '<x-color><param>#268bd2</param>(</x-color>normal visual motion<x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#2aa198</param>"d"</x-color> #'evil-backward-char
+      <x-color><param>#2aa198</param>"n"</x-color> #'evil-forward-char
+      <x-color><param>#2aa198</param>"h"</x-color> #'evil-next-line
+      <x-color><param>#2aa198</param>"t"</x-color> #'evil-previous-line
+
+
+      <x-color><param>#2aa198</param>"s"</x-color> #'evil-ex
+
+
+      <x-color><param>#2aa198</param>"j"</x-color> #'evil-delete
+      <x-color><param>#2aa198</param>"k"</x-color> #'evil-find-char-to
+
+
+      <x-color><param>#2aa198</param>"l"</x-color> #'evil-search-next
+      <x-color><param>#2aa198</param>"L"</x-color> #'evil-search-previous
+
+
+      <x-color><param>#2aa198</param>"D"</x-color> #'evil-beginning-of-line
+      <x-color><param>#2aa198</param>"N"</x-color> #'evil-end-of-line
+      <x-color><param>#2aa198</param>"H"</x-color> <x-color><param>#268bd2</param>(</x-color>kbd <x-color><param>#2aa198</param>"5h"</x-color><x-color><param>#268bd2</param>)</x-color>
+      <x-color><param>#2aa198</param>"T"</x-color> <x-color><param>#268bd2</param>(</x-color>kbd <x-color><param>#2aa198</param>"5t"</x-color><x-color><param>#268bd2</param>)</x-color>
+
+
+      <x-color><param>#2aa198</param>"C-d"</x-color> #'evil-window-left
+      <x-color><param>#2aa198</param>"C-h"</x-color> #'evil-window-down
+      <x-color><param>#2aa198</param>"C-t"</x-color> #'evil-window-up
+      <x-color><param>#2aa198</param>"C-n"</x-color> #'evil-window-right<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> evil-commentary
+  <x-color><param>#839496</param>:after</x-color> evil
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>evil-commentary-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> evil-surround
+  <x-color><param>#839496</param>:after</x-color> evil
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>global-evil-surround-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Language Server</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* lsp-mode</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-bg-color><param>#00001eef26d9</param>  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> lsp-mode
+    <x-color><param>#839496</param>:defer</x-color> 3
+    <x-color><param>#839496</param>:commands</x-color> lsp
+    <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>typescript-mode javascript-mode vue-mode c++-mode c-mode latex-mode python-mode<x-color><param>#268bd2</param>)</x-color> . lsp-deferred<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"g r"</x-color> . lsp-find-references<x-color><param>#268bd2</param>)</x-color>
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"g d"</x-color> . lsp-find-definition<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#839496</param>:custom</x-color>
+    <x-color><param>#586e75</param>;; disable breadcrumbs
+</x-color>    <x-color><param>#b58900</param>(</x-color>lsp-headerline-breadcrumb-enable nil<x-color><param>#b58900</param>)</x-color>
+
+    <x-color><param>#586e75</param>;; vue related configuration
+</x-color>    <x-color><param>#b58900</param>(</x-color>lsp-vetur-format-default-formatter-css <x-color><param>#2aa198</param>"none"</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-vetur-format-default-formatter-html <x-color><param>#2aa198</param>"none"</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-vetur-format-default-formatter-js <x-color><param>#2aa198</param>"none"</x-color><x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-vetur-validation-template nil<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+  <x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> lsp-ui
+    <x-color><param>#839496</param>:after</x-color> lsp-mode
+    <x-color><param>#839496</param>:commands</x-color> lsp-ui-mode
+    <x-color><param>#839496</param>:custom</x-color> 
+    <x-color><param>#b58900</param>(</x-color>lsp-signature-auto-activate nil<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-signature-render-documentation nil<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-eldoc-enable-hover nil<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-ui-doc-enable t<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-ui-doc-position 'at-point<x-color><param>#b58900</param>)</x-color>
+    <x-color><param>#b58900</param>(</x-color>lsp-ui-doc-border <x-color><param>#2aa198</param>"white"</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Auto Complete</x-color>
+
 To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we must use this package.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package company
-  :defer 3
-  :custom
-  (company-idle-delay 0)
-  (company-echo-delay 0)
-  (company-minimum-prefix-length 1)
-  (company-tooltip-align-annotations t)
-  :config
-  (global-company-mode))
 
-(use-package company-lsp
-  :after company
-  :commands company-lsp
-  :custom
-  (company-lsp-async t)
-  (company-lsp-enable-snippet t)
-  (company-lsp-enable-recompletion t)
-  (company-lsp-cache-candidates 'auto)
-  :config
-  (push 'company-lsp company-backends))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-(use-package company-posframe
-  :delight
-  :after company
-  :config (company-posframe-mode 1))
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> company
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>company-idle-delay 0<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>company-echo-delay 0<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>company-minimum-prefix-length 1<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>company-tooltip-align-annotations t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color>global-company-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package company-box
-  :delight
-  :after company
-  :hook (company-mode . company-box-mode))
-#+END_SRC
 
-* Languages
-** Emacs Lisp
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ielm
-  :defer 3
-  :commands ielm)
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-posframe
+  <x-color><param>#839496</param>:delight</x-color>
+  <x-color><param>#839496</param>:after</x-color> company
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>company-posframe-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package paredit
-  :hook ((lisp-mode emacs-lisp-mode ielm-mode) . paredit-mode))
 
-(use-package rainbow-delimiters
-  :hook ((lisp-mode emacs-lisp-mode ielm-mode) . rainbow-delimiters-mode))
-#+END_SRC
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-box
+  <x-color><param>#839496</param>:delight</x-color>
+  <x-color><param>#839496</param>:after</x-color> company
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>company-mode . company-box-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** C++
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ccls
-  :defer 3)
-#+END_SRC
+</italic>
 
-** Python
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package python-mode
-  :defer 3
-  :custom (python-shell-interpreter "python3")
-  :hook ((python-mode . lsp-deferred)
-         (python-mode . (lambda () 
-          (setq tab-width        (py-guess-indent-offset)
-                evil-shift-width (py-guess-indent-offset))))))
+<x-color><param>#cb4b16</param>* Languages</x-color>
 
-(use-package lsp-pyright
-  :after python-mode
-  :hook (python-mode . lsp-deferred))
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Emacs Lisp</x-color>
 
-(use-package pyvenv
-  :after python-mode
-  :config (pyvenv-mode 1))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-(use-package py-isort
-  :after python-mode
-  :hook ((python-mode . pyvenv-mode)
-         (before-save . py-isort-before-save)))
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> ielm
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:commands</x-color> ielm<x-color><param>#2aa198</param>)</x-color>
 
-(use-package blacken
-  :after python-mode
-  :hook (python-mode . blacken-mode)
-  :custom (blacken-line-length 79))
-#+END_SRC
 
-** Golang
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package go-mode
-  :mode "\\.go\\'"
-  :hook ((go-mode     . lsp-deferred)
-         (before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports)))
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> paredit
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>lisp-mode emacs-lisp-mode ielm-mode<x-color><param>#268bd2</param>)</x-color> . paredit-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(use-package company-go
-  :after company go-mode
-  :custom (company-go-show-annotation t)
-  :config
-  (defun dz/go-mode-hook ()
-    (set (make-local-variable 'company-backends)
-      '(company-go)))
-  :hook (go-mode . dz/go-mode-hook))
 
-(use-package go-eldoc
-  :after go-mode
-  :hook (go-mode . go-eldoc-setup))
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> rainbow-delimiters
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>lisp-mode emacs-lisp-mode ielm-mode<x-color><param>#268bd2</param>)</x-color> . rainbow-delimiters-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-(use-package go-guru 
-  :after go-mode
-  :hook (go-mode . go-guru-hl-identifier-mode))
+</italic>
 
-(use-package go-tag
-  :after go-mode
-  :custom (go-tag-args (list "-transform" "camelcase")))
-#+END_SRC
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* C++</x-color>
 
-** Javascript/Typescript
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :custom (typescript-indent-level 2))
-#+END_SRC
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-** Web
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package web-mode
-  :mode ("\\.html\\'" "\\.css\\'")
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> ccls
+  <x-color><param>#839496</param>:defer</x-color> 3<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-  :custom
-  (web-mode-enable-current-element-highlight t)
+</italic>
 
-  :config
-  (use-package company-web)
-  (use-package css-mode)
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Python</x-color>
 
-  (defun dz/web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> python-mode
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>python-shell-interpreter <x-color><param>#2aa198</param>"python3"</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>python-mode . lsp-deferred<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>python-mode . <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#859900</param>()</x-color> 
+          <x-color><param>#859900</param>(setq</x-color> tab-width        <x-color><param>#b58900</param>(</x-color>py-guess-indent-offset<x-color><param>#b58900</param>)</x-color>
+                evil-shift-width <x-color><param>#b58900</param>(</x-color>py-guess-indent-offset<x-color><param>#b58900</param>)</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> lsp-pyright
+  <x-color><param>#839496</param>:after</x-color> python-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>python-mode . lsp-deferred<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> pyvenv
+  <x-color><param>#839496</param>:after</x-color> python-mode
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>pyvenv-mode 1<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> py-isort
+  <x-color><param>#839496</param>:after</x-color> python-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>python-mode . pyvenv-mode<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>before-save . py-isort-before-save<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> blacken
+  <x-color><param>#839496</param>:after</x-color> python-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>python-mode . blacken-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>blacken-line-length 79<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Golang</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> go-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#2aa198</param>"\\.go\\'"</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>go-mode     . lsp-deferred<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>before-save . lsp-format-buffer<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>before-save . lsp-organize-imports<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-go
+  <x-color><param>#839496</param>:after</x-color> company go-mode
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>company-go-show-annotation t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/go-mode-hook</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#268bd2</param>(</x-color>set <x-color><param>#6c71c4</param>(</x-color>make-local-variable 'company-backends<x-color><param>#6c71c4</param>)</x-color>
+      '<x-color><param>#6c71c4</param>(</x-color>company-go<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>go-mode . dz/go-mode-hook<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> go-eldoc
+  <x-color><param>#839496</param>:after</x-color> go-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>go-mode . go-eldoc-setup<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> go-guru 
+  <x-color><param>#839496</param>:after</x-color> go-mode
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>go-mode . go-guru-hl-identifier-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> go-tag
+  <x-color><param>#839496</param>:after</x-color> go-mode
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>go-tag-args <x-color><param>#268bd2</param>(</x-color>list <x-color><param>#2aa198</param>"-transform"</x-color> <x-color><param>#2aa198</param>"camelcase"</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Javascript/Typescript</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> typescript-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#2aa198</param>"\\.js\\'"</x-color> <x-color><param>#2aa198</param>"\\.jsx\\'"</x-color> <x-color><param>#2aa198</param>"\\.ts\\'"</x-color> <x-color><param>#2aa198</param>"\\.tsx\\'"</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>typescript-mode . lsp-deferred<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>typescript-indent-level 2<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Web</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> web-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.html\\'"</x-color> <x-color><param>#2aa198</param>"\\.css\\'"</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>web-mode-enable-current-element-highlight t<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#839496</param>:config</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-web<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>use-package</x-color> css-mode<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/web-mode-hook</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#2aa198</param>"Hooks for Web mode."</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq</x-color> web-mode-markup-indent-offset 2
           web-mode-code-indent-offset   2
-          web-mode-css-indent-offset    2)
+          web-mode-css-indent-offset    2<x-color><param>#268bd2</param>)</x-color>
 
-    (set (make-local-variable 'company-backends)
-      '(company-css
+
+    <x-color><param>#268bd2</param>(</x-color>set <x-color><param>#6c71c4</param>(</x-color>make-local-variable 'company-backends<x-color><param>#6c71c4</param>)</x-color>
+      '<x-color><param>#6c71c4</param>(</x-color>company-css
         company-web-html
         company-yasnippet
-        company-files)))
+        company-files<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-  :hook ((web-mode . prog-mode)
-         (web-mode . dz/web-mode-hook)
-         (web-mode . company-mode)))
-#+END_SRC
 
-*** Emmet
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package emmet-mode
-  :preface (defvar emmet-mode-keymap (make-sparse-keymap))
-  :bind (:map emmet-mode-keymap
-          ("C-TAB" . emmet-expand-line))
-  :hook ((css-mode web-mode html-mode) . emmet-mode))
-#+END_SRC
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>web-mode . prog-mode<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>web-mode . dz/web-mode-hook<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>web-mode . company-mode<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-** Vue
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package vue-mode
-  :mode "\\.vue\\'"
-  :hook ((vue-mode . prettier-js-mode)
-         (vue-mode . lsp)
-         (vue-mode . (lambda () (set-face-background 'mmm-default-submode-face nil))))
-  :config (setq prettier-js-args '("--parser vue")))
-#+END_SRC
+</italic>
 
-* Org
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package org
-  :defer 3
-  :config
+<x-color><param>#002b36</param>**</x-color><x-color><param>#268bd2</param>* Emmet</x-color>
 
-  (require 'ox)
-  (require 'color)
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-  (setq org-directory "~/org")
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> emmet-mode
+  <x-color><param>#839496</param>:preface</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>emmet-mode-keymap</x-color> <x-color><param>#268bd2</param>(</x-color>make-sparse-keymap<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> emmet-mode-keymap
+          <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-TAB"</x-color> . emmet-expand-line<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>css-mode web-mode html-mode<x-color><param>#268bd2</param>)</x-color> . emmet-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-  ;; Mark done tasks with current time.
-  (setq org-log-done 'time) 
-  ;; Disable annoying indentation behaviour.
-  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
+</italic>
 
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Vue</x-color>
 
-  (defun +org-update-latex-preview-background-color (&rest _)
-    (setq-default
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> vue-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#2aa198</param>"\\.vue\\'"</x-color>
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>vue-mode . prettier-js-mode<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>vue-mode . lsp<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>vue-mode . <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#859900</param>()</x-color> <x-color><param>#859900</param>(</x-color>set-face-background 'mmm-default-submode-face nil<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> prettier-js-args '<x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"--parser vue"</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Org</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> org
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:config</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>ox</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>require</x-color> '<x-color><param>#268bd2</param>color</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> org-directory <x-color><param>#2aa198</param>"~/org"</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#586e75</param>;; Mark done tasks with current time.
+</x-color>  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> org-log-done 'time<x-color><param>#b58900</param>)</x-color> 
+  <x-color><param>#586e75</param>;; Disable annoying indentation behaviour.
+</x-color>  <x-color><param>#b58900</param>(</x-color>add-hook 'org-mode-hook <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#6c71c4</param>()</x-color> <x-color><param>#6c71c4</param>(</x-color>electric-indent-local-mode -1<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> org-format-latex-options <x-color><param>#268bd2</param>(</x-color>plist-put org-format-latex-options <x-color><param>#839496</param>:scale</x-color> 2.0<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>+org-update-latex-preview-background-color</x-color> <x-color><param>#268bd2</param>(</x-color><x-color><param>#b58900</param>&rest</x-color> _<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq-default</x-color>
      org-format-latex-options
-     (plist-put org-format-latex-options
-                :background
-                (face-attribute (or (cadr (assq 'default face-remapping-alist))
-                                    'default)
-                                :background nil t))))
+     <x-color><param>#6c71c4</param>(</x-color>plist-put org-format-latex-options
+                <x-color><param>#839496</param>:background</x-color>
+                <x-color><param>#859900</param>(</x-color>face-attribute <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>or</x-color> <x-color><param>#268bd2</param>(</x-color>cadr <x-color><param>#6c71c4</param>(</x-color>assq 'default face-remapping-alist<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+                                    'default<x-color><param>#b58900</param>)</x-color>
+                                <x-color><param>#839496</param>:background</x-color> nil t<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-  (advice-add 'load-theme :after '+org-update-latex-preview-background-color)
 
-  (setq org-latex-listings 'minted
-        org-latex-packages-alist '(("" "minted"))
+  <x-color><param>#b58900</param>(</x-color>advice-add 'load-theme <x-color><param>#839496</param>:after</x-color> '+org-update-latex-preview-background-color<x-color><param>#b58900</param>)</x-color>
+
+
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>setq</x-color> org-latex-listings 'minted
+        org-latex-packages-alist '<x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color><x-color><param>#2aa198</param>""</x-color> <x-color><param>#2aa198</param>"minted"</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
         org-latex-pdf-process
-        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+        '<x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"</x-color>
+          <x-color><param>#2aa198</param>"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+
  
-  ;; Use mixed pitch font for headers.
-  (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4
-                  org-level-5 org-level-6 org-level-7 org-level-8))
-    (set-face-attribute face nil :inherit 'mixed-pitch))
 
-  (defun dz/org-faces ()
-    (set-face-attribute 'org-block-begin-line nil :slant 'italic)
-    (set-face-attribute 'org-block-end-line nil :slant 'italic)
-    (set-face-attribute 'org-block nil :background
-                        (color-darken-name
-                          (face-attribute 'default :background) 3)))
+  <x-color><param>#586e75</param>;; Use mixed pitch font for headers.
+</x-color>  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>dolist</x-color> <x-color><param>#268bd2</param>(</x-color>face '<x-color><param>#6c71c4</param>(</x-color>org-level-1 org-level-2 org-level-3 org-level-4
+                  org-level-5 org-level-6 org-level-7 org-level-8<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>set-face-attribute face nil <x-color><param>#839496</param>:inherit</x-color> 'mixed-pitch<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-  :bind (:map evil-normal-state-map
-    ("C-c C-e" . org-export-dispatch))
 
-  :hook ((org-mode . org-indent-mode)
-         (org-mode . flyspell-mode)
-         (org-mode . dz/org-faces)))
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/org-faces</x-color> <x-color><param>#268bd2</param>()</x-color>
+    <x-color><param>#268bd2</param>(</x-color>set-face-attribute 'org-block-begin-line nil <x-color><param>#839496</param>:slant</x-color> 'italic<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>set-face-attribute 'org-block-end-line nil <x-color><param>#839496</param>:slant</x-color> 'italic<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>set-face-attribute 'org-block nil <x-color><param>#839496</param>:background</x-color>
+                        <x-color><param>#6c71c4</param>(</x-color>color-darken-name
+                          <x-color><param>#859900</param>(</x-color>face-attribute 'default <x-color><param>#839496</param>:background</x-color><x-color><param>#859900</param>)</x-color> 3<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-;(use-package org-bullets
-;  :after org
-;  :hook (org-mode . org-bullets-mode))
-#+END_SRC
 
-** Org Export
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package ox-hugo 
-  :after ox)
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> evil-normal-state-map
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"C-c C-e"</x-color> . org-export-dispatch<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-(use-package ox-reveal 
-  :after ox)
-#+END_SRC
 
-* LaTeX
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package auctex
-  :mode
-  ("\\.tex\\'" . latex-mode)
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#268bd2</param>(</x-color>org-mode . org-indent-mode<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>org-mode . flyspell-mode<x-color><param>#268bd2</param>)</x-color>
+         <x-color><param>#268bd2</param>(</x-color>org-mode . dz/org-faces<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-  :custom
-	(TeX-save-query                    nil)
-	(TeX-source-correlate-method       'synctex)
-	(TeX-source-correlate-mode         t)
-  (TeX-PDF-mode                      t)
-  (TeX-source-correlate-start-server t)
-  (TeX-view-program-selection        '((output-pdf "PDF Tools")))
 
-  :config
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> org-bullets
+  <x-color><param>#839496</param>:after</x-color> org
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>org-mode . org-bullets-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-  ;(add-hook 'latex-mode-hook 'TeX-fold-mode)
-  ;(add-hook 'latex-mode-hook 'latex-math-mode)
-  ;(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
+</italic>
 
-  (add-hook 'latex-mode-hook (lambda ()
-    (add-to-list 'org-latex-classes
-                 '("report"
-                   "\\documentclass{report}"
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))))
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Org Export</x-color>
 
-  (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-  (add-hook 'pdf-view-mode-hook
-            (lambda () (setq header-line-format nil)))
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> ox-hugo 
+  <x-color><param>#839496</param>:after</x-color> ox<x-color><param>#2aa198</param>)</x-color>
 
-  ;; Update PDF buffers after successful LaTeX runs.
-  (add-hook 'TeX-after-compilation-finished-functions
-             #'TeX-revert-document-buffer))
 
-(use-package company-auctex 
-  :after company tex)
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> ox-reveal 
+  <x-color><param>#839496</param>:after</x-color> ox<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
 
-(use-package company-math 
-  :after company tex)
+</italic>
 
-(use-package reftex
-  :after tex
-  :commands turn-on-reftex
-  :custom
-  (reftex-plug-into-AUCTeX t)
-	;; RefTeX list of sections, labels and figures shows as vertical bar to the left of the window.
-	(reftex-toc-split-windows-horizontally t)
-	;; RefTeX table of contents does not indicate which sections are in which files.
-	(reftex-toc-include-file-boundaries nil))
-#+END_SRC
+<x-color><param>#cb4b16</param>* LaTeX</x-color>
 
-* Configuration Files
-** Terraform
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package terraform-mode
-  :mode ("\\.tf$" . terraform-mode))
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
 
-(use-package company-terraform
-  :after company-mode
-  :config (company-terraform-init))
-#+END_SRC
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> auctex
+  <x-color><param>#839496</param>:mode</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.tex\\'"</x-color> . latex-mode<x-color><param>#b58900</param>)</x-color>
 
-** Yaml
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package yaml-mode
-  :mode ("\\.yml$" . yaml-mode))
-#+END_SRC
 
-** Protobuf
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package protobuf-mode
-  :mode ("\\.pb$" . protobuf-mode))
-#+END_SRC
+  <x-color><param>#839496</param>:custom</x-color>
+	<x-color><param>#b58900</param>(</x-color>TeX-save-query                    nil<x-color><param>#b58900</param>)</x-color>
+	<x-color><param>#b58900</param>(</x-color>TeX-source-correlate-method       'synctex<x-color><param>#b58900</param>)</x-color>
+	<x-color><param>#b58900</param>(</x-color>TeX-source-correlate-mode         t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>TeX-PDF-mode                      t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>TeX-source-correlate-start-server t<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>TeX-view-program-selection        '<x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>output-pdf <x-color><param>#2aa198</param>"PDF Tools"</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-** CMake
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package cmake-mode
-  :mode ("CMakeLists\\.txt\\'" . cmake-mode))
-#+END_SRC
 
-** Dockerfile
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package dockerfile-mode
-  :mode ("Dockerfile" . dockerfile-mode))
+  <x-color><param>#839496</param>:config</x-color>
 
-(use-package docker-compose-mode)
 
-(use-package docker
-  :bind ("C-c d" . docker))
-#+END_SRC
+  <x-color><param>#b58900</param>(</x-color>add-hook 'latex-mode-hook 'TeX-fold-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>add-hook 'latex-mode-hook 'latex-math-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>add-hook 'LaTeX-mode-hook 'prettify-symbols-mode<x-color><param>#b58900</param>)</x-color>
 
-** Toml
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package toml-mode
-  :mode ("\\.toml$" . toml-mode))
-#+END_SRC
 
-* Spelling
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package flycheck
-  :defer 3
-  :init (global-flycheck-mode)
-  :custom (flycheck-global-modes '(not org-mode)))
-#+END_SRC
+  <x-color><param>#b58900</param>(</x-color>add-hook 'latex-mode-hook <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#6c71c4</param>()</x-color>
+    <x-color><param>#6c71c4</param>(</x-color>add-to-list 'org-latex-classes
+                 '<x-color><param>#859900</param>(</x-color><x-color><param>#2aa198</param>"notes"</x-color>
+                   <x-color><param>#2aa198</param>"\\documentclass{notes}"</x-color>
+                   <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\section{%s}"</x-color> . <x-color><param>#2aa198</param>"\\section*{%s}"</x-color><x-color><param>#b58900</param>)</x-color>
+                   <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\subsection{%s}"</x-color> . <x-color><param>#2aa198</param>"\\subsection*{%s}"</x-color><x-color><param>#b58900</param>)</x-color>
+                   <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\subsubsection{%s}"</x-color> . <x-color><param>#2aa198</param>"\\subsubsection*{%s}"</x-color><x-color><param>#b58900</param>)</x-color>
+                   <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\paragraph{%s}"</x-color> . <x-color><param>#2aa198</param>"\\paragraph*{%s}"</x-color><x-color><param>#b58900</param>)</x-color>
+                   <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\subparagraph{%s}"</x-color> . <x-color><param>#2aa198</param>"\\subparagraph*{%s}"</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-* Snippets
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package yasnippet
-  :defer 3
-  :hook (after-init . yas-global-mode)
-  :bind (:map yas-minor-mode-map
-          ("TAB" . yas-expand))
-  :custom (yas-prompt-functions '(yas-completing-prompt)))
 
-(use-package yasnippet-snippets
-  :after yasnippet
-  :custom (yas-snippet-dirs '("~/.emacs.d/snippets")))
-#+END_SRC
+  <x-color><param>#b58900</param>(</x-color>add-to-list 'auto-mode-alist '<x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"\\.pdf\\'"</x-color> . pdf-tools-install<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-* Miscellaneous functions
-** Open configuration
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;;###autoload
-(defun dz/open-config ()
-  (interactive)
-  (find-file "~/.emacs.d/init.org"))
 
-(define-key evil-normal-state-map (kbd "SPC o c") #'dz/open-config)
-#+END_SRC
+  <x-color><param>#b58900</param>(</x-color>add-hook 'pdf-view-mode-hook
+            <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>lambda</x-color> <x-color><param>#6c71c4</param>()</x-color> <x-color><param>#6c71c4</param>(</x-color><x-color><param>#859900</param>setq</x-color> header-line-format nil<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
 
-** Wrap org source code blocks
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defvar def-language nil)
-(setq def-language "")
 
-;;;###autoload
-(defun dz/org-wrap-source ()
-  (interactive)
-  (let ((lang (read-string (format "Language [%s]: " def-language) nil nil def-language))
-        (start (min (point) (mark)))
-        (end (max (point) (mark))))
-    (goto-char end)
-    (unless (bolp)
-      (newline))
-    (insert "#+END_SRC\n")
-    (goto-char start)
-    (unless (bolp)
-      (newline))
-    (setq def-language lang)
-    (insert (format "#+BEGIN_SRC %s\n" def-language))))
+  <x-color><param>#586e75</param>;; Update PDF buffers after successful LaTeX runs.
+</x-color>  <x-color><param>#b58900</param>(</x-color>add-hook 'TeX-after-compilation-finished-functions
+             #'TeX-revert-document-buffer<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
 
-(define-key evil-visual-state-map (kbd "SPC w") #'dz/org-wrap-source)
-#+END_SRC
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-auctex 
+  <x-color><param>#839496</param>:after</x-color> company tex<x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-math 
+  <x-color><param>#839496</param>:after</x-color> company tex<x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> reftex
+  <x-color><param>#839496</param>:after</x-color> tex
+  <x-color><param>#839496</param>:commands</x-color> turn-on-reftex
+  <x-color><param>#839496</param>:custom</x-color>
+  <x-color><param>#b58900</param>(</x-color>reftex-plug-into-AUCTeX t<x-color><param>#b58900</param>)</x-color>
+	<x-color><param>#586e75</param>;; RefTeX list of sections, labels and figures shows as vertical bar to the left of the window.
+</x-color>	<x-color><param>#b58900</param>(</x-color>reftex-toc-split-windows-horizontally t<x-color><param>#b58900</param>)</x-color>
+	<x-color><param>#586e75</param>;; RefTeX table of contents does not indicate which sections are in which files.
+</x-color>	<x-color><param>#b58900</param>(</x-color>reftex-toc-include-file-boundaries nil<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Configuration Files</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Terraform</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> terraform-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.tf$"</x-color> . terraform-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> company-terraform
+  <x-color><param>#839496</param>:after</x-color> company-mode
+  <x-color><param>#839496</param>:config</x-color> <x-color><param>#b58900</param>(</x-color>company-terraform-init<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Yaml</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> yaml-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.yml$"</x-color> . yaml-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Protobuf</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> protobuf-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.pb$"</x-color> . protobuf-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* CMake</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> cmake-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"CMakeLists\\.txt\\'"</x-color> . cmake-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Dockerfile</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> dockerfile-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"Dockerfile"</x-color> . dockerfile-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> docker-compose-mode<x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> docker
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"C-c d"</x-color> . docker<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Toml</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> toml-mode
+  <x-color><param>#839496</param>:mode</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#2aa198</param>"\\.toml$"</x-color> . toml-mode<x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Spelling</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> flycheck
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:init</x-color> <x-color><param>#b58900</param>(</x-color>global-flycheck-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>flycheck-global-modes '<x-color><param>#268bd2</param>(</x-color>not org-mode<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Snippets</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>use-package</x-color> yasnippet
+  <x-color><param>#839496</param>:defer</x-color> 3
+  <x-color><param>#839496</param>:hook</x-color> <x-color><param>#b58900</param>(</x-color>after-init . yas-global-mode<x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:bind</x-color> <x-color><param>#b58900</param>(</x-color><x-color><param>#839496</param>:map</x-color> yas-minor-mode-map
+          <x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"TAB"</x-color> . yas-expand<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>yas-prompt-functions '<x-color><param>#268bd2</param>(</x-color>yas-completing-prompt<x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>use-package</x-color> yasnippet-snippets
+  <x-color><param>#839496</param>:after</x-color> yasnippet
+  <x-color><param>#839496</param>:custom</x-color> <x-color><param>#b58900</param>(</x-color>yas-snippet-dirs '<x-color><param>#268bd2</param>(</x-color><x-color><param>#2aa198</param>"~/.emacs.d/snippets"</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#cb4b16</param>* Miscellaneous functions</x-color>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Open configuration</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#586e75</param><x-bg-color><param>#00001eef26d9</param>;;;###autoload
+</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/open-config</x-color> <x-color><param>#b58900</param>()</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color>find-file <x-color><param>#2aa198</param>"~/.emacs.d/init.org"</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color>define-key evil-normal-state-map <x-color><param>#b58900</param>(</x-color>kbd <x-color><param>#2aa198</param>"SPC o c"</x-color><x-color><param>#b58900</param>)</x-color> #'dz/open-config<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
+
+<x-color><param>#002b36</param>*</x-color><x-color><param>#859900</param>* Wrap org source code blocks</x-color>
+
+<italic>#+BEGIN_SRC emacs-lisp :tangle yes
+
+</italic><x-color><param>#2aa198</param><x-bg-color><param>#00001eef26d9</param>(</x-bg-color></x-color><x-bg-color><param>#00001eef26d9</param><x-color><param>#859900</param>defvar</x-color> <x-color><param>#268bd2</param>def-language</x-color> nil<x-color><param>#2aa198</param>)</x-color>
+<x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>setq</x-color> def-language <x-color><param>#2aa198</param>"")</x-color>
+
+
+<x-color><param>#586e75</param>;;;###autoload
+</x-color><x-color><param>#2aa198</param>(</x-color><x-color><param>#859900</param>defun</x-color> <x-color><param>#268bd2</param>dz/org-wrap-source</x-color> <x-color><param>#b58900</param>()</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>interactive</x-color><x-color><param>#b58900</param>)</x-color>
+  <x-color><param>#b58900</param>(</x-color><x-color><param>#859900</param>let</x-color> <x-color><param>#268bd2</param>(</x-color><x-color><param>#6c71c4</param>(</x-color>lang <x-color><param>#859900</param>(</x-color>read-string <x-color><param>#b58900</param>(</x-color>format <x-color><param>#2aa198</param>"Language [%s]: "</x-color> def-language<x-color><param>#b58900</param>)</x-color> nil nil def-language<x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color>
+        <x-color><param>#6c71c4</param>(</x-color>start <x-color><param>#859900</param>(</x-color>min <x-color><param>#b58900</param>(</x-color>point<x-color><param>#b58900</param>)</x-color> <x-color><param>#b58900</param>(</x-color>mark<x-color><param>#b58900</param>)</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color>
+        <x-color><param>#6c71c4</param>(</x-color>end <x-color><param>#859900</param>(</x-color>max <x-color><param>#b58900</param>(</x-color>point<x-color><param>#b58900</param>)</x-color> <x-color><param>#b58900</param>(</x-color>mark<x-color><param>#b58900</param>)</x-color><x-color><param>#859900</param>)</x-color><x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>goto-char end<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>unless</x-color> <x-color><param>#6c71c4</param>(</x-color>bolp<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>newline<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>insert <x-color><param>#2aa198</param>"#+END_SRC\n"</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>goto-char start<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>unless</x-color> <x-color><param>#6c71c4</param>(</x-color>bolp<x-color><param>#6c71c4</param>)</x-color>
+      <x-color><param>#6c71c4</param>(</x-color>newline<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color><x-color><param>#859900</param>setq</x-color> def-language lang<x-color><param>#268bd2</param>)</x-color>
+    <x-color><param>#268bd2</param>(</x-color>insert <x-color><param>#6c71c4</param>(</x-color>format <x-color><param>#2aa198</param>"#+BEGIN_SRC %s\n"</x-color> def-language<x-color><param>#6c71c4</param>)</x-color><x-color><param>#268bd2</param>)</x-color><x-color><param>#b58900</param>)</x-color><x-color><param>#2aa198</param>)</x-color>
+
+
+<x-color><param>#2aa198</param>(</x-color>define-key evil-visual-state-map <x-color><param>#b58900</param>(</x-color>kbd <x-color><param>#2aa198</param>"SPC w"</x-color><x-color><param>#b58900</param>)</x-color> #'dz/org-wrap-source<x-color><param>#2aa198</param>)</x-color>
+</x-bg-color><italic>#+END_SRC
+
+</italic>
