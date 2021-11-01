@@ -3,39 +3,63 @@ files:
   - .config/kitty
   - .config/picom
   - .config/ranger
+  - .config/smug
   - .config/zathura
   - .inputrc
-  - .tmux
   - .tmux.conf
-  - .tmuxinator
   - .xinitrc
   - .xprofile
   - bin
 
 software:
-  - asciinema
+  # Desktop Applications
   - chromium
+  - spotify
+  - spotify-tray-git
+  - dropbox
+  - telegram-desktop
+
+  # Tmux & Session Management
+  - tmux
+  - smug
+
+  # Random CLI Tools
+  - asciinema
   - clipnotify
   - cloc
-  - docker
-  - docker-compose
-  - dropbox
   - dunst
   - fzf
   - gdrive-bin
   - glances
+  - openvpn
+  - ranger
+  - weechat
+  - maim
+
+  # Terminal Emulator
+  - kitty
+
+  # Web Shit
+  - npm
+  - typescript
+
+  # Networking
   - iw
   - iwd
-  - kitty
-  - maim
+
+  # PDF
+  - zathura
+  - zathura-pdf-poppler
+
+  # Docker
+  - docker
+  - docker-compose
+
+  # Fonts
   - nerd-fonts-hack
-  - npm
-  - openvpn
-  - otf-hasklig
-  - ranger
-  - spotify
-  - spotify-tray-git
-  - telegram-desktop
+  - otf-apple-sf-mono
+
+  # Latex
   - texlive-bibtexextra
   - texlive-bin
   - texlive-core
@@ -44,9 +68,4 @@ software:
   - texlive-latexextra
   - texlive-pictures
   - texlive-publishers
-  - scrcpy # android screen capture
   - texlive-science
-  - typescript
-  - weechat
-  - zathura
-  - zathura-pdf-poppler

@@ -6,12 +6,10 @@ xset r rate 250 35
 [ -z "$(lsusb | grep ErgoDox)" ] && setxkbmap -layout us -variant dvp
 
 case "$WM" in
-
   "dwm")
-
     kill_if_alive() {
       pidof $1 && pkill $1
-      $@ &
+      nohup $@
     }
 
     # Statusbar
@@ -26,9 +24,7 @@ case "$WM" in
     kill_if_alive picom
     kill_if_alive redshift
     kill_if_alive unclutter --timeout 2 --fork
-
     ;;
 
   *) exec $WM ;;
-
 esac

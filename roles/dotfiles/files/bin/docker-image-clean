@@ -4,4 +4,4 @@ docker images \
 	| awk 'NR>1' \
 	| fzf -m \
 	| awk '{print $3}' \
-	| xargs docker rmi
+	| xargs docker rmi -f

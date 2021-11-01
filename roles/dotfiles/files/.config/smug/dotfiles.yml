@@ -1,0 +1,10 @@
+session: dotfiles
+
+root: ~/code/dotfiles
+
+windows:
+  - name: code
+    layout: main-vertical
+    panes:
+      - commands:
+          - git log --graph --oneline --decorate

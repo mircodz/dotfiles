@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cd software/burp; java -Xbootclasspath/p:BurpKeygen.jar -jar burpsuite_pro_v2.0.06beta.jar &
