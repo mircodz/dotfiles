@@ -89,7 +89,24 @@ Include extra package repositories.
         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
 #+END_SRC
 
-Configure package manager.
+Install =straight.el=.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defvar bootstrap-version)
+(let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+#+END_SRC
+
+Install and configure =use-package=.
 #+BEGIN_SRC emacs-lisp :tangle yes
 (unless (bound-and-true-p package--initialized)
   (setq package-enable-at-startup nil) ; To prevent initializing twice.
@@ -97,11 +114,7 @@ Configure package manager.
 
 (eval-and-compile
   (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-#+END_SRC
 
-Configure and install =use-package=.
-#+BEGIN_SRC emacs-lisp :tangle yes
-;; Install use-package if not installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -241,6 +254,12 @@ In case some packages are missing, install them.
   (mode-line              ((t (:inverse-video t :underline nil))))
   (mode-line-buffer-id    ((t (:inverse-video t :foreground nil))))
   (mode-line-inactive     ((t (:inverse-video t :underline nil)))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package base16-theme
+  :straight (base16-theme :type git :host github :repo "mircodezorzi/base16-emacs"))
+  :config (load-theme 'base16-gruvbox-material-dark-pale t))
 #+END_SRC
 
 ** Better Scrolling
@@ -956,7 +975,12 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 	(reftex-toc-include-file-boundaries nil))
 #+END_SRC
 
-* Configuration Files
+* File Formats
+** Makefile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(add-to-list 'auto-mode-alist '("Makefile" . makefile-mode))
+#+END_SRC
+
 ** Terraform
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package terraform-mode
@@ -982,7 +1006,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 ** CMake
 #+BEGIN_SRC emacs-lisp :tangle yes
 (use-package cmake-mode
-  :mode ("CMakeLists\\.txt\\'" . cmake-mode))
+  :mode ("CMakeLists.txt" . cmake-mode))
 #+END_SRC
 
 ** Dockerfile
@@ -1058,4 +1082,3 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 
 (define-key evil-visual-state-map (kbd "SPC w") #'dz/org-wrap-source)
 #+END_SRC
-
