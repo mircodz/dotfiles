@@ -1,5 +1,15 @@
-"colorscheme base16-gruvbox-dark-soft  " Set default colorscheme
-colorscheme NeoSolarized
+function! s:colorscheme(name) abort
+    let pat = 'colors/'.a:name.'.vim'
+    return !empty(globpath(&rtp, pat))
+endfunction
+
+if s:colorscheme('base16-gruvbox-dark-soft') 
+	colorscheme base16-gruvbox-dark-soft
+endif
+if s:colorscheme('NeoSolarized')
+	colorscheme NeoSolarized
+endif
+
 filetype indent plugin on
 syntax on
 

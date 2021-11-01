@@ -35,8 +35,4 @@ nnoremap <leader>h :tabn<CR>
 nnoremap <leader>d :tabclose<CR>
 nnoremap <leader>n :tabnew<CR>
 
-noremap <C-n> <C-b>
-noremap <C-b> <C-n>
-imap <silent> <C-w> <C-n>
-
 let g:gitgutter_map_keys = 0
