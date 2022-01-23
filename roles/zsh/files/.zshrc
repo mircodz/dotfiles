@@ -5,12 +5,12 @@ autoload -Uz _zinit
 fpath+=$HOME/.zsh/pure
 
 # Syntax Highligthing
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice lucid wait='0' atload='_zsh_autosuggest_start'
 
 # Completion
 zinit light zsh-users/zsh-autosuggestions
-zinit light zdharma/history-search-multi-word
+zinit light zdharma-continuum/history-search-multi-word
 
 # fzf
 zinit ice from"gh-r" as"program"
