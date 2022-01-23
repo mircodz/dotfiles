@@ -163,7 +163,7 @@ Hide minor mode symbols in modeline.
 
 ** Fonts
 #+begin_src emacs-lisp :tangle yes
-(set-face-attribute 'default nil :font "Source Code Pro 16")
+(set-face-attribute 'default nil :font "SF Mono 16")
 #+end_src
 
 ** Beacon
