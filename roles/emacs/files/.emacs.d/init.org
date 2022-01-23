@@ -4,45 +4,46 @@
 
 * Meta
 ** Enable lexical scoping for the current file.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 ;;; -*- lexical-binding: t -*-
-#+END_SRC
+#+end_src
 
 ** Enable native compilation.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq package-native-compile t)
-#+END_SRC
+#+end_src
 
 ** Defer Garbage Collection
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq gc-cons-threshold 100000000)
-#+END_SRC
+#+end_src
 
 ** Unset =file-name-handler-alist=
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (defvar file-name-handler-alist-original file-name-handler-alist)
 (setq file-name-handler-alist nil)
-#+END_SRC
+#+end_src
 
 ** Garbage Collection
 Tweak garbage collection configuration during initialization.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (defvar better-gc-cons-threshold 402653184
   "The default value to use for `gc-cons-threshold'.")
 
 (defvar better-gc-cons-percentage 0.6
   "The default value to use for `gc-cons-percentage'.")
 
+;; Revert to defaults once Emacs has finished starting up.
 (add-hook 'emacs-startup-hook
   (lambda ()
     (setq gc-cons-threshold better-gc-cons-threshold
           gc-cons-percentage better-gc-cons-percentage
           file-name-handler-alist file-name-handler-alist-original)
     (makunbound 'file-name-handler-alist-original)))
-#+END_SRC
+#+end_src
 
 Garbage Collect when Emacs is out of focus and avoid garbage collection when using minibuffer.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (add-hook 'emacs-startup-hook
   (lambda ()
     (if (boundp 'after-focus-change-function)
@@ -61,11 +62,11 @@ Garbage Collect when Emacs is out of focus and avoid garbage collection when usi
 
     (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
     (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)))
-#+END_SRC
+#+end_src
 
 ** Literate Configuration Compilation
 Automatically update configuration file when saving the document.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq user-emacs-directory "~/code/dotfiles/roles/emacs/files/.emacs.d/")
 
 (defun tangle-init ()
@@ -77,20 +78,20 @@ Automatically update configuration file when saving the document.
       (byte-compile-file (concat user-emacs-directory "init.el")))))
 
 (add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
+#+end_src
 
 * Packages
 Include extra package repositories.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory)
       package-archives
       '(("gnu"   . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
-#+END_SRC
+#+end_src
 
-Install =straight.el=.
-#+BEGIN_SRC emacs-lisp :tangle yes
+Install and configure =straight.el=.
+#+begin_src emacs-lisp :tangle yes
 (defvar bootstrap-version)
 (let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
@@ -104,70 +105,19 @@ Install =straight.el=.
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
-#+END_SRC
-
-Install and configure =use-package=.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(unless (bound-and-true-p package--initialized)
-  (setq package-enable-at-startup nil) ; To prevent initializing twice.
-  (package-initialize))
-
-(eval-and-compile
-  (setq use-package-verbose (not (bound-and-true-p byte-compile-current-file))))
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-and-compile
-  (setq use-package-always-ensure t)
-  (setq use-package-expand-minimally t)
-  (setq use-package-enable-imenu-support t))
-
-(eval-when-compile
-  (require 'use-package)
-  (require 'bind-key))
-#+END_SRC
-
-In case some packages are missing, install them.
-#+BEGIN_SRC emacs-lisp :tangle yes
-(let* ((package--builtins nil)
-       (packages
-        '(auctex blacken ccls cmake-mode company company-auctex company-box company-go company-math company-posframe company-terraform company-web counsel counsel-projectile docker docker-compose-mode dockerfile-mode emmet-mode evil evil-commentary evil-surround flycheck general git-gutter git-gutter-fringe go-eldoc go-guru go-mode go-tag highlight-indent-guides ialign ivy ivy-xref key-chord linum-relative lsp-mode lsp-pyright lsp-treemacs lsp-ui magit org org-bullets origami ox-hugo ox-reveal paredit projectile protobuf-mode py-isort python-mode pyvenv rainbow-delimiters swiper terraform-mode toml-mode tree-sitter treemacs treemacs-all-the-icons treemacs-projectile typescript-mode undo-tree vue-mode web-mode yaml-mode yasnippet yasnippet-snippets)))
-  (let ((packages (seq-remove 'package-installed-p packages)))
-    (when packages
-      ;; Install uninstalled packages.
-      (package-refresh-contents)
-      (mapc 'package-install packages))))
-#+END_SRC
-
-** Auto Update Packages
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package auto-package-update
-  :if (not (daemonp))
-  :custom
-  (auto-package-update-interval             7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-delete-old-versions  t)
-  (auto-package-update-hide-results         t)
-  :config
-  (auto-package-update-maybe))
-#+END_SRC
+(straight-use-package 'el-patch)
+(setq straight-use-package-by-default t)
+#+end_src
 
 ** Diminish
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package delight) ;; Hide minor mode symbols in modeline.
-#+END_SRC
+Hide minor mode symbols in modeline.
+#+begin_src emacs-lisp :tangle yes
+(use-package delight)
+#+end_src
 
 * General
-** Personal information
-#+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-full-name    "Mirco De Zorzi"
-      user-mail-address "mircodezorzi@protonmail.com")
-#+END_SRC
-
 ** Reduce filesystem clutter
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (defvar emacs-autosave-directory
   (concat user-emacs-directory "autosaves/"))
 
@@ -179,10 +129,10 @@ In case some packages are missing, install them.
 
 ;; Don't generate lock files. Prevents Angular from breaking.
 (setq create-lockfiles nil)
-#+END_SRC
+#+end_src
 
 ** Cleanup UI
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (dolist (mode
          '(menu-bar-mode
            tool-bar-mode
@@ -190,29 +140,18 @@ In case some packages are missing, install them.
            scroll-bar-mode
            blink-cursor-mode))
   (funcall mode 0))
-#+END_SRC
-
-** Fonts
-#+BEGIN_SRC emacs-lisp :tangle yes
-(dolist (face '(default fixed-pitch))
-  (set-face-attribute `,face nil :font "Source Code Pro 16"))
-(set-face-attribute 'variable-pitch nil :font "Bitter 16")
-#+END_SRC
+#+end_src
 
 ** Saner defaults
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq inhibit-startup-screen    t
       initial-scratch-message   nil
       sentence-end-double-space nil
       use-dialog-box            nil
       mark-even-if-inactive     nil
-      kill-whole-line           t
-      case-fold-search          nil)
-;; Set better default tab settings.
-(setq-default 
-  indent-tabs-mode nil
-  tab-width        2
-  evil-shift-width 2)
+      case-fold-search          nil
+      kill-whole-line           t)
+
 (show-paren-mode t)         ;; Show matching parenthesis.
 (global-so-long-mode)       ;; Handle long lines better.
 (global-font-lock-mode 1)   ;; Always highlight code.
@@ -220,18 +159,15 @@ In case some packages are missing, install them.
 (savehist-mode 1)           ;; Save command history between sessions.
 
 (defalias 'yes-or-no-p 'y-or-n-p) ;; Accept 'y' in lieu of 'yes'.
-#+END_SRC
+#+end_src
 
-** Mixed pitch
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package mixed-pitch
-  :defer 3
-  :hook (text-mode . mixed-pitch-mode)
-  :custom (mixed-pitch-set-height t))
-#+END_SRC
+** Fonts
+#+begin_src emacs-lisp :tangle yes
+(set-face-attribute 'default nil :font "Source Code Pro 16")
+#+end_src
 
 ** Beacon
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package beacon
   :config
   (beacon-mode 1)
@@ -242,28 +178,25 @@ In case some packages are missing, install them.
   (beacon-blink-duration            .5)
   (beacon-blink-delay               .5)
   (beacon-size                      20))
-#+END_SRC
+#+end_src
 
 ** Theme
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (use-package solarized-theme
   :config (load-theme 'solarized-dark t)
   :custom-face
-  (font-lock-contant-face ((t (:bold nil :foreground nil))))
-  (font-lock-keyword-face ((t (:bold nil))))
-  (mode-line              ((t (:inverse-video t :underline nil))))
-  (mode-line-buffer-id    ((t (:inverse-video t :foreground nil))))
-  (mode-line-inactive     ((t (:inverse-video t :underline nil)))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package base16-theme
-  :straight (base16-theme :type git :host github :repo "mircodezorzi/base16-emacs"))
-  :config (load-theme 'base16-gruvbox-material-dark-pale t))
-#+END_SRC
+  (font-lock-contant-face           ((t (:bold nil :foreground nil))))
+  (font-lock-comment-face           ((t (:foreground "#859900"))))
+  (font-lock-comment-delimiter-face ((t (:foreground "#859900"))))
+  (button                           ((t (:underline nil))))
+  (font-lock-keyword-face           ((t (:bold nil))))
+  (mode-line                        ((t (:inverse-video t :underline nil))))
+  (mode-line-buffer-id              ((t (:inverse-video t :foreground nil))))
+  (mode-line-inactive               ((t (:inverse-video t :underline nil)))))
+#+end_src
 
 ** Better Scrolling
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package fast-scroll
   :hook
   (fast-scroll-start . (lambda () (flycheck-mode -1)))
@@ -271,92 +204,112 @@ In case some packages are missing, install them.
   :config
   (fast-scroll-config)
   (fast-scroll-mode 1))
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (setq
-  mouse-wheel-scroll-amount '(6 ((shift) . 1))   ;; Mouse scroll N lines.
-  mouse-wheel-progressive-speed nil              ;; Don't accelerate scrolling.
-  redisplay-dont-pause t                         ;; Don't pause display on input.
-
-  ;; Always redraw immediately when scrolling, more responsive and doesn't hang!
-  fast-but-imprecise-scrolling nil
-  jit-lock-defer-time          0)
-#+END_SRC
+  ;; Mouse scroll N lines.
+  mouse-wheel-scroll-amount '(6 ((shift) . 1))   
+  ;; Don't accelerate scrolling.
+  mouse-wheel-progressive-speed nil)
+#+end_src
 
 ** Indent guides
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
   :custom (highlight-indent-guides-method 'character))
-#+END_SRC
+#+end_src
 
 ** Cursorline
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
-#+END_SRC
+#+end_src
 
 ** Indentation
-Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]]
-#+BEGIN_SRC emacs-lisp :tangle yes
+Somewhat stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][binchen]].
+
+Set's default indentation to 2 spaces.
+#+begin_src emacs-lisp :tagle yes
 ;;;###autoload
-(defun dz/indent-setup (n)
+(defun dz/indent-default-setup (n)
+  ;; java/c/c++
+  (setq-default c-basic-offset n)
+  ;; web development
+  (setq-default web-mode-markup-indent-offset n
+                web-mode-css-indent-offset    n
+                web-mode-code-indent-offset   n)
+  ;; other
+  (setq-default tab-width        n
+                evil-shift-width n))
+
+(setq-default indent-tabs-mode nil)
+(dz/indent-default-spaces 2)
+#+end_src
+
+Set's local indentation to either 2 spaces or 2 wide tabs.
+#+begin_src emacs-lisp :tangle yes
+;;;###autoload
+(defun dz/indent-local-setup (n)
   ;; java/c/c++
   (setq-local c-basic-offset n)
   ;; web development
   (setq-local web-mode-markup-indent-offset n
               web-mode-css-indent-offset    n
-              web-mode-code-indent-offset   n))
+              web-mode-code-indent-offset   n)
+  ;; other
+  (setq-local tab-width        n
+              evil-shift-width n))
 
 ;;;###autoload
 (defun dz/indent-tabs ()
   (interactive)
   (setq-local indent-tabs-mode t) ;; Use tab instead of space.
-  (dz/indent-setup 2))            ;; Indent 2 spaces width.
+  (dz/indent-local-setup 2))      ;; Indent 2 spaces width.
 
 ;;;###autoload
 (defun dz/indent-spaces ()
   (interactive)
   (setq-local indent-tabs-mode nil) ;; Use space instead of tab.
-  (dz/indent-setup 2))              ;; Indent 2 spaces width.
-#+END_SRC
+  (dz/indent-local-setup 2))        ;; Indent 2 spaces width.
+#+end_src
 
 ** Origami
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (use-package origami
-  :defer 3
-  :config (origami-mode))
-#+END_SRC
+  :defer t
+  :config 
+  ;; Activate it.
+  (origami-mode))
+#+end_src
 
 ** ialign
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package ialign
-  :defer 3)
-#+END_SRC
+  :defer t)
+#+end_src
 
 ** Relative line numbers
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package linum-relative
   :hook (prog-mode . display-line-numbers-mode)
   :custom
   (linum-relative-backend 'display-line-numbers-mode)
   (linum-relative-current-symbol ""))
-#+END_SRC
+#+end_src
 
 ** Key chords
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package key-chord
   :config
   (key-chord-mode 1)
   (key-chord-define-global "eu" 'evil-normal-state)
-  :custom 
-  (key-chord-two-keys-delay 0.05))
-#+END_SRC
+  :custom  (key-chord-two-keys-delay 0.05))
+#+end_src
 
 * Tools
 ** Workspaces
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package perspective
   :defer t
   :config
@@ -364,32 +317,33 @@ Stolen from [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-
   (persp-mode)
   ;; In the modeline, tell me which workspace I'm in.
   (persp-turn-on-modestring))
-#+END_SRC
+#+end_src
 
 ** Terminal Emulator
 /Pop up a terminal, do some work, then close it using the same command./
 Shell-pop uses only one key action to work: If the buffer exists, and we’re in it, then hide it; else jump to it; otherwise create it if it does not exit.
 Use line mode by default. This allows to manipulate the terminal buffer while being in normal mode.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package shell-pop
   :defer t
   :custom
-    ;; This binding toggles popping up a shell, or moving cursour to the shell pop-up.
-    (shell-pop-universal-key "M-t")
-    ;; Percentage for shell-buffer window size.
-    (shell-pop-window-size 30)
-    ;; Position of the popped buffer: top, bottom, left, right, full.
-    (shell-pop-window-position "bottom")
-    ;; Please use an awesome shell.
-    (shell-pop-term-shell "/bin/zsh"))
+  ;; This binding toggles popping up a shell, or moving cursour to the shell pop-up.
+  (shell-pop-universal-key "M-t")
+  ;; Percentage for shell-buffer window size.
+  (shell-pop-window-size 30)
+  ;; Position of the popped buffer: top, bottom, left, right, full.
+  (shell-pop-window-position "bottom")
+  ;; Please use an awesome shell.
+  (shell-pop-term-shell "/bin/zsh"))
+
 ;;;###autoload
 (defun @dz/term-init (&rest ignored)
   (term-line-mode))
 (advice-add 'ansi-term :after #'@dz/term-init)
 (advice-add 'term :after #'@dz/term-init)
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (defun @dz/vterm-init () 
   (setq mode-line-format       nil
         confirm-kill-processes nil
@@ -401,7 +355,7 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   (vterm-toggle))
 
 (use-package vterm
-  :defer 3
+  :defer t
   :preface (setq vterm-install t)
   :commands vterm vterm-mode
   :hook (vterm-mode . @dz/vterm-init)
@@ -428,10 +382,10 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 (use-package vterm-toggle
   :after vterm
   :bind ("C-c t" . #'vterm-toggle))
-#+END_SRC
+#+end_src
 
 ** Undo Tree
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package undo-tree
   :after evil
   :diminish undo-tree-mode
@@ -441,20 +395,20 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
   :custom
   (undo-tree-visualizer-diff t)
   (undo-tree-visualizer-timestamps t))
-#+END_SRC
+#+end_src
 
 ** Magit
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package magit
-  :defer 3
+  :defer t
   :bind (:map evil-normal-state-map
     ("SPC C-c" . magit-dispatch)))
-#+END_SRC
+#+end_src
 
 ** Git Gutter
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package git-gutter
-  :defer 3
+  :defer t
   :config
 
   (use-package git-gutter-fringe
@@ -478,10 +432,10 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
       [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248] nil nil 'center))
 
   (global-git-gutter-mode))
-#+END_SRC
+#+end_src
 
 ** Ivy
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 ;;;###autoload
 (defun dz/find-file ()
   "Call `counsel-projectile-find-file' if `projectile-project-p', otherwise fallback to `counsel-find-files'."
@@ -545,22 +499,12 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 
 (use-package counsel-projectile
   :after counsel projectile)
-#+END_SRC
-
-** Treesitter
-#+BEGIN_SRC emacs-lisp
-(use-package tree-sitter
-  :defer 3
-  :config
-  (require 'tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-#+END_SRC
+#+end_src
 
 ** Treemacs
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package treemacs
-  :defer 3
+  :defer t
   :custom
   (treemacs-width 20)
   (treemacs-indentation 2)
@@ -583,15 +527,15 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 (use-package treemacs-all-the-icons
   :after treemacs
   :config (treemacs-load-theme 'all-the-icons))
-#+END_SRC
+#+end_src
 
 * Evil Mode
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package general
   :config (general-override-mode))
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package evil
   :custom
   (evil-search-module                     'evil-search)
@@ -658,68 +602,62 @@ Use line mode by default. This allows to manipulate the terminal buffer while be
 (use-package evil-surround
   :after evil
   :config (global-evil-surround-mode 1))
-#+END_SRC
+#+end_src
 
 * Language Server
 ** lsp-mode
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package lsp-mode
-  :defer 3
+  :defer t
   :commands lsp
-  :hook ((typescript-mode javascript-mode vue-mode c++-mode c-mode latex-mode python-mode) . lsp-deferred)
+  :hook ((typescript-mode javascript-mode c++-mode c-mode latex-mode python-mode) . lsp-deferred)
   :bind (:map evil-normal-state-map
+          ("<f2>" . lsp-rename)
           ("g r" . lsp-find-references)
           ("g d" . lsp-find-definition))
   :custom
-  ;; disable breadcrumbs
+  ;; Disable code lenses
+  (lsp-lens-enable nil)
+
+  ;; Disable modeline
+  (lsp-modeline-diagnostics-enable nil)
+
+  ;; Disable breadcrumbs
   (lsp-headerline-breadcrumb-enable nil)
-  ;; vue related configuration
-  (lsp-vetur-format-default-formatter-css "none")
-  (lsp-vetur-format-default-formatter-html "none")
-  (lsp-vetur-format-default-formatter-js "none")
-  (lsp-vetur-validation-template nil))
+
+  ;; Disable signature
+  (lsp-signature-auto-activate nil)
+  (lsp-signature-render-documentation nil))
 
 (use-package lsp-ui
   :after lsp-mode
   :commands lsp-ui-mode
   :custom 
+  (lsp-ui-sideline-enable nil)
   (lsp-signature-auto-activate nil)
   (lsp-signature-render-documentation nil)
   (lsp-eldoc-enable-hover nil)
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-position 'at-point)
-  (lsp-ui-doc-border "white"))
-#+END_SRC
+  (lsp-ui-doc-border "black"))
+#+end_src
 
 * Auto Complete
-To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we must use this package.
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package company
-  :defer 3
+  :defer t
   :custom
-  (company-idle-delay 0)
-  (company-echo-delay 0)
+  (company-idle-delay 0.3)
+  (company-echo-delay 0.3)
   (company-minimum-prefix-length 1)
-  (company-tooltip-align-annotations t)
-  :config
-  (global-company-mode))
-
-(use-package company-posframe
-  :delight
-  :after company
-  :config (company-posframe-mode 1))
-
-(use-package company-box
-  :delight
-  :after company
-  :hook (company-mode . company-box-mode))
-#+END_SRC
+  :config (global-company-mode))
+#+end_src
 
 * Languages
 ** Emacs Lisp
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package ielm
-  :defer 3
+  :defer t
   :commands ielm)
 
 (use-package paredit
@@ -727,18 +665,18 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 
 (use-package rainbow-delimiters
   :hook ((lisp-mode emacs-lisp-mode ielm-mode) . rainbow-delimiters-mode))
-#+END_SRC
+#+end_src
 
 ** C++
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package ccls
-  :defer 3)
-#+END_SRC
+  :defer t)
+#+end_src
 
 ** Python
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package python-mode
-  :defer 3
+  :mode "\\.py\\'"
   :custom (python-shell-interpreter "python3")
   :hook ((python-mode . lsp-deferred)
          (python-mode . (lambda () 
@@ -762,10 +700,10 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :after python-mode
   :hook (python-mode . blacken-mode)
   :custom (blacken-line-length 79))
-#+END_SRC
+#+end_src
 
 ** Golang
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package go-mode
   :mode "\\.go\\'"
   :hook ((go-mode     . lsp-deferred)
@@ -792,18 +730,18 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package go-tag
   :after go-mode
   :custom (go-tag-args (list "-transform" "camelcase")))
-#+END_SRC
+#+end_src
 
 ** Javascript/Typescript
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package typescript-mode
   :mode "\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'"
   :hook (typescript-mode . lsp-deferred)
   :custom (typescript-indent-level 2))
-#+END_SRC
+#+end_src
 
 ** Web
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package web-mode
   :mode ("\\.html\\'" "\\.css\\'")
 
@@ -829,31 +767,21 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   :hook ((web-mode . prog-mode)
          (web-mode . dz/web-mode-hook)
          (web-mode . company-mode)))
-#+END_SRC
+#+end_src
 
 *** Emmet
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package emmet-mode
   :preface (defvar emmet-mode-keymap (make-sparse-keymap))
   :bind (:map emmet-mode-keymap
           ("C-TAB" . emmet-expand-line))
   :hook ((css-mode web-mode html-mode) . emmet-mode))
-#+END_SRC
-
-** Vue
-#+BEGIN_SRC emacs-lisp :tangle yes
-(use-package vue-mode
-  :mode "\\.vue\\'"
-  :hook ((vue-mode . prettier-js-mode)
-         (vue-mode . lsp)
-         (vue-mode . (lambda () (set-face-background 'mmm-default-submode-face nil))))
-  :config (setq prettier-js-args '("--parser vue")))
-#+END_SRC
+#+end_src
 
 * Org
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package org
-  :defer 3
+  :defer t
   :config
 
   (require 'ox)
@@ -918,19 +846,19 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode))
-#+END_SRC
+#+end_src
 
 ** Org Export
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package ox-hugo 
   :after ox)
 
 (use-package ox-reveal 
   :after ox)
-#+END_SRC
+#+end_src
 
 * LaTeX
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package auctex
   :mode
   ("\\.tex\\'" . latex-mode)
@@ -952,11 +880,7 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
 
   (add-hook 'pdf-view-mode-hook
-            (lambda () (setq header-line-format nil)))
-
-  ;; Update PDF buffers after successful LaTeX runs.
-  (add-hook 'TeX-after-compilation-finished-functions
-             #'TeX-revert-document-buffer))
+            (lambda () (setq header-line-format nil))))
 
 (use-package company-auctex 
   :after company tex)
@@ -973,44 +897,44 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 	(reftex-toc-split-windows-horizontally t)
 	;; RefTeX table of contents does not indicate which sections are in which files.
 	(reftex-toc-include-file-boundaries nil))
-#+END_SRC
+#+end_src
 
 * File Formats
 ** Makefile
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (add-to-list 'auto-mode-alist '("Makefile" . makefile-mode))
-#+END_SRC
+#+end_src
 
 ** Terraform
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package terraform-mode
   :mode ("\\.tf$" . terraform-mode))
 
 (use-package company-terraform
   :after company-mode
   :config (company-terraform-init))
-#+END_SRC
+#+end_src
 
 ** Yaml
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package yaml-mode
   :mode ("\\.yml$" . yaml-mode))
-#+END_SRC
+#+end_src
 
 ** Protobuf
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package protobuf-mode
   :mode ("\\.pb$" . protobuf-mode))
-#+END_SRC
+#+end_src
 
 ** CMake
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package cmake-mode
   :mode ("CMakeLists.txt" . cmake-mode))
-#+END_SRC
+#+end_src
 
 ** Dockerfile
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package dockerfile-mode
   :mode ("Dockerfile" . dockerfile-mode))
 
@@ -1018,26 +942,26 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 
 (use-package docker
   :bind ("C-c d" . docker))
-#+END_SRC
+#+end_src
 
 ** Toml
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package toml-mode
   :mode ("\\.toml$" . toml-mode))
-#+END_SRC
+#+end_src
 
 * Spelling
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package flycheck
-  :defer 3
+  :defer t
   :init (global-flycheck-mode)
   :custom (flycheck-global-modes '(not org-mode)))
-#+END_SRC
+#+end_src
 
 * Snippets
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (use-package yasnippet
-  :defer 3
+  :defer t
   :hook (after-init . yas-global-mode)
   :bind (:map yas-minor-mode-map
           ("TAB" . yas-expand))
@@ -1046,21 +970,21 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
 (use-package yasnippet-snippets
   :after yasnippet
   :custom (yas-snippet-dirs '("~/.emacs.d/snippets")))
-#+END_SRC
+#+end_src
 
 * Miscellaneous functions
 ** Open configuration
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 ;;;###autoload
 (defun dz/open-config ()
   (interactive)
   (find-file "~/.emacs.d/init.org"))
 
 (define-key evil-normal-state-map (kbd "SPC o c") #'dz/open-config)
-#+END_SRC
+#+end_src
 
 ** Wrap org source code blocks
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes
 (defvar def-language nil)
 (setq def-language "")
 
@@ -1073,12 +997,12 @@ To fix the alignment issues caused by =mixed-pitch-mode= in non-prog buffers we 
     (goto-char end)
     (unless (bolp)
       (newline))
-    (insert "#+END_SRC\n")
+    (insert "#+end_src\n")
     (goto-char start)
     (unless (bolp)
       (newline))
     (setq def-language lang)
-    (insert (format "#+BEGIN_SRC %s\n" def-language))))
+    (insert (format "#+begin_src %s\n" def-language))))
 
 (define-key evil-visual-state-map (kbd "SPC w") #'dz/org-wrap-source)
-#+END_SRC
+#+end_src
