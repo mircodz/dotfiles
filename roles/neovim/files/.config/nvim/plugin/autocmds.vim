@@ -14,12 +14,6 @@ autocmd BufReadPost *
 	\   exe "normal! g'\""|
 	\ endif
 
-augroup BetterFocus
-	autocmd!
-	au VimEnter,WinEnter,BufEnter,BufNewFile,BufWinEnter,FocusGained * setlocal cursorline
-	au WinLeave,FocusLost * setlocal cursorline!
-augroup end
-
 " set correct colors
 augroup Colors
 	autocmd!
@@ -35,12 +29,4 @@ endfunction
 augroup Terminal
 	autocmd!
 	autocmd TermOpen * call s:term()
-augroup end
-
-augroup BetterFocus
-	autocmd!
-	au VimEnter,WinEnter,BufEnter,BufNewFile,BufWinEnter,FocusGained *
-		\ let &l:colorcolumn=join(range(80, 254), ',')
-	au WinLeave,FocusLost *
-		\ let &l:colorcolumn=join(range(1, 254), ',')
 augroup end

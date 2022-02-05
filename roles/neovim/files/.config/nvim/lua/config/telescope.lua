@@ -15,9 +15,6 @@ telescope.setup {
     },
     borderchars = {'─', '│', '─', '│', '┌', '┐', '┘', '└'},
   },
-  extensions = {
-    frecency = { },
-  },
   pickers = {
     lsp_references = { theme = 'dropdown' },
     lsp_code_actions = { theme = 'dropdown' },
@@ -29,7 +26,3 @@ telescope.setup {
     },
   },
 }
-
-if not telescope.stud then
-  telescope.load_extension 'frecency'
-end

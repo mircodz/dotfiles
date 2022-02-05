@@ -3,22 +3,13 @@ function! s:colorscheme(name) abort
     return !empty(globpath(&rtp, pat))
 endfunction
 
-if s:colorscheme('base16-gruvbox-dark-soft') 
-	colorscheme base16-gruvbox-dark-soft
-endif
-if s:colorscheme('NeoSolarized')
-	colorscheme NeoSolarized
-endif
+set background=dark
 
 filetype indent plugin on
 syntax on
 
 set autoindent                        " Maintain indent of current line
 set backspace=indent,start,eol        " Allow unrestricted backspacing in insert mode
-
-if exists('+colorcolumn')             " Highlight all columns after the 254th
-	let &l:colorcolumn='+' . join(range(80, 254), ',+')
-endif
 
 if has('folding')
 	set foldenable                      " Enable folding
@@ -27,7 +18,6 @@ if has('folding')
 	set foldtext=mirco#fold#text()      " Change folding style to one inspired by Emacs
 endif
 
-set cursorline                        " Highlight current line
 set inccommand=nosplit                " Live preview in substitution comands
 
 if has('termguicolors')

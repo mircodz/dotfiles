@@ -23,11 +23,9 @@ local on_attach = function(client, bufnr)
   nmap('<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
 end
 
-if not lsp.stud then
-  lsp.ccls.setup { on_attach = on_attach, }        -- C/C++
-  lsp.gopls.setup { on_attach = on_attach, }       -- Golang
-  lsp.pylsp.setup { on_attach = on_attach, }       -- Python
-  lsp.terraformls.setup { on_attach = on_attach, } -- Terraform
-  lsp.tsserver.setup { on_attach = on_attach, }    -- Typescript
-  lsp.vuels.setup { on_attach = on_attach, }       -- Vue
-end
+lsp.ccls.setup { on_attach = on_attach, }        -- C/C++
+lsp.gopls.setup { on_attach = on_attach, }       -- Golang
+lsp.pylsp.setup { on_attach = on_attach, }       -- Python
+lsp.terraformls.setup { on_attach = on_attach, } -- Terraform
+lsp.tsserver.setup { on_attach = on_attach, }    -- Typescript
+lsp.vuels.setup { on_attach = on_attach, }       -- Vue

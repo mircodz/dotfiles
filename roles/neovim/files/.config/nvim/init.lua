@@ -15,28 +15,19 @@ require('packer').startup(function()
 	if exists("g:vscode") == 0 then
 		-- Search
 		use {
-			{
-				'nvim-telescope/telescope.nvim',
-				requires = {
-					'nvim-lua/popup.nvim',
-					'nvim-lua/plenary.nvim',
-					'telescope-frecency.nvim',
-				},
-				wants = {
-					'popup.nvim',
-					'plenary.nvim',
-					'telescope-frecency.nvim',
-				},
-				setup = [[require('config.telescope_setup')]],
-				config = [[require('config.telescope')]],
-				cmd = 'Telescope',
-				module = 'telescope',
+			'nvim-telescope/telescope.nvim',
+			requires = {
+				'nvim-lua/popup.nvim',
+				'nvim-lua/plenary.nvim',
 			},
-			{
-				'nvim-telescope/telescope-frecency.nvim',
-				after = 'telescope.nvim',
-				requires = 'tami5/sql.nvim',
+			wants = {
+				'popup.nvim',
+				'plenary.nvim',
 			},
+			setup = [[require('config.telescope_setup')]],
+			config = [[require('config.telescope')]],
+			cmd = 'Telescope',
+			module = 'telescope',
 		}
 
 		-- -- Add indentation guides even on blank lines
@@ -90,15 +81,15 @@ require('packer').startup(function()
 			config = [[vim.g.undotree_SetFocusWhenToggle = 1]],
 		}
 
-		use 'chriskempson/base16-vim'  -- More colorschemes
+		use 'kana/vim-textobj-user'
 		use 'glts/vim-textobj-comment'
+
 		use 'junegunn/goyo.vim'
 		use 'junegunn/limelight.vim'   -- Highlight current paragraph
-		use 'kana/vim-textobj-user'
 		use 'mphe/grayout.vim'         -- Clang grayout for inactive macros
 		use 'overcache/NeoSolarized'   -- Dark/light Solarized colorschemes
-		use 'sheerun/vim-polyglot'
 		use 'tpope/vim-projectionist'  -- Switch between file alternatives
+		use 'sheerun/vim-polyglot'
 
 		if exists('$TMUX') then
 			use 'aserowy/tmux.nvim'

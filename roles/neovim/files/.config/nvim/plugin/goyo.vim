@@ -4,7 +4,6 @@ function! s:enter()
 		silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
 	endif
 	set scrolloff=999
-	set cursorline!
 	set showcmd!
 	set showmode!
 	set wrap
@@ -17,7 +16,6 @@ function! s:leave()
 		silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
 	endif
 	set scrolloff=5
-	set cursorline
 	set showcmd
 	set showmode
 	set nowrap
