@@ -1,0 +1,10 @@
+- name: installing
+  pacman:
+    name: intellij-idea-community-edition-jre
+
+- name: installing configuration files
+  file:
+    src: '{{ role_path }}/files/.ideavimrc'
+    path: '~/.ideavimrc'
+    state: link
+    force: yes

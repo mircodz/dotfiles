@@ -1,0 +1,61 @@
+set commentary
+
+set scrolloff=12
+set relativenumber
+set showmode
+set showcmd
+set wildmenu
+set ruler
+set nowrap
+
+" Search
+set ignorecase
+set hlsearch
+set incsearch
+
+" Mappings
+let mapleader=' '
+
+noremap <Leader><Leader> :action GotoClass<CR>
+noremap <Leader>p :action GotoFile<CR>
+
+noremap <Leader>gc :action GenerateConstructor<CR>
+noremap <Leader>ga :action GenerateGetterAndSetter<CR>
+
+noremap <Leader>re :action RenameElement<CR>
+noremap <Leader>rf :action RenameFile<CR>
+
+noremap <Leader>z :action ToggleZenMode<CR>
+
+noremap gd :action GotoDeclaration<CR>
+noremap ge :action GotoNextError<CR>
+noremap gi :action GotoImplementation<CR>
+noremap gt :action GotoTest<CR>
+noremap gu :action FindUsages<CR>
+
+noremap <Leader>t :action ActivateTerminalToolWindow<CR>
+
+noremap d h
+noremap h j
+noremap t k
+noremap n l
+
+noremap D ^
+noremap H 5<Down>
+noremap T 5<Up>
+noremap N $
+
+noremap j d
+noremap k t
+noremap s :
+noremap l n
+
+noremap J D
+noremap K T
+noremap S ;
+noremap L N
+
+nnoremap <C-d> <C-w>h
+nnoremap <C-h> <C-w>j
+nnoremap <C-t> <C-w>k
+nnoremap <C-n> <C-w>l
