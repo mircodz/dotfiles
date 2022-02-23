@@ -1,3 +1,7 @@
+files:
+  - .config/awesome
+  - .xinitrc
+
 software:
   - awesome
   - clipmenu

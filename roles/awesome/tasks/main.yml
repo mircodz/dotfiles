@@ -9,4 +9,4 @@
     path: '~/{{ item }}'
     state: link
     force: yes
-  loop: '{{ [ ".config/awesome" ] }}'
+  loop: '{{ files }}'
