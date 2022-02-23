@@ -1,12 +1,9 @@
-- name: dotfiles role is required to install awesome
-  include_role:
-    name: dotfiles
+- name: installing
+  yay:
+    name: '{{ software }}'
+    state: latest
 
-- name: installing dependencies
-  pacman:
-    name: awesome
-
-- name: symlinking configuration files
+- name: installing configuration files
   file:
     src: '{{ role_path }}/files/{{ item }}'
     path: '~/{{ item }}'
