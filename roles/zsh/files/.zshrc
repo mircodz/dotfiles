@@ -1,4 +1,4 @@
-source ~/.zinit/bin/zinit.zsh
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
@@ -33,3 +33,5 @@ bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
