@@ -1,7 +1,7 @@
 export FZF_DEFAULT_COMMAND="fd"
 
 export BROWSER="chromium"
-export EDITOR="nvim"
+export EDITOR="vim"
 export GUIEDITOR="emacs"
 export READER="zathura"
 export TERMINAL="kitty"

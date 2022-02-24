@@ -2,7 +2,18 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-fpath+=$HOME/.zsh/pure
+autoload -Uz compinit
+compinit
+
+# Kubectl autocompletion
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+compdef k='kubectl'
+
+# Kubectl autocompletion
+[[ $commands[helm] ]] && source <(helm completion zsh)
+
+# Docker autocompletion
+source "$HOME/.zsh/_docker"
 
 # Syntax Highligthing
 zinit light zdharma-continuum/fast-syntax-highlighting
@@ -16,8 +27,10 @@ zinit light zdharma-continuum/history-search-multi-word
 zinit ice from"gh-r" as"program"
 zinit load junegunn/fzf-bin
 
-autoload colors; colors
-autoload -U promptinit; promptinit; prompt pure
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
+zinit light starship/starship
 
 bindkey -e
 
@@ -31,7 +44,3 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
