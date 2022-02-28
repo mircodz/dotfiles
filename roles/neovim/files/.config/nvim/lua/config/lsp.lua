@@ -1,9 +1,7 @@
-local srequire = require'config.utils'.srequire
-local lsp = srequire'lspconfig'
+local lsp = require'lspconfig'
 
--- See `:help vim.lsp.*` for documentation on any of the below functions
 local on_attach = function(client, bufnr)
-  -- Mappings.
+  -- Mappings
   local defaults = {noremap = true, silent = true}
   local nmap = function(a, b) vim.api.nvim_buf_set_keymap(bufnr, 'n', a, b, defaults) end
   
@@ -23,9 +21,6 @@ local on_attach = function(client, bufnr)
   nmap('<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
 end
 
-lsp.ccls.setup { on_attach = on_attach, }        -- C/C++
-lsp.gopls.setup { on_attach = on_attach, }       -- Golang
-lsp.pylsp.setup { on_attach = on_attach, }       -- Python
-lsp.terraformls.setup { on_attach = on_attach, } -- Terraform
-lsp.tsserver.setup { on_attach = on_attach, }    -- Typescript
-lsp.vuels.setup { on_attach = on_attach, }       -- Vue
+lsp.ccls.setup  { on_attach = on_attach, } -- C/C++
+lsp.gopls.setup { on_attach = on_attach, } -- Golang
+lsp.pylsp.setup { on_attach = on_attach, } -- Python

@@ -1,7 +1,4 @@
-local srequire = require'config.utils'.srequire
-local telescope = srequire'telescope'
-
-telescope.setup {
+require'telescope'.setup {
   defaults = {
     vimgrep_arguments = {
       'rg',

@@ -1,5 +1,4 @@
-local srequire = require'config.utils'.srequire
-srequire'compe'.setup {
+require'compe'.setup {
   enabled = true;
   autocomplete = true;
   preselect = 'enable';
