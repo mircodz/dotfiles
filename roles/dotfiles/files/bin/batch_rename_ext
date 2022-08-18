@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if [ -z "$1" ] || [ -z "$2" ]; then
-	echo "$0 <original ext> <new ext>"
-	exit 0
-fi
-
-find . | grep ".$1$" | sed "s,.$1$,,g" | xargs -I:: /bin/sh -c "mv ::.$1 ::.$2"

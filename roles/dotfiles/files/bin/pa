@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if [ $# -eq 0 ]; then
-	yay -S --noconfirm $(cat "$HOME/.cache/yay/completion.cache.sorted" \
-		| fzf --multi --preview 'yay -Si {} | grep " : "')
-else
-	yay -S --noconfirm $@
-fi

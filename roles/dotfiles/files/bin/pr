@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-if [ $# -eq 0 ]; then
-	sudo pacman -Rns --noconfirm $(pacman -Qq | fzf --multi --preview 'yay -Qi {} | grep " : "')
-else
-	sudo pacman -Rns --noconfirm $@
-fi
