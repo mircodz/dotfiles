@@ -3,4 +3,3 @@ alias ll="ls -la"
 alias ls="ls --color=auto"
 alias lsa="ls -la"
 alias ldot="ls -ld .*"
-

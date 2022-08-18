@@ -1,3 +1,0 @@
-zstyle :prompt:pure:git:arrow show yes
-zstyle :prompt:pure:git:dirty show yes
-zstyle :prompt:pure:git:stash show yes

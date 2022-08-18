@@ -1,8 +1,8 @@
-- name: installing
+- name: install
   pacman:
     name: zsh
 
-- name: installing configuration files
+- name: install configuration files
   file:
     src: '{{ role_path }}/files/{{ item }}'
     path: '~/{{ item }}'
