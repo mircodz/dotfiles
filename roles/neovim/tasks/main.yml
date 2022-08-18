@@ -1,24 +1,23 @@
-- name: install
+- name: install neovim
   pacman:
     name: 'neovim'
 
-- name: installing configuration files
+- name: install configuration files
   file:
-    src: '{{ role_path }}/files/{{ item }}'
-    path: '~/{{ item }}'
+    src: '{{ role_path }}/files/.config/nvim'
+    path: '~/.config/nvim'
     state: link
     force: yes
-  loop: '{{ [ ".config/nvim" ] }}'
 
 - name: install neovim plugins
   command:
     cmd: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerCompile' -c 'PackerSync'
 
-- name: installing language servers through yay
+- name: install language servers through yay
   yay:
     name: '{{ aur_lsp_dependencies }}'
     state: latest
 
-- name: installing language servers through pip
+- name: install language servers through pip
   pip:
     name: '{{ pip_lsp_dependencies }}'

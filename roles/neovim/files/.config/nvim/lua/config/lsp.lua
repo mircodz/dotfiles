@@ -21,6 +21,22 @@ local on_attach = function(client, bufnr)
   nmap('<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
 end
 
-lsp.ccls.setup  { on_attach = on_attach, } -- C/C++
-lsp.gopls.setup { on_attach = on_attach, } -- Golang
-lsp.pylsp.setup { on_attach = on_attach, } -- Python
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+-- C/C++
+lsp.ccls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+-- Go
+lsp.gopls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+-- Python
+lsp.pylsp.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}

@@ -1,8 +1,11 @@
 syntax on
 
+set mouse=a
+
 set tabstop=4 shiftwidth=4 expandtab
 
 set list listchars=nbsp:¬,tab:»·,trail:·,extends:>
+set completeopt=menu,menuone,noselect
 
 set scrolloff=12
 set relativenumber
@@ -12,6 +15,7 @@ set showcmd
 set wildmenu
 set ruler
 set nowrap
+set noexpandtab
 
 " Search
 set ignorecase
@@ -46,16 +50,32 @@ nnoremap <C-h> <C-w>j
 nnoremap <C-t> <C-w>k
 nnoremap <C-n> <C-w>l
 
+" Statusline
+set laststatus=3
+highlight VertSplit cterm=NONE
+
+" Color column
+hi Bang ctermfg=red
+match Bang /\%>79v.*\%<81v/
+
+
 lua << EOF
 local use = require('packer').use
 require('packer').startup(function()
   use 'wbthomason/packer.nvim'                         -- Package manager
 
+  use 'github/copilot.vim'
   use 'kana/vim-arpeggio'                              -- Key combos
+  use 'lukas-reineke/indent-blankline.nvim'
   use 'mileszs/ack.vim'                                -- :Ag
   use 'preservim/nerdcommenter'                        -- Commenting
   use 'tommcdo/vim-lion'                               -- Alignment
   use 'tpope/vim-eunuch'                               -- Better commands
+
+  use {
+	'nvim-treesitter/nvim-treesitter',
+    config = [[require('config.treesitter')]],
+  }
 
   -- Search
   use {
@@ -63,6 +83,7 @@ require('packer').startup(function()
     requires = {
       'nvim-lua/popup.nvim',
       'nvim-lua/plenary.nvim',
+      'kyazdani42/nvim-web-devicons',
     },
     wants = {
       'popup.nvim',
@@ -73,7 +94,7 @@ require('packer').startup(function()
     cmd = 'Telescope',
     module = 'telescope',
   }
-  
+
   -- Better git support
   use {
     { 'tpope/vim-fugitive', cmd = { 'Git', 'Gstatus', 'Gblame', 'Gpush', 'Gpull' }, disable = true },
@@ -83,24 +104,35 @@ require('packer').startup(function()
     },
     { 'TimUntersberger/neogit', cmd = 'Neogit' },
   }
-  
+
   -- Collection of configurations for built-in LSP client
   use {
     'neovim/nvim-lspconfig',
     config = [[require('config.lsp')]],
   }
-  
+
   -- Better completion framework
   use {
-    'hrsh7th/nvim-compe',
-    config = [[require('config.compe')]],
+    'hrsh7th/nvim-cmp',
+    config = [[require('config.cmp')]],
+    requires = { 
+      'onsails/lspkind-nvim',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-vsnip',
+      'hrsh7th/vim-vsnip',
+    },
   }
-  
+
   -- Undo tree
   use {
     'mbbill/undotree',
     cmd = 'UndotreeToggle',
     config = [[vim.g.undotree_SetFocusWhenToggle = 1]],
   }
+
+  use {
+    "folke/trouble.nvim",
+  }
 end)
+
 EOF
