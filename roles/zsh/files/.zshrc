@@ -16,6 +16,16 @@ compdef k='kubectl'
 # Kubectl autocompletion
 [[ $commands[helm] ]] && source <(helm completion zsh)
 
+# Digctl autocompletion
+[[ $commands[digctl] ]] && source <(digctl completion zsh)
+alias d='digctl'
+compdef d='digctl'
+
+# Flagops autocompletion
+[[ $commands[flagctl] ]] && source <(flagctl completion zsh)
+# alias f='flagctl'
+# compdef f='flagctl'
+
 # Docker autocompletion
 source "$HOME/.zsh/_docker"
 
@@ -45,3 +55,11 @@ bindkey -e
 source ~/.zsh/aliases
 source ~/.zsh/exports
 source ~/.zsh/mappings
+
+# History settings
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
