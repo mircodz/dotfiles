@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Namespace
-# key: ns
-# --
-namespace ${1:name} {
-	$2
-} // $1
