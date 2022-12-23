@@ -1,6 +1,0 @@
-aur_lsp_dependencies:
-  - ccls
-  - gopls
-
-pip_lsp_dependencies:
-  - pyls

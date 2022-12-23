@@ -58,24 +58,16 @@ highlight VertSplit cterm=NONE
 hi Bang ctermfg=red
 match Bang /\%>79v.*\%<81v/
 
-
 lua << EOF
-local use = require('packer').use
-require('packer').startup(function()
+local use = require'packer'.use
+require'packer'.startup(function()
   use 'wbthomason/packer.nvim'                         -- Package manager
-
-  use 'github/copilot.vim'
+  use 'navarasu/onedark.nvim'                          -- Colorscheme
   use 'kana/vim-arpeggio'                              -- Key combos
-  use 'lukas-reineke/indent-blankline.nvim'
   use 'mileszs/ack.vim'                                -- :Ag
   use 'preservim/nerdcommenter'                        -- Commenting
   use 'tommcdo/vim-lion'                               -- Alignment
   use 'tpope/vim-eunuch'                               -- Better commands
-
-  use {
-	'nvim-treesitter/nvim-treesitter',
-    config = [[require('config.treesitter')]],
-  }
 
   -- Search
   use {
@@ -104,18 +96,30 @@ require('packer').startup(function()
     },
     { 'TimUntersberger/neogit', cmd = 'Neogit' },
   }
-
+-- 
   -- Collection of configurations for built-in LSP client
   use {
     'neovim/nvim-lspconfig',
     config = [[require('config.lsp')]],
+    requires = {
+      'RishabhRD/popfix',
+      'RishabhRD/nvim-lsputils',
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    }
+  }
+-- 
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    config = [[require('config.treesitter')]],
   }
 
+-- 
   -- Better completion framework
   use {
     'hrsh7th/nvim-cmp',
     config = [[require('config.cmp')]],
-    requires = { 
+    requires = {
       'onsails/lspkind-nvim',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-vsnip',
@@ -129,10 +133,9 @@ require('packer').startup(function()
     cmd = 'UndotreeToggle',
     config = [[vim.g.undotree_SetFocusWhenToggle = 1]],
   }
-
-  use {
-    "folke/trouble.nvim",
-  }
 end)
+
+-- TODO move to appropriate place
+require('onedark').load()
 
 EOF

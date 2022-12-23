@@ -1,10 +1,13 @@
 local lsp = require'lspconfig'
 
 local on_attach = function(client, bufnr)
+  -- Auto-format on save
+  -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting()]]
+
   -- Mappings
   local defaults = {noremap = true, silent = true}
   local nmap = function(a, b) vim.api.nvim_buf_set_keymap(bufnr, 'n', a, b, defaults) end
-  
+
   -- Navigation
   nmap('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
   nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
@@ -21,22 +24,37 @@ local on_attach = function(client, bufnr)
   nmap('<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+require'mason'.setup()
+require'mason-lspconfig'.setup({
+  ensure_installed = { "clangd", "gopls", "pylsp", "yamlls", "jsonls" }
+})
 
 -- C/C++
-lsp.ccls.setup {
+lsp.clangd.setup {
   on_attach = on_attach,
-  capabilities = capabilities,
 }
 
 -- Go
 lsp.gopls.setup {
   on_attach = on_attach,
-  capabilities = capabilities,
 }
 
 -- Python
 lsp.pylsp.setup {
   on_attach = on_attach,
-  capabilities = capabilities,
+}
+
+-- Yaml
+lsp.yamlls.setup {
+  on_attach = on_attach,
+}
+
+-- Json
+lsp.jsonls.setup {
+  on_attach = on_attach,
+}
+
+-- Typescript
+lsp.tsserver.setup {
+  on_attach = on_attach,
 }
