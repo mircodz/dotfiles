@@ -1,0 +1,14 @@
+# Prevent errors
+$include /etc/inputrc
+
+# Ignore case when autocompleting
+set completion-ignore-case on
+
+# Addd a trailing slash when completing for symlinked directories
+set mark-symlinked-directories on
+
+# Don't match files or directories beginnig with a dot unless specified
+set match-hidden-files off
+
+# Show all completions at once
+set page-completions off

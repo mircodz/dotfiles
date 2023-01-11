@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+docker container ls -a \
+	| awk 'NR>1' \
+	| fzf -m \
+	| awk '{print $1}' \
+	| xargs docker container rm

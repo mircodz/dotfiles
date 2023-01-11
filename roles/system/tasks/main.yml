@@ -1,0 +1,31 @@
+- name: install packages through yay
+  yay:
+    name: '{{ yay }}'
+    state: latest
+  become: true
+
+- name: install packages through pip
+  pip:
+    name: '{{ pip }}'
+
+- name: enable service docker
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+  become: true
+
+- name: add docker users
+  user:
+    name: "{{ item }}"
+    append: yes
+    groups: docker
+  with_items: '{{ docker_users }}'
+  become: true
+
+- name: install configuration files
+  file:
+    src: '{{ role_path }}/files/{{ item }}'
+    path: '~/{{ item }}'
+    state: link
+    force: yes
+  loop: '{{ files }}'

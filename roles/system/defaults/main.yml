@@ -1,0 +1,61 @@
+yay:
+  # Window Manager
+  - awesome
+
+  # Development
+  - docker
+  - git
+  - make
+
+  # Kubernetes
+  - helm
+  - kubectl
+
+  # Terminal & CLI
+  - fzf
+  - kitty
+  - tmux
+
+  # Networking
+  - iw
+  - iwd
+
+  # PDF viewer
+  - zathura
+  - zathura-pdf-poppler
+
+  # Latex
+  - texlive-bibtexextra
+  - texlive-bin
+  - texlive-core
+  - texlive-fontsextra
+  - texlive-formatsextra
+  - texlive-latexextra
+  - texlive-pictures
+  - texlive-publishers
+  - texlive-science
+
+  # Utilities
+  - chromium
+  - clipmenu
+  - dropbox
+  - flameshot
+  - redshift
+  - spotify
+  - spotify-tray-git
+  - sxiv
+
+pip:
+  - docker-compose
+
+docker_users:
+  - mirco
+
+files:
+  - .config/awesome
+  - .config/kitty
+  - .config/zathura
+  - .inputrc
+  - .tmux.conf
+  - .xinitrc
+  - bin

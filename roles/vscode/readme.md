@@ -1,1 +1,0 @@
-VScode is configured to use neovim as a backend, you must add some checks in `init.vim` and other `.vim` files to prevent the plugins from loading as they are not necessary and sometimes they even break the editor.
