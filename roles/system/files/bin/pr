@@ -1,7 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+set -euo pipefail
 
 if [ $# -eq 0 ]; then
-	sudo pacman -Rns --noconfirm $(pacman -Qq | fzf --multi --preview 'yay -Qi {} | grep " : "')
+	packages=$(pacman -Qq | fzf --multi --preview 'yay -Qi {} | grep " : "')
+	sudo pacman -Rns --noconfirm $packages
 else
 	sudo pacman -Rns --noconfirm $@
 fi

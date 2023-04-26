@@ -1,3 +1,5 @@
 #!/bin/sh
 
+set -euo pipefail
+
 git branch | fzf | xargs git checkout

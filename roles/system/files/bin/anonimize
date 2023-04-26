@@ -1,10 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+set -euo pipefail
 
 if [ -z "$1" ] ; then
 	echo "$0 <filename>"
 	exit
 fi
 
-filename="$(date +%s%u -r $1)"."${1##*.}"
+filename="$(date +%s%u -r "$1")"."${1##*.}"
 echo "renaming to $filename"
 mv "$1" "$filename"

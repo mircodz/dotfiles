@@ -1,7 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-sudo pacman  -Syyu --noconfirm
-cat "$HOME/.cache/yay/completion.cache" \
-	| sort \
+set -euo pipefail
+
+sudo pacman -Syyu --noconfirm
+
+sort "$HOME/.cache/yay/completion.cache"\
 	| awk '{print $1}' > "$HOME/.cache/yay/completion.cache.sorted"
-[ "$(pacman -Qtdq)" ] && sudo pacman -R --noconfirm $(pacman -Qtdq)
+
+[ "$(pacman -Qtdq)" ] && sudo pacman -R --noconfirm "$(pacman -Qtdq)"
