@@ -1,5 +1,5 @@
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "lua", "go" },
+  ensure_installed = { "c", "lua", "go", "python" },
 
   sync_install = true,
   auto_install = true,
